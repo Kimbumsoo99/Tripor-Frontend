@@ -14,8 +14,8 @@
 					id="header_join_login"
 					style="display: block; overflow: hidden; white-space: nowrap;">
 
-						<button id="joinButton" class="btn btn-outline-primary m-1"><RouterLink :to="{ name: 'join' }" style="text-decoration: none; color: #0077CC">회원가입</RouterLink></button>
-						<button id="logInButton" class="btn text-white btn-primary m-1"><RouterLink :to="{ name: 'login' }" style="text-decoration: none; color: white">로그인</RouterLink></button>
+						<RouterLink :to="{ name: 'join' }" style="text-decoration: none; color: #0077CC"><button id="joinButton" class="btn btn-outline-primary m-1">회원가입</button></RouterLink>
+						<RouterLink :to="{ name: 'login' }" style="text-decoration: none; color: white"><button id="logInButton" class="btn text-white btn-primary m-1">로그인</button></RouterLink>
 						<div style="display:none">
 							<span>{} 님 로그인 중</span>
 							<button id="logOutButton" class="btn text-white btn-primary m-1" onclick="">로그아웃</button>
