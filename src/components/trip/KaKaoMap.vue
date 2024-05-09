@@ -33,12 +33,9 @@ const kakaoMapStatus = ref(false); // 카카오 맵 로드 확인
 
 // 지도 표시
 onMounted(() => {
-    console.log("제발");
     if (window.kakao && window.kakao.maps) {
-        console.log("동작");
         initMap();
     } else {
-        console.log("이건");
         const script = document.createElement("script");
         /* global kakao */
         script.onload = () => kakao.maps.load(initMap);
@@ -54,8 +51,6 @@ const initMap = () => {
         center: new window.kakao.maps.LatLng(locationMap.서울.lat, locationMap.서울.lng),
         level: 5,
     };
-    console.log(container.value);
-    console.log(options);
     map.value = new kakao.maps.Map(container.value, options);
     kakaoMapStatus.value = true;
     // initKakaoObj();
