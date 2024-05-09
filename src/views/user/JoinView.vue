@@ -1,4 +1,31 @@
 <script setup>
+import axios from 'axios'
+import { ref, onMounted, watch } from 'vue'
+
+const sidoList = ref([]);
+const gugunList = ref([]);
+const selectedSido = ref('');
+
+const getSido = async function () {
+  await axios.get('http://localhost/trip/sido').then((response) => {
+    sidoList.value = response.data.items
+  })
+}
+
+onMounted(() => {
+  getSido()
+})
+
+watch(selectedSido, (newVal) => {
+    getGugun(newVal)
+})
+
+const getGugun = async function (sido) {
+  await axios.get(`http://localhost/trip/${sido}/gugun`).then((response) => {
+    gugunList.value = response.data.items
+  })
+}
+
 
 </script>
 
@@ -83,9 +110,11 @@
 			                  name="sido"
 			                  style="width: 50%"
 			                  aria-label="시도 선택"
+                          v-model="selectedSido"
+             
 			                >
-			                  <option selected>선택</option>
-			                  
+			                  <option selected value="">선택</option>
+			                  <option v-for="sido in sidoList" :value="sido.sidoCode">{{ sido.sidoName }}</option>
 			                </select>
 			                <select
 			                  class="p-1 ms-1 mb-3"
@@ -95,7 +124,7 @@
 			                  aria-label="구군 선택"
 			                >
 			                  <option selected>선택</option>
-			                  
+			                  <option v-for="gugun in gugunList">{{ gugun.gugunName }}</option>
 			                </select>
 			              </div>
 							<button
