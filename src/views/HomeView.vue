@@ -3,8 +3,12 @@ import KaKaoMap from "@/components/trip/KaKaoMap.vue";
 </script>
 
 <template>
-    <div style="width: 400px; height: 300px"></div>
-    <KaKaoMap />
+    <div id="map_view" class="position-relative d-flex"><KaKaoMap /></div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#map_view{
+    width: 100%; 
+    height: 100%;
+}
+</style>
