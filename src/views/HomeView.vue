@@ -1,16 +1,10 @@
 <script setup>
-
+import KaKaoMap from "@/components/trip/KaKaoMap.vue";
 </script>
 
 <template>
-    <div>
-        <div style="height: 400px;"></div>
-        <h1>
-            gd
-        </h1>
-    </div>
+    <div style="width: 400px; height: 300px"></div>
+    <KaKaoMap />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
