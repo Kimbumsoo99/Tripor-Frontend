@@ -1,19 +1,29 @@
 <script setup>
 import { ref } from 'vue';
-const expandIconVisible = ref(true);
-const foldIconVisible = ref(false);
+// const expandIconVisible = ref(true);
+// const foldIconVisible = ref(false);
+// const expandDivVisible = ref(false);
 
-const openToggle = () => {
-    expandIconVisible.value = false;
-    foldIconVisible.value = true;
-    document.getElementById('myPageExpand').style.display = 'block';
-    document.getElementById('expandIcon').style.display = 'block';
-};
-const closeToggle = () => {
-    expandIconVisible.value = true;
-    foldIconVisible.value = false;
-    document.getElementById('myPageExpand').style.display = 'none';
-    document.getElementById('expandIcon').style.display = 'none';
+// const openToggle = () => {
+//     expandIconVisible.value = false;
+//     foldIconVisible.value = true;
+//     expandDivVisible.value = true;
+// }
+// const closeToggle = () => {
+//     console.log('!')
+//     expandIconVisible.value = true;
+//     foldIconVisible.value = false;
+//     expandDivVisible.value = false;
+// }
+
+const isExpanded = ref(false)
+
+const toggle = () => {
+    if (isExpanded.value === false) {
+        isExpanded.value = true
+    } else {
+        isExpanded.value = false
+    }
 }
 </script>
 
@@ -41,7 +51,7 @@ const closeToggle = () => {
                 </div>
             </div>
             <div>
-                <div style="cursor: pointer" id="expandDiv" class="p-3 m-1 rounded menu_button row" @click="openToggle">
+                <div style="cursor: pointer" id="expandDiv" class="p-3 m-1 rounded menu_button row" @click="toggle">
                     <div
                         class="col-10"
                         id="myPageDiv"                  
@@ -49,12 +59,12 @@ const closeToggle = () => {
                         <i class="bi bi-person-circle me-3"></i>
                         <span>마이페이지</span>
                     </div>
-                    <i v-if="expandIconVisible" class="bi bi-caret-up-fill col-2" id="expandIcon"></i>
-                    <i v-if="foldIconVisible"
+                    <i v-if="!isExpanded" class="bi bi-caret-up-fill col-2" id="expandIcon"></i>
+                    <i v-if="isExpanded"
                         class="bi bi-caret-down-fill col-2"
-                        id="foldIcon" @click="closeToggle"></i>
+                        id="foldIcon"></i>
                 </div>
-                <div class="ps-5 pt-1" id="myPageExpand" style="display: none">
+                <div class="ps-5 pt-1" id="myPageExpand" v-if="isExpanded">
                      <div>
                         <a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;나의 여행 계획</a>
                     </div>
