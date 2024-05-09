@@ -25,7 +25,7 @@ const closeToggle = () => {
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                 <div class="col-12" onclick="">
                     <i class="bi bi-house-door-fill me-3"></i>
-                    <span>홈</span>
+                    <RouterLink :to="{ name: 'home' }" style="text-decoration: none; color:#332D2D"><span>홈</span></RouterLink>
                 </div>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
