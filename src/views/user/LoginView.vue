@@ -25,7 +25,6 @@
                             placeholder="아이디를 입력해주세요."
                             required
                         />
-                  
                         
                         <label>비밀번호</label><br />
                         <input
@@ -41,17 +40,13 @@
                         <button
                        	 	type="submit"
                        	 	id="regist"
-                            class="col-12 btn btn-primary mb-3"
-                        >
+                            class="col-12 btn btn-primary mb-3">
                             로그인
                         </button>
                         <div class="d-flex justify-content-center">
-                            <a
-                                href="#"
-                                class="text-decoration-none text-primary"
-                                onclick=""
-                                >회원가입</a
-                            >
+                            <a href="#" class="text-decoration-none text-primary" onclick="">
+                                <RouterLink :to="{ name: 'join' }" style="text-decoration: none;">회원가입</RouterLink>
+                            </a>
                             <span class="ps-1 pe-1">|</span>
                             <a href="#" class="text-decoration-none text-primary" onclick="">
                                 <RouterLink :to="{ name: 'findpwd' }" style="text-decoration: none;">비밀번호 찾기</RouterLink>
