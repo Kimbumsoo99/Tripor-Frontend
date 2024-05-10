@@ -1,32 +1,93 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
+
+const props = defineProps({ tourData: Array });
+
+const tourList = ref([]);
 
 const route = useRoute();
 const router = useRouter();
 
 const place = ref("");
 
+const mergeSort = (arr) => {
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    const mid = Math.floor(arr.length / 2);
+    const left = arr.slice(0, mid);
+    const right = arr.slice(mid);
+
+    return merge(mergeSort(left), mergeSort(right));
+};
+
+const merge = (left, right) => {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex].distance < right[rightIndex].distance) {
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
+        }
+    }
+
+    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+};
+
 watch(
-    () => route.params.contentId,
-    (newVal) => {
-        axios.get(`http://localhost/trip/${newVal}`).then((res) => {
-            place.value = res.data.item;
-        });
+    () => props.tourData,
+    (t) => {
+        tourList.value = t;
     }
 );
+
+watch(
+    () => route.params.contentId,
+    (contentId) => {
+        axios.get(`http://localhost/trip/${contentId}`).then((res) => {
+            place.value = res.data.item;
+        });
+
+        const placeSaveList = [];
+        props.tourData.forEach((i, index) => {
+            let distance = Math.sqrt(
+                Math.pow(i.latitude - place.value.latitude, 2) +
+                    Math.pow(i.longitude - place.value.longitude, 2)
+            );
+
+            let placeSave = i;
+            placeSave.distance = distance;
+            placeSave.index = index;
+
+            placeSaveList.push(placeSave);
+        });
+        tourList.value = placeSaveList;
+    }
+);
+
+const sortList = computed(() => {
+    return mergeSort(tourList.value).slice(0, 4);
+});
+
+const movePlace = (contentId) => {
+    router.replace({ name: "content", params: { contentId: contentId } });
+};
 
 const getAttractionInfo = async () => {
     try {
         const response = await axios.get(`http://localhost/trip/${route.params.contentId}`);
-        console.log(response.data.item);
         place.value = response.data.item;
     } catch (error) {
         console.error(error);
     }
-
-    console.log(place);
 };
 
 const closeOverlay = () => {
@@ -77,6 +138,15 @@ onMounted(() => {
         </template>
         <hr />
         <div style="font-weight: bold; color: gray; font-size: 24px">주변 관광지 추천</div>
+        <div
+            v-for="(p, idx) in sortList"
+            :key="idx"
+            class="text-primary"
+            style="font-size: 20px; cursor: pointer"
+            @click="movePlace(p.contentId)"
+        >
+            {{ p.title }}
+        </div>
     </div>
 </template>
 

@@ -168,7 +168,7 @@ const setMapCenter = (sido) => {
 
 <template>
     <div id="map">
-        <RouterView />
+        <RouterView :tourData="props.tourData" />
     </div>
 </template>
 
