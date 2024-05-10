@@ -1,20 +1,5 @@
 <script setup>
 import { ref } from 'vue';
-// const expandIconVisible = ref(true);
-// const foldIconVisible = ref(false);
-// const expandDivVisible = ref(false);
-
-// const openToggle = () => {
-//     expandIconVisible.value = false;
-//     foldIconVisible.value = true;
-//     expandDivVisible.value = true;
-// }
-// const closeToggle = () => {
-//     console.log('!')
-//     expandIconVisible.value = true;
-//     foldIconVisible.value = false;
-//     expandDivVisible.value = false;
-// }
 
 const isExpanded = ref(false)
 
@@ -29,20 +14,24 @@ const toggle = () => {
 
 <template>
         <div
-            class="d-none d-xl-block shadow-sm position-fixed ps-2 pt-4 pe-2 container bg-white"
-            style="width: 380px; height: 100%; z-index: 9; padding-right: 0">
+            id="aside_div"
+            class="d-none d-xl-block shadow-sm position-fixed ps-2 pt-4 pe-2 container bg-white">
             <div style="height: 90px"></div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
-                <div class="col-12" onclick="">
-                    <i class="bi bi-house-door-fill me-3"></i>
-                    <RouterLink :to="{ name: 'home' }" style="text-decoration: none; color:#332D2D"><span>홈</span></RouterLink>
-                </div>
+                <RouterLink :to="{ name: 'home' }" style="text-decoration: none; color:#332D2D">
+                    <div class="col-12" onclick="">
+                        <i class="bi bi-house-door-fill me-3"></i>
+                        <span>홈</span>
+                    </div>
+                </RouterLink>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
+                <RouterLink :to="{ name: 'makeplan' }" style="text-decoration: none; color:#332D2D">
                 <div class="col-12" onclick="">
                     <i class="bi bi-search me-3"></i>
                     <span>여행 계획 만들기</span>
                 </div>
+                </RouterLink>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                 <div class="col-12" onclick="">
@@ -66,7 +55,7 @@ const toggle = () => {
                 </div>
                 <div class="ps-5 pt-1" id="myPageExpand" v-if="isExpanded">
                      <div>
-                        <a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;나의 여행 계획</a>
+                        <RouterLink :to="{ name: 'myplan' }" style="text-decoration: none; color:#332D2D"><a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;나의 여행 계획</a></RouterLink>
                     </div>
                     <div style="height: 10px"></div>
                     <div>
@@ -83,6 +72,13 @@ const toggle = () => {
 </template>
 
 <style scoped>
+#aside_div{
+    width: 380px; 
+    height: 100%; 
+    z-index: 9; 
+    padding-right: 0; 
+    z-index:9999
+}
 .menu_button:hover{
     background-color: #bfeaff;
 }
