@@ -7,6 +7,7 @@ import ProfileView from "@/views/user/ProfileView.vue";
 import MakePlanView from "@/views/plan/MakePlanView.vue";
 import MyPlanView from "@/views/plan/MyPlanView.vue";
 import ArticleListView from "@/views/board/ArticleListView.vue";
+import ArticleDetailView from "@/views/board/ArticleDetailView.vue";
 import WriteArticleView from "@/views/board/WriteArticleView.vue";
 
 const router = createRouter({
@@ -51,6 +52,11 @@ const router = createRouter({
       path: "/board",
       name: "board",
       component: ArticleListView,
+    },
+    {
+      path: "/board/:id",
+      name: "detail",
+      component: ArticleDetailView,
     },
     {
       path: "/write",
