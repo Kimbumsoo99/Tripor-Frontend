@@ -1,5 +1,4 @@
 <script setup>
-
 </script>
 
 <template>
@@ -7,8 +6,9 @@
 		<div class="navbar navbar-expand-md bg-white navbar-light">
 			<div class="container-fluid justify-content-center">
 				<RouterLink :to="{ name: 'home' }" style="text-decoration: none;"><a href="" class="navbar-brand fw-bold fs-1 col-lg-2" id="header_title">Tripor</a></RouterLink>
+				
 				<div
-					class="col-lg-2 d-none d-md-none d-lg-none collapse navbar-collapse d-flex flex-row justify-content-end me-5 pe-5"
+					class="col-lg-2 d-none d-md-none d-lg-none collapse navbar-collapse d-flex flex-row justify-content-end"
 					id="header_join_login"
 					style="display: block; overflow: hidden; white-space: nowrap;">
 
@@ -34,7 +34,7 @@
   color: white;
 }
 .navbar{
-    padding-left: 120px; padding-right: 120px;
+    padding-left: 110px; padding-right: 110px;
     padding-top: 10px; padding-bottom: 10px;
 }
 #header_title {
