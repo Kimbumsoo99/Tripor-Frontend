@@ -65,7 +65,7 @@ const getGugun = async function (sido) {
 </script>
 
 <template>
-    <div>
+    <div id="test">
         <span>관광지를 선택하세요!</span>
         <select name="sido" v-model="selectSido">
             <option value="">도 선택</option>
@@ -88,4 +88,12 @@ const getGugun = async function (sido) {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#test {
+    position: absolute;
+    top: 100px;
+    left: 800px;
+
+    z-index: 1;
+}
+</style>

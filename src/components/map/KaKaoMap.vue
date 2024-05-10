@@ -1,5 +1,10 @@
 <script setup>
+import AttractionInfo from "./AttractionInfo.vue";
 import { onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
 const props = defineProps({ tourData: Array, region: String });
 
@@ -43,6 +48,22 @@ const map = ref(null);
 const container = ref(null);
 const kakaoMapStatus = ref(false); // 카카오 맵 로드 확인
 
+//커스텀 오버레이 추적 변수
+const currentOverlay = ref(null);
+const closeOverlay = (item = null) => {
+    // 아이템 정보가 제공되었고, planItems 배열에서 아이템 검사
+    // if (item && planItems.some((planItem) => planItem.title === item.title)) {
+    //     // 아이템이 planItems 배열에 있다면 함수 종료
+    //     return;
+    // }
+
+    // 아이템이 planItems 배열에 없거나, 아이템 정보가 제공되지 않았다면 기존 오버레이 숨김 로직 수행
+    if (currentOverlay.value) {
+        // currentOverlay.value.setMap(null); // 현재 오버레이 숨김
+        currentOverlay.value = null; // 참조 제거
+    }
+};
+
 // 지도 표시
 onMounted(() => {
     if (window.kakao && window.kakao.maps) {
@@ -68,6 +89,12 @@ const initMap = () => {
     kakaoMapStatus.value = true;
     // initKakaoObj();
 };
+// 마커 오버레이 상세보기.
+const showPlaceDetail = (e, p) => {
+    console.log(e, p);
+    console.log("하이");
+    const place = JSON.parse(decodeURIComponent(p));
+};
 
 const updateMapMarkers = async (tourList, oldTourList) => {
     let bounds = new kakao.maps.LatLngBounds();
@@ -85,54 +112,29 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             image: markerImage,
         });
 
-        const content = `<div class="wrap">
-                                <div class="info">
-                                    <div class="title">
-                                        ${item.title}
-                                        <div class="close" onclick="currentOverlay.setMap(null);" title="닫기"></div>
-                                    </div>
-                                    <div class="body">
-                                        <div class="img">
-                                            <img src="${
-                                                item.firstImage
-                                                    ? item.firstImage
-                                                    : "@/assets/image/no_image.jpg"
-                                            }" width="80px" height="80px">
-                                        </div>
-                                        <div class="desc">
-                                            <div class="ellipsis">주소: ${
-                                                item.addr ? item.addr : "정보 없음"
-                                            }</div>
-                                            <div class="jibun ellipsis">전화번호: ${
-                                                item.tel ? item.tel : "정보 없음"
-                                            }</div>
-                                            <div>
-                                                상세보기
-                                                    </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
         // <a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">
         //                         상세보기
         //                         </a>
 
-        const overlay = new kakao.maps.CustomOverlay({
-            content: content,
-            map: null,
-            position: position,
+        kakao.maps.event.addListener(marker, "click", () => {
+            closeOverlay();
+            currentOverlay.value = item;
+            map.value.setCenter(position);
+            console.log(item.contentId);
+            router.replace({ name: "content", params: { contentId: item.contentId } });
         });
-        // kakao.maps.event.addListener(marker, "click", () => {
-        //     closeOverlay();
-        //     overlay.setMap(map);
-        //     currentOverlay = overlay;
-        //     map.setCenter(position);
-        // });
 
         marker.setMap(map.value);
         markers.value.push(marker);
         bounds.extend(position);
     }
+
+    // close 버튼에 이벤트 등록
+    const closeButton = document.querySelectorAll(".close");
+    console.log(closeButton);
+    // closeButton.addEventListener("click", () => {
+    //     closeOverlay();
+    // });
     // 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
     if (flag !== false) {
         map.value.setBounds(bounds);
@@ -165,7 +167,9 @@ const setMapCenter = (sido) => {
 </script>
 
 <template>
-    <div id="map"></div>
+    <div id="map">
+        <RouterView />
+    </div>
 </template>
 
 <style>
@@ -218,5 +222,85 @@ const setMapCenter = (sido) => {
     width: 22px;
     height: 12px;
     background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+}
+
+.wrap * {
+    padding: 0;
+    margin: 0;
+}
+.wrap .info {
+    width: 286px;
+    height: 120px;
+    border-radius: 5px;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    overflow: hidden;
+    background: #fff;
+}
+.wrap .info:nth-child(1) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+}
+.info .title {
+    padding: 5px 0 0 10px;
+    height: 30px;
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+}
+.info .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #888;
+    width: 17px;
+    height: 17px;
+    background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
+}
+.info .close:hover {
+    cursor: pointer;
+}
+.info .body {
+    position: relative;
+    overflow: hidden;
+}
+.info .desc {
+    position: relative;
+    margin: 13px 0 0 90px;
+    height: 75px;
+}
+.desc .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.desc .jibun {
+    font-size: 11px;
+    color: #888;
+    margin-top: -2px;
+}
+.info .img {
+    position: absolute;
+    top: 6px;
+    left: 5px;
+    width: 73px;
+    height: 71px;
+    border: 1px solid #ddd;
+    color: #888;
+    overflow: hidden;
+}
+.info:after {
+    content: "";
+    position: absolute;
+    margin-left: -12px;
+    left: 50%;
+    bottom: 0;
+    width: 22px;
+    height: 12px;
+    background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+}
+.info .link {
+    color: #5085bb;
 }
 </style>

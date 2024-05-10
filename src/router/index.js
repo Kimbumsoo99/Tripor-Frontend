@@ -9,6 +9,7 @@ import MyPlanView from "@/views/plan/MyPlanView.vue";
 import ArticleListView from "@/views/board/ArticleListView.vue";
 import ArticleDetailView from "@/views/board/ArticleDetailView.vue";
 import WriteArticleView from "@/views/board/WriteArticleView.vue";
+import AttractionInfo from "@/components/map/AttractionInfo.vue";
 import UpdateArticleView from "@/views/board/UpdateArticleView.vue";
 
 const router = createRouter({
@@ -18,6 +19,13 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      children: [
+          {
+              path: ":contentId",
+              name: "content",
+              component: AttractionInfo,
+          },
+      ],
     },
     {
       path: "/login",
