@@ -9,6 +9,7 @@ import MyPlanView from "@/views/plan/MyPlanView.vue";
 import ArticleListView from "@/views/board/ArticleListView.vue";
 import ArticleDetailView from "@/views/board/ArticleDetailView.vue";
 import WriteArticleView from "@/views/board/WriteArticleView.vue";
+import UpdateArticleView from "@/views/board/UpdateArticleView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,9 +60,14 @@ const router = createRouter({
       component: ArticleDetailView,
     },
     {
-      path: "/write",
+      path: "/board/write",
       name: "write",
       component: WriteArticleView,
+    },
+    {
+      path: "/bord/update/:id",
+      name: "update",
+      component: UpdateArticleView,
     },
   ],
 });

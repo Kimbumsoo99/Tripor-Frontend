@@ -27,7 +27,7 @@ onMounted(() => {
     <div class="position-relative">
 		<div style="height:280px"></div>
 		<div id="article_div" class="mb-3 position-absolute top-50 start-50 translate-middle-x">
-			<RouterLink :to="{ name: 'board' }" style="text-decoration: none; color:#332D2D"><span class="mb-3 text-primary" style="cursor: pointer">&lt; 뒤로가기</span></RouterLink>
+			<RouterLink :to="{ name: 'board' }" style="text-decoration: none;"><span class="mb-3 text-primary" style="cursor: pointer">&lt; 뒤로가기</span></RouterLink>
 			
 			<h3 class="mt-3">{{ board.subject }}</h3>
 			<span style="font-size: medium"> {{board.memberId}} | {{board.registerDate}} | 조회수 {{board.hit}}</span> 
@@ -37,7 +37,7 @@ onMounted(() => {
 			<hr>
 			<!-- <c:if test="${board.userId eq member.userId}">-->
 				<div class="d-flex justify-content-center">
-					<input type="button" class="btn text-white btn-outline-primary m-1" onclick='' value="수정하기"/> 
+					<RouterLink :to="{ name: 'update', params: {id: board.articleId} }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick='' value="수정하기"/></RouterLink> 
 					<input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" onclick="javascript:deleteArticle()" value = "삭제하기"/>
 				</div> 
 
