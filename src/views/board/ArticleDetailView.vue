@@ -38,7 +38,7 @@ onMounted(() => {
 			<!-- <c:if test="${board.userId eq member.userId}">-->
 				<div class="d-flex justify-content-center">
 					<RouterLink :to="{ name: 'update', params: {id: board.articleId} }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick='' value="수정하기"/></RouterLink> 
-					<input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" onclick="javascript:deleteArticle()" value = "삭제하기"/>
+					<input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" @click="boardRemove" value = "삭제하기"/>
 				</div> 
 
 			<!-- </c:if>  -->
