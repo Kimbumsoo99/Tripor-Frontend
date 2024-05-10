@@ -23,8 +23,7 @@ onMounted(() => {
 	<div>
         <div class="position-relative">
             <div style="height: 280px"></div>
-            <div class="mb-3 position-absolute top-50 start-50 translate-middle-x"
-                id="board_div" style="position: relative; top: 1.5rem; width: 47%">
+            <div class="mb-3 position-absolute top-50 start-50 translate-middle-x" id="board_div">
                 <h4 class="d-flex justify-content-center"
                     style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
 
@@ -34,8 +33,7 @@ onMounted(() => {
 						<RouterLink :to="{ name: 'write' }" style="text-decoration: none; color:#332D2D">
                         <button
                             class="btn btn-primary ms-auto me-3 d-flex justify-content-end mb-3"
-                            style="overflow: hidden; white-space: nowrap" type="button"
-                            onclick=''>
+                            style="overflow: hidden; white-space: nowrap" type="button" onclick=''>
                             글쓰기</button>
 						</RouterLink>
                         <!--  PAGE 및 검색으로 인해 추가 한 부분 -->
@@ -68,11 +66,13 @@ onMounted(() => {
                             </thead>
                             <tbody class="board__contents" id="board-body">
 								<tr v-for="article in articleList" :key="article.articleId">
-									<td class="board__column col-2 col-sm-2">{{ article.articleId }}</td>
-                                        <th class="board__column col-4 col-sm-5"><a href="">{{ article.subject }}</a></th>
+									
+										<td class="board__column col-2 col-sm-2">{{ article.articleId }}</td>
+                                        <th class="board__column col-4 col-sm-5"><RouterLink :to="{ name: 'detail', params: {id: article.articleId} }">{{ article.subject }}</RouterLink></th>
                                         <td class="board__column col-2 col-sm-3">{{ article.memberId }}</td>
                                         <td class="board__column col-3 d-none d-md-block">{{ article.registerDate }}</td>
                                         <td class="board__column col-1 col-sm-2">{{ article.hit }}</td>
+
 								</tr>
                             </tbody>
                         </table>
@@ -100,6 +100,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
+#board_div{
+	position: relative; 
+	top: 1.5rem; 
+	width: 47%;
+}
 .board-table {
     font-size: 13px;
     width: 100%;
