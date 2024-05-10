@@ -28,7 +28,7 @@ const setSido = (name) => {
 </script>
 
 <template>
-    <div id="map_view" class="position-relative d-flex">
+    <div id="map_view">
         <KaKaoMap :tourData="tourData" :region="region" />
     </div>
     <AttractionLocate @get-locate="changeLocation" @set-sido="setSido" />
