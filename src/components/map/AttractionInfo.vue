@@ -39,38 +39,36 @@ onMounted(() => {
 </script>
 
 <template>
-    <div
-        id="placeDetail"
-        class="bg-light p-3"
-        style="
-            width: 19%;
-            height: 83%;
-            right: 20px;
-            position: absolute;
-            overflow-y: auto;
-            background-color: rgba(255, 255, 255, 0.8) !important;
-            z-index: 1000;
-            margin-top: 130px;
-            margin-right: 30px;
-            border-radius: 30px;
-        "
-    >
-        <h4>{{ place.title }} <button @click="closeOverlay">닫기</button></h4>
+    <div id="placeDetail" class="bg-light p-3">
+        <div class="d-flex flex-row justify-content-between">
+            <h4>{{ place.title }} </h4>
+            <i class="bi bi-x-lg" style="cursor: pointer" @click="closeOverlay"></i>
+        </div>
         <div style="font-weight: 500; font-size: 17px">
             {{ place.overview ? place.overview : "" }}
         </div>
         <div style="height: 10px"></div>
-        <img
-            :src="place.firstImage ? place.firstImage : 'src/assets/image/no_image.jpg'"
-            width="100%"
-        />
-        <div style="height: 10px"></div>
-        <div v-if="place.addr !== null" style="font-weight: bold">
-            주소: {{ place.addr ? place.addr : "정보 없음" }}
+        <div id="placeInfo">
+            <img
+                :src="place.firstImage ? place.firstImage : 'src/assets/image/no_image.jpg'"
+                id="placeImage"
+            />
+            <div style="height: 10px"></div>
+            <div class="p-1">
+                <div v-if="place.addr !== null" style="font-weight: bold">
+                주소: {{ place.addr ? place.addr : "정보 없음" }}
+                </div>
+                <div v-if="place.tel !== null" style="font-weight: bold">
+                    전화번호: {{ place.tel ? place.tel : "정보 없음" }}
+                </div>
+
+            </div>
+            
         </div>
-        <div v-if="place.tel !== null" style="font-weight: bold">
-            전화번호: {{ place.tel ? place.tel : "정보 없음" }}
-        </div>
+
+
+
+        
         <template v-if="place.description !== null">
             <hr />
             <div>{{ place.description }}</div>
@@ -80,4 +78,42 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 1200px) {
+    #placeDetail{
+        width: 19%;
+        top: 140px;
+        height: 82%;
+        right: 20px;
+        position: absolute;
+        overflow-y: auto;
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        z-index: 1000;
+        border-radius: 30px;
+    }
+    #placeImage{
+        width: 100%;
+    }
+}
+@media (max-width: 1200px){
+    #placeDetail{
+        width: 85%;
+        bottom: 20px;
+        height: 40%;
+        left: 40px;
+        position: absolute;
+        overflow-y: auto;
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        z-index: 1000;
+        border-radius: 30px;
+    }
+    #placeInfo{
+        display: flex;
+        direction: column;
+    }
+    #placeImage{
+        width: 30%;
+    }
+}
+
+</style>

@@ -1,6 +1,6 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
-import AttractionLocate from "@/components/plan/AttractionLocate.vue";
+import AttractionLocate from "@/components/map/AttractionLocate.vue";
 import axios from "axios";
 import { ref } from "vue";
 

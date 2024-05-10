@@ -65,35 +65,45 @@ const getGugun = async function (sido) {
 </script>
 
 <template>
-    <div id="test">
-        <span>관광지를 선택하세요!</span>
-        <select name="sido" v-model="selectSido">
-            <option value="">도 선택</option>
-            <option v-for="(sido, idx) in sidoList" :key="idx" :value="sido.sidoCode">
-                {{ sido.sidoName }}
-            </option>
-        </select>
-        <select name="gugun" v-model="selectGugun">
-            <option value="">시/구 선택</option>
-            <option v-for="(gugun, idx) in gugunList" :key="idx" :value="gugun.gugunCode">
-                {{ gugun.gugunName }}
-            </option>
-        </select>
-        <select name="content" v-model="selectContentType">
-            <option value="">관광 타입 선택</option>
-            <option v-for="(category, idx) in categoryItems" :key="idx" :value="category.code">
-                {{ category.name }}
-            </option>
-        </select>
+    <div class="d-flex flex-column">
+        <div style="height: 70px; width: 100%" class="d-block d-xl-none"></div>
+
+        <div id="test">
+            <span class="d-none d-xl-block">관광지를 선택하세요!</span>
+            <div style="width: 10px"></div>
+            <select name="sido" v-model="selectSido">
+                <option value="">도 선택</option>
+                <option v-for="(sido, idx) in sidoList" :key="idx" :value="sido.sidoCode">
+                    {{ sido.sidoName }}
+                </option>
+            </select>
+            <div style="width: 5px"></div>
+            <select name="gugun" v-model="selectGugun">
+                <option value="">시/구 선택</option>
+                <option v-for="(gugun, idx) in gugunList" :key="idx" :value="gugun.gugunCode">
+                    {{ gugun.gugunName }}
+                </option>
+            </select>
+            <div style="width: 5px"></div>
+            <select name="content" v-model="selectContentType">
+                <option value="">관광 타입 선택</option>
+                <option v-for="(category, idx) in categoryItems" :key="idx" :value="category.code">
+                    {{ category.name }}
+                </option>
+            </select>
+        </div>
     </div>
 </template>
 
 <style scoped>
 #test {
-    position: absolute;
-    top: 100px;
-    left: 800px;
+    /* background-color: rgba(222, 237, 255, 0.85) !important;  */
 
-    z-index: 1;
+    width: 100%;
+    height: 85px;
+    z-index: 10000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>
