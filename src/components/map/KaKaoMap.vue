@@ -14,17 +14,6 @@ const locationMap = {
     경기도: { lat: 37.28101111, lng: 127.05 },
     강원도: { lat: 37.885352, lng: 127.729829 },
 };
-// 관광 테마 카테고리 선택 12:관광지, 14:문화시설, 15:축제공연행사, 25:여행코스, 28:레포츠, 32:숙박, 38:쇼핑, 39:음식점
-const categoryItems = [
-    { code: 12, name: "관광지" },
-    { code: 14, name: "문화시설" },
-    { code: 15, name: "축제공연행사" },
-    { code: 25, name: "여행코스" },
-    { code: 28, name: "레포츠" },
-    { code: 32, name: "숙박" },
-    { code: 38, name: "쇼핑" },
-    { code: 39, name: "음식점" },
-];
 
 // 카카오 맵
 const map = ref(null);

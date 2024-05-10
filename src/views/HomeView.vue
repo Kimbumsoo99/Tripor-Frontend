@@ -1,6 +1,6 @@
 <script setup>
-import KaKaoMap from "@/components/trip/KaKaoMap.vue";
-import AttractionLocate from "@/components/trip/AttractionLocate.vue";
+import KaKaoMap from "@/components/map/KaKaoMap.vue";
+import AttractionLocate from "@/components/plan/AttractionLocate.vue";
 </script>
 
 <template>
