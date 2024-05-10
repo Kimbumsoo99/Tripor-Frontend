@@ -2,8 +2,11 @@
 import { ref, onMounted, watch } from "vue";
 import axios from "axios";
 
+const emit = defineEmits(["getLocate", "setSido"]);
+
 const selectSido = ref("");
 const selectGugun = ref("");
+const selectContentType = ref("");
 
 const sidoList = ref([]);
 const gugunList = ref([]);
@@ -31,6 +34,9 @@ onMounted(() => {
 });
 
 watch(selectSido, (newVal) => {
+    selectGugun.value = "";
+    const sidoName = sidoList.value.find((sido) => sido.sidoCode == newVal).sidoName;
+    emit("setSido", sidoName);
     // 지도 위치 이동하기
     getGugun(newVal);
 });
@@ -38,8 +44,17 @@ watch(selectSido, (newVal) => {
 watch(selectGugun, (gCode) => {
     const sidoCode = selectSido.value;
     const gugunCode = gCode;
-    console.log(sidoCode, gugunCode);
+    const type = selectContentType.value;
+
     // 지역에 맞는 관광 정보 가져오기
+    if (type) emit("getLocate", sidoCode, gugunCode, type);
+    else emit("getLocate", sidoCode, gugunCode);
+});
+
+watch(selectContentType, (type) => {
+    if (selectGugun.value) {
+        emit("getLocate", selectSido.value, selectGugun.value, type);
+    }
 });
 
 const getGugun = async function (sido) {
@@ -53,19 +68,19 @@ const getGugun = async function (sido) {
     <div>
         <span>관광지를 선택하세요!</span>
         <select name="sido" v-model="selectSido">
-            <option selected value="">도 선택</option>
+            <option value="">도 선택</option>
             <option v-for="(sido, idx) in sidoList" :key="idx" :value="sido.sidoCode">
                 {{ sido.sidoName }}
             </option>
         </select>
         <select name="gugun" v-model="selectGugun">
-            <option selected value="">시/구 선택</option>
+            <option value="">시/구 선택</option>
             <option v-for="(gugun, idx) in gugunList" :key="idx" :value="gugun.gugunCode">
                 {{ gugun.gugunName }}
             </option>
         </select>
-        <select name="content">
-            <option selected>관광 타입 선택</option>
+        <select name="content" v-model="selectContentType">
+            <option value="">관광 타입 선택</option>
             <option v-for="(category, idx) in categoryItems" :key="idx" :value="category.code">
                 {{ category.name }}
             </option>
