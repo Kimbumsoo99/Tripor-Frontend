@@ -6,6 +6,8 @@ import FindPwdView from "@/views/user/FindPwdView.vue";
 import ProfileView from "@/views/user/ProfileView.vue";
 import MakePlanView from "@/views/plan/MakePlanView.vue";
 import MyPlanView from "@/views/plan/MyPlanView.vue";
+import ArticleListView from "@/views/board/ArticleListView.vue";
+import WriteArticleView from "@/views/board/WriteArticleView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,16 @@ const router = createRouter({
       path: "/myplan",
       name: "myplan",
       component: MyPlanView,
+    },
+    {
+      path: "/board",
+      name: "board",
+      component: ArticleListView,
+    },
+    {
+      path: "/write",
+      name: "write",
+      component: WriteArticleView,
     },
   ],
 });
