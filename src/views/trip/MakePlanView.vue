@@ -21,7 +21,7 @@ import KaKaoMap from "@/components/trip/KaKaoMap.vue";
 						<span class="mb-3 ms-2" id="planNameGroup">
 						     <i class="bi bi-pen-fill me-1"></i>		
 							<input 
-								value="()의 여행 계획"
+								value="의 여행 계획"
 								name="planname"
 								id="planName" />
 									

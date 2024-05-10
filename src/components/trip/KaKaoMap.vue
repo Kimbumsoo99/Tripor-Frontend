@@ -65,8 +65,9 @@ const initMap = () => {
 
 <style>
 #map {
-    width: 100%;
-    height: 100%;
+    width: 2000px;
+    height: 1000px;
+    display: flex;
 }
 
 .customoverlay {
