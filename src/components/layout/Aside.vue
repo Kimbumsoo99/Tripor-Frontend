@@ -34,10 +34,12 @@ const toggle = () => {
                 </RouterLink>
             </div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
+                <RouterLink :to="{ name: 'board' }" style="text-decoration: none; color:#332D2D">
                 <div class="col-12" onclick="">
                     <i class="bi bi-pencil-square me-3"></i>
                     <span>여행 정보 공유하기</span>
                 </div>
+                </RouterLink>
             </div>
             <div>
                 <div style="cursor: pointer" id="expandDiv" class="p-3 m-1 rounded menu_button row" @click="toggle">
