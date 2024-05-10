@@ -1,5 +1,5 @@
 <script setup>
-import KaKaoMap from "@/components/trip/KaKaoMap.vue";
+import KaKaoMap from "@/components/map/KaKaoMap.vue";
 </script>
 
 <template>
