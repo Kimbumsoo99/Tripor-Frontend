@@ -114,7 +114,7 @@ const getGugun = async function (sido) {
              
 			                >
 			                  <option selected value="">선택</option>
-			                  <option v-for="sido in sidoList" :value="sido.sidoCode">{{ sido.sidoName }}</option>
+			                  <option v-for="sido in sidoList" :key="sido.sidoCode" :value="sido.sidoCode">{{ sido.sidoName }}</option>
 			                </select>
 			                <select
 			                  class="p-1 ms-1 mb-3"
@@ -124,7 +124,7 @@ const getGugun = async function (sido) {
 			                  aria-label="구군 선택"
 			                >
 			                  <option selected>선택</option>
-			                  <option v-for="gugun in gugunList">{{ gugun.gugunName }}</option>
+			                  <option v-for="gugun in gugunList" :key="gugun.gugunCode">{{ gugun.gugunName }}</option>
 			                </select>
 			              </div>
 							<button
