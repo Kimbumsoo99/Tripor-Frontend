@@ -4,7 +4,7 @@ import AttractionLocate from "@/components/plan/AttractionLocate.vue";
 </script>
 
 <template>
-    <div id="map_view" class="position-relative d-flex"><KaKaoMap /></div>
+    <div id="map_view"><KaKaoMap /></div>
     <AttractionLocate />
 </template>
 
@@ -12,5 +12,8 @@ import AttractionLocate from "@/components/plan/AttractionLocate.vue";
 #map_view {
     width: 100%;
     height: 100%;
+    position: absolute; 
+    top: 0; 
+    left:0; 
 }
 </style>
