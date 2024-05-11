@@ -37,7 +37,6 @@ const onPageChange = (val) => {
 const getArticleList = function () {
     axios("http://localhost/article", { params: param.value })
         .then((response) => {
-            console.log(response);
             articleList.value = response.data.items.articles;
             currentPage.value = response.data.items.currentPage;
             totalPage.value = response.data.items.totalPageCount;
