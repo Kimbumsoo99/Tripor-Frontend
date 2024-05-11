@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
-const props = defineProps({ tourData: Array, region: String });
+const props = defineProps({ tourData: Array, region: String, planFlag: Boolean });
 
 const markers = ref([]);
 
@@ -116,13 +116,20 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         //                         상세보기
         //                         </a>
 
-        kakao.maps.event.addListener(marker, "click", () => {
-            closeOverlay();
-            currentOverlay.value = item;
-            map.value.setCenter(position);
-            console.log(item.contentId);
-            router.replace({ name: "content", params: { contentId: item.contentId } });
-        });
+        if (props.planFlag === true) {
+            kakao.maps.event.addListener(marker, "click", () => {
+                closeOverlay();
+                currentOverlay.value = item;
+                map.value.setCenter(position);
+            });
+        } else {
+            kakao.maps.event.addListener(marker, "click", () => {
+                closeOverlay();
+                currentOverlay.value = item;
+                map.value.setCenter(position);
+                router.replace({ name: "content", params: { contentId: item.contentId } });
+            });
+        }
 
         marker.setMap(map.value);
         markers.value.push(marker);
@@ -150,6 +157,7 @@ const updateMapMarkers = async (tourList, oldTourList) => {
 watch(
     () => props.region,
     (name) => {
+        console.log("내가 문제임");
         setMapCenter(name);
     }
 );
@@ -200,9 +208,7 @@ const setMapCenter = (sido) => {
     font-weight: bold;
     overflow: hidden;
     background: #d95050;
-    background: #d95050
-        url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat
-        right 14px center;
+    background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
 }
 .customoverlay .title {
     display: block;
