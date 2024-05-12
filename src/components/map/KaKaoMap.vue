@@ -50,6 +50,7 @@ const kakaoMapStatus = ref(false); // 카카오 맵 로드 확인
 
 //커스텀 오버레이 추적 변수
 const currentOverlay = ref(null);
+const currentMarkerOverlay = ref(null);
 const closeOverlay = (item = null) => {
     // 아이템 정보가 제공되었고, planItems 배열에서 아이템 검사
     // if (item && planItems.some((planItem) => planItem.title === item.title)) {
@@ -59,7 +60,8 @@ const closeOverlay = (item = null) => {
 
     // 아이템이 planItems 배열에 없거나, 아이템 정보가 제공되지 않았다면 기존 오버레이 숨김 로직 수행
     if (currentOverlay.value) {
-        // currentOverlay.value.setMap(null); // 현재 오버레이 숨김
+        currentMarkerOverlay.value.setMap(null); // 현재 오버레이 숨김
+        currentMarkerOverlay.value = null;
         currentOverlay.value = null; // 참조 제거
     }
 };
@@ -112,9 +114,31 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             image: markerImage,
         });
 
+        const content = `<div class="wrap">
+                                <div class="info">
+                                    <div class="title">
+                                        ${item.title}
+                                    </div>
+                                    <div class="body">
+                                        <div class="img">
+                                            <img src="${item.firstImage ? item.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                        </div>
+                                        <div class="desc">
+                                            <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
+                                            <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
         // <a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">
         //                         상세보기
         //                         </a>
+
+        const overlay = new kakao.maps.CustomOverlay({
+            content: content,
+            map: null,
+            position: position,
+        });
 
         if (props.planFlag === true) {
             kakao.maps.event.addListener(marker, "click", () => {
@@ -125,6 +149,10 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         } else {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();
+
+                currentMarkerOverlay.value = overlay;
+                overlay.setMap(map.value);
+
                 currentOverlay.value = item;
                 map.value.setCenter(position);
                 router.replace({ name: "content", params: { contentId: item.contentId } });
@@ -176,7 +204,7 @@ const setMapCenter = (sido) => {
 
 <template>
     <div id="map">
-        <RouterView :tourData="props.tourData" />
+        <RouterView :tourData="props.tourData" @close-overlay="closeOverlay" />
     </div>
 </template>
 
