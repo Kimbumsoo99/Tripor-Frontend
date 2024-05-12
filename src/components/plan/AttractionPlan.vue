@@ -26,6 +26,10 @@ const planAdd = (tour) => {
     planList.value.push(tour);
 };
 
+const removeFromPlanList = (tour) => {
+    planList.value = planList.value.filter((planItem) => planItem.title !== tour.title);
+};
+
 const searchTrip = () => {
     emit("searchTrip", searchKeyword.value);
 };
@@ -52,7 +56,7 @@ const searchTrip = () => {
                         <button class="btn text-white btn-primary" type="button" style="overflow: hiddlen; white-space: nowrap" id="searchButton" @click.prevent="searchTrip">검색</button>
                     </div>
                     <ul id="planItems" class="list-unstyled">
-                        <PlanItem v-for="(item, idx) in planList" :key="idx" :item="item" />
+                        <PlanItem v-for="(item, idx) in planList" :key="idx" :item="item" @remove-from-plan-list="removeFromPlanList" />
                     </ul>
                     <button type="button" id="savePlanButton" class="btn btn-outline-primary mt-auto">일정 등록하기</button>
                     <div style="height: 5px"></div>

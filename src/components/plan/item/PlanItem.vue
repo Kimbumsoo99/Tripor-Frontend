@@ -3,8 +3,8 @@ const props = defineProps({ item: Object });
 const emit = defineEmits(["removeFromPlanList"]);
 
 const removeFromPlanList = (item) => {
-    console.log(item);
-    // emit("removeFromPlanList", item);
+    // console.log(item);
+    emit("removeFromPlanList", item);
 };
 </script>
 
