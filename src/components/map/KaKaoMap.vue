@@ -7,6 +7,7 @@ const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
 const props = defineProps({ tourData: Array, region: String, planFlag: Boolean });
+const emit = defineEmits(["markerClickEvent"]);
 
 const markers = ref([]);
 
@@ -60,9 +61,11 @@ const closeOverlay = (item = null) => {
 
     // 아이템이 planItems 배열에 없거나, 아이템 정보가 제공되지 않았다면 기존 오버레이 숨김 로직 수행
     if (currentOverlay.value) {
+        currentOverlay.value = null; // 참조 제거
+    }
+    if (currentMarkerOverlay.value) {
         currentMarkerOverlay.value.setMap(null); // 현재 오버레이 숨김
         currentMarkerOverlay.value = null;
-        currentOverlay.value = null; // 참조 제거
     }
 };
 
@@ -143,8 +146,11 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         if (props.planFlag === true) {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();
+
                 currentOverlay.value = item;
                 map.value.setCenter(position);
+
+                emit("markerClickEvent", item);
             });
         } else {
             kakao.maps.event.addListener(marker, "click", () => {
