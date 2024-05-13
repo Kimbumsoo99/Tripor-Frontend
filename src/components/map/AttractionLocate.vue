@@ -73,21 +73,21 @@ const getGugun = async function (sido) {
             <div style="width: 10px"></div>
             <select name="sido" v-model="selectSido">
                 <option value="">도 선택</option>
-                <option v-for="(sido, idx) in sidoList" :key="idx" :value="sido.sidoCode">
+                <option v-for="sido in sidoList" :key="sido.sidoCode" :value="sido.sidoCode">
                     {{ sido.sidoName }}
                 </option>
             </select>
             <div style="width: 5px"></div>
             <select name="gugun" v-model="selectGugun">
                 <option value="">시/구 선택</option>
-                <option v-for="(gugun, idx) in gugunList" :key="idx" :value="gugun.gugunCode">
+                <option v-for="gugun in gugunList" :key="gugun.gugunCode" :value="gugun.gugunCode">
                     {{ gugun.gugunName }}
                 </option>
             </select>
             <div style="width: 5px"></div>
             <select name="content" v-model="selectContentType">
                 <option value="">관광 타입 선택</option>
-                <option v-for="(category, idx) in categoryItems" :key="idx" :value="category.code">
+                <option v-for="category in categoryItems" :key="category.code" :value="category.code">
                     {{ category.name }}
                 </option>
             </select>

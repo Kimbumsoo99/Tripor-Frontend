@@ -59,10 +59,7 @@ watch(
 
         const placeSaveList = [];
         props.tourData.forEach((i, index) => {
-            let distance = Math.sqrt(
-                Math.pow(i.latitude - place.value.latitude, 2) +
-                    Math.pow(i.longitude - place.value.longitude, 2)
-            );
+            let distance = Math.sqrt(Math.pow(i.latitude - place.value.latitude, 2) + Math.pow(i.longitude - place.value.longitude, 2));
 
             let placeSave = i;
             placeSave.distance = distance;
@@ -113,18 +110,11 @@ onMounted(() => {
         </div>
         <div style="height: 10px"></div>
         <div id="placeInfo">
-            <img
-                :src="place.firstImage ? place.firstImage : 'src/assets/image/no_image_logo.png'"
-                id="placeImage"
-            />
+            <img :src="place.firstImage ? place.firstImage : 'src/assets/image/no_image_logo.png'" id="placeImage" />
             <div style="height: 10px"></div>
             <div class="p-1">
-                <div v-if="place.addr !== null" style="font-weight: bold">
-                    주소: {{ place.addr ? place.addr : "정보 없음" }}
-                </div>
-                <div v-if="place.tel !== null" style="font-weight: bold">
-                    전화번호: {{ place.tel ? place.tel : "정보 없음" }}
-                </div>
+                <div v-if="place.addr !== null" style="font-weight: bold">주소: {{ place.addr ? place.addr : "정보 없음" }}</div>
+                <div v-if="place.tel !== null" style="font-weight: bold">전화번호: {{ place.tel ? place.tel : "정보 없음" }}</div>
             </div>
         </div>
 
@@ -134,13 +124,7 @@ onMounted(() => {
         </template>
         <hr />
         <div style="font-weight: bold; color: gray; font-size: 24px">주변 관광지 추천</div>
-        <div
-            v-for="(p, idx) in sortList"
-            :key="idx"
-            class="text-primary"
-            style="font-size: 20px; cursor: pointer"
-            @click="movePlace(p.contentId)"
-        >
+        <div v-for="p in sortList" :key="p.contentId" class="text-primary" style="font-size: 20px; cursor: pointer" @click="movePlace(p.contentId)">
             {{ p.title }}
         </div>
     </div>

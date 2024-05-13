@@ -1,11 +1,16 @@
 <script setup>
 import { ref, watch } from "vue";
 import PlanItem from "./item/PlanItem.vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const emit = defineEmits(["searchTrip", "makePlanPolylines"]);
 const props = defineProps({ currentTour: Object });
 
 const planList = ref([]);
+const userPlanName = ref("Tripor의 여행계획");
 
 const searchKeyword = ref("");
 
@@ -25,7 +30,28 @@ watch(
     { deep: true }
 );
 
-const makePlan = () => {};
+const makePlan = async () => {
+    const makeFlag = confirm("이대로 여행 계획을 세우시겠습니까?");
+    if (!makeFlag) {
+        return;
+    }
+    const tripList = planList.value.map((item) => item.contentId);
+    const memberId = "show7441"; // 후에 member token 활용하기
+    const planName = userPlanName.value;
+
+    const params = { tripList, memberId, planName };
+
+    await axios
+        .post("http://localhost/trip/plan", params)
+        .then(() => {
+            planList.value = [];
+            const flag = confirm("여행 계획 확인하러가기");
+            if (flag) {
+                router.push({ name: "myplan" });
+            }
+        })
+        .catch((err) => console.error(err));
+};
 
 const initPlan = () => {
     if (planList.value.length === 0) return;
@@ -64,7 +90,7 @@ const searchTrip = () => {
                 <div id="makeplan_div" class="d-flex flex-column p-3" style="width: 300px">
                     <span class="mb-3 ms-2" id="planNameGroup">
                         <i class="bi bi-pen-fill me-1"></i>
-                        <input value="의 여행 계획" name="planname" id="planName" />
+                        <input v-model="userPlanName" name="planname" id="planName" />
                     </span>
 
                     <div class="d-flex flex-row" id="makePlace">
@@ -73,7 +99,7 @@ const searchTrip = () => {
                         <button class="btn text-white btn-primary" type="button" style="overflow: hiddlen; white-space: nowrap" id="searchButton" @click.prevent="searchTrip">검색</button>
                     </div>
                     <ul id="planItems" class="list-unstyled">
-                        <PlanItem v-for="(item, idx) in planList" :key="idx" :item="item" @remove-from-plan-list="removeFromPlanList" />
+                        <PlanItem v-for="item in planList" :key="item.contentId" :item="item" @remove-from-plan-list="removeFromPlanList" />
                     </ul>
                     <button type="button" id="savePlanButton" class="btn btn-outline-primary mt-auto" @click="makePlan">일정 등록하기</button>
                     <div style="height: 5px"></div>
