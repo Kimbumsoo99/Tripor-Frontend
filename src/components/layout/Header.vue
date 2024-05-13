@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue';
+import { useRoute, useRouter } from "vue-router";
 import SideMenu from "@/components/layout/SideMenu.vue";
+
+const route = useRoute()
 
 const isExpanded = ref(false)
 const sideFlag= ref(false)
@@ -18,15 +21,15 @@ function openMobileMenu() {
 }
 
 function closeCallback() {
-	console.log('닫기 클릭')
 	sideFlag.value = false;
 }
+
 </script>
 
 <template>
 	<div>
 		<SideMenu v-if="sideFlag" @close-side="closeCallback"/>
-		<div id="header_div" class="fixed-top">
+		<div id="header_div" class="fixed-top" :class="[route.name === 'home'?'home-style':'']">
 			<div class="navbar navbar-expand-md bg-white navbar-light">
 				<div id="mobile_menu" class="d-block d-md-none">
 					<i class="bi bi-list" style="font-size: 24px; cursor:pointer" @click="openMobileMenu"></i>
@@ -57,17 +60,21 @@ function closeCallback() {
 
 <style scoped>
 @media (min-width: 768px){
-	.navbar{
-		padding-left: 20px; padding-right: 40px;
+	.home-style .navbar{
+		padding-left: 20px; padding-right: 60px;
 		padding-top: 10px; padding-bottom: 10px;
 	}
 }
 @media (max-width: 768px) {
-    .navbar{
+    .home-style .navbar{
 		height: 138px;
 		padding-left: 60px; padding-right: 60px;
 		padding-top: 0px; padding-bottom: 0px;
 	}
+}
+.navbar{
+	padding-left: 20px; padding-right: 60px;
+	padding-top: 10px; padding-bottom: 10px;
 }
 #header_div{
 	z-index: 10000;
