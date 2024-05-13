@@ -1,26 +1,24 @@
 <script setup>
+const props = defineProps({ myPlans: Array });
 </script>
 
 <template>
     <div class="position-relative">
-		<div class="d-flex flex-row">
-				<div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
-				<div id="planListDiv" style="width: 100%">
-				<div style="height: 90px"></div>
-					<!-- <c:if test="${ empty plans }">
-						<div class="position-absolute top-50 start-50 translate-middle-x">
-							<h4>
-								아직 여행 계획이 없어요							
-							</h4>
-							<div>
-								여행 계획 만들러 가기 &gt;&gt;
-								<a class="link-primary" href="${root}/trip?action=mvPlan">GO!</a>
-							</div>
-						</div>
-						</c:if> -->
-					<div class="p-5 mb-3 d-flex flex-row flex-wrap">
-					
-						<!-- <c:forEach var="plan" items="${plans}">
+        <div class="d-flex flex-row">
+            <div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
+            <div id="planListDiv" style="width: 100%">
+                <div style="height: 90px"></div>
+                <template v-if="props.myPlans == null">
+                    <div class="position-absolute top-50 start-50 translate-middle-x">
+                        <h4>아직 여행 계획이 없어요</h4>
+                        <div>
+                            여행 계획 만들러 가기 &gt;&gt;
+                            <RouterLink :to="{ name: 'makeplan' }">GO!</RouterLink>
+                        </div>
+                    </div>
+                </template>
+                <div class="p-5 mb-3 d-flex flex-row flex-wrap">
+                    <!-- <c:forEach var="plan" items="${plans}">
 							<c:set var="loop_flag" value="false" />
 								<div class="card m-1" style="width: 24rem;">
 									<c:if test="${not empty plan.tripList}">
@@ -51,16 +49,10 @@
 							</div>
 				
 						</c:forEach> -->
-					</div>
-					
-					
-			</div>
-		</div>
-				
-	</div>
-
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

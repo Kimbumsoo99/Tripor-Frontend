@@ -43,6 +43,7 @@ const getArticleList = function () {
         })
         .catch((error) => {
             console.log("에러발생");
+            console.error(error);
         });
 };
 
@@ -66,7 +67,8 @@ onMounted(() => {
                         </RouterLink>
                         <!--  PAGE 및 검색으로 인해 추가 한 부분 -->
                         <form id="form-search" class="d-flex" action="">
-                            <input type="hidden" name="action" value="list" /> <input type="hidden" name="pgno" value="1" />
+                            <input type="hidden" name="action" value="list" />
+                            <input type="hidden" name="pgno" value="1" />
                             <select id="key" name="key" class="form-select form-select-sm ms-3 me-1 w-50" aria-label="검색조건">
                                 <option selected>검색조건</option>
                                 <option value="subject">제목</option>
@@ -91,12 +93,24 @@ onMounted(() => {
                             </thead>
                             <tbody class="board__contents" id="board-body">
                                 <tr v-for="article in articleList" :key="article.articleId">
-                                    <td class="board__column col-2 col-sm-2">{{ article.articleId }}</td>
+                                    <td class="board__column col-2 col-sm-2">
+                                        {{ article.articleId }}
+                                    </td>
                                     <th class="board__column col-4 col-sm-5">
-                                        <RouterLink :to="{ name: 'detail', params: { id: article.articleId } }">{{ article.subject }}</RouterLink>
+                                        <RouterLink
+                                            :to="{
+                                                name: 'detail',
+                                                params: { id: article.articleId },
+                                            }"
+                                            >{{ article.subject }}</RouterLink
+                                        >
                                     </th>
-                                    <td class="board__column col-2 col-sm-3">{{ article.memberId }}</td>
-                                    <td class="board__column col-3 d-none d-md-block">{{ article.registerDate }}</td>
+                                    <td class="board__column col-2 col-sm-3">
+                                        {{ article.memberId }}
+                                    </td>
+                                    <td class="board__column col-3 d-none d-md-block">
+                                        {{ article.registerDate }}
+                                    </td>
                                     <td class="board__column col-1 col-sm-2">{{ article.hit }}</td>
                                 </tr>
                             </tbody>

@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
-const props = defineProps({ tourData: Array, region: String, planFlag: Boolean });
+const props = defineProps({ tourData: Array, region: String, planFlag: Boolean, planList: Array });
 const emit = defineEmits(["markerClickEvent"]);
 
 const markers = ref([]);
@@ -101,6 +101,38 @@ const showPlaceDetail = (e, p) => {
     const place = JSON.parse(decodeURIComponent(p));
 };
 
+let polylines = [];
+
+watch(
+    () => props.planList,
+    (planItems) => {
+        // 모든 선분 제거
+        for (let i = 0; i < polylines.length; i++) {
+            polylines[i].setMap(null);
+        }
+        polylines = []; // 선분 배열 초기화
+
+        if (planItems.length > 1) {
+            // 선분 다시 그리기
+            for (let i = 1; i < planItems.length; i++) {
+                const startItem = planItems[i - 1];
+                const endItem = planItems[i];
+                const polyline = new kakao.maps.Polyline({
+                    path: [new kakao.maps.LatLng(startItem.latitude, startItem.longitude), new kakao.maps.LatLng(endItem.latitude, endItem.longitude)],
+                    // 선분 스타일 설정
+                    strokeWeight: 3,
+                    strokeColor: "#db4040",
+                    strokeOpacity: 0.8,
+                    strokeStyle: "solid",
+                });
+                polyline.setMap(map.value);
+                polylines.push(polyline);
+            }
+        }
+    },
+    { deep: true }
+);
+
 const updateMapMarkers = async (tourList, oldTourList) => {
     let bounds = new kakao.maps.LatLngBounds();
     let flag = false;
@@ -133,9 +165,6 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                                     </div>
                                 </div>
                             </div>`;
-        // <a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">
-        //                         상세보기
-        //                         </a>
 
         const overlay = new kakao.maps.CustomOverlay({
             content: content,
@@ -170,12 +199,6 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         bounds.extend(position);
     }
 
-    // close 버튼에 이벤트 등록
-    const closeButton = document.querySelectorAll(".close");
-    console.log(closeButton);
-    // closeButton.addEventListener("click", () => {
-    //     closeOverlay();
-    // });
     // 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
     if (flag !== false) {
         map.value.setBounds(bounds);

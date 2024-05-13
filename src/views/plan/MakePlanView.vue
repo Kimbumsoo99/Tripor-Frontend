@@ -7,6 +7,11 @@ import { ref } from "vue";
 const tourData = ref([]);
 
 const planFlag = ref(true);
+const planList = ref([]);
+
+const makePlanPolylines = (plans) => {
+    planList.value = plans;
+};
 
 const searchTrip = async (searchKeyword) => {
     if (searchKeyword === "") {
@@ -14,9 +19,12 @@ const searchTrip = async (searchKeyword) => {
     }
 
     const params = { keyword: searchKeyword };
-    await axios.get(`http://localhost/trip/search`, { params }).then((res) => {
-        tourData.value = res.data.items;
-    });
+    await axios
+        .get(`http://localhost/trip/search`, { params })
+        .then((res) => {
+            tourData.value = res.data.items;
+        })
+        .catch((err) => console.error(err));
 };
 
 const currentTour = ref({});
@@ -28,9 +36,9 @@ const markerClickEvent = (tour) => {
 
 <template>
     <div id="map_view">
-        <KaKaoMap :tourData="tourData" :planFlag="planFlag" @marker-click-event="markerClickEvent" />
+        <KaKaoMap :tourData="tourData" :planList="planList" :planFlag="planFlag" @marker-click-event="markerClickEvent" />
     </div>
-    <AttractionPlan @search-trip="searchTrip" :currentTour="currentTour" />
+    <AttractionPlan @search-trip="searchTrip" :currentTour="currentTour" @make-plan-polylines="makePlanPolylines" />
 </template>
 
 <style scoped>

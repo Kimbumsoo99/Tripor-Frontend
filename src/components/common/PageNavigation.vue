@@ -53,7 +53,9 @@ function onPageChange(pg) {
             <li class="page-item">
                 <a class="page-link" @click="onPageChange(endRange ? totalPage : endPage + 1)">다음</a>
             </li>
-            <li class="page-item"><a class="page-link" @click="onPageChange(totalPage)">마지막</a></li>
+            <li class="page-item">
+                <a class="page-link" @click="onPageChange(totalPage)">마지막</a>
+            </li>
         </ul>
     </div>
 </template>
