@@ -35,7 +35,7 @@ function closeCallback() {
 				<div class="container-fluid justify-content-center">
 						
 					<RouterLink :to="{ name: 'home' }" class="col-lg-2 d-flex justify-content-center" id="header_title">Tripːor</RouterLink>
-		
+					
 					<div
 						class="col-lg-2 d-none d-lg-block collapse navbar-collapse d-flex flex-row justify-content-end"
 						id="header_join_login"
@@ -56,17 +56,17 @@ function closeCallback() {
 </template>
 
 <style scoped>
-@media (min-width: 720px){
+@media (min-width: 768px){
 	.navbar{
-		padding-left: 60px; padding-right: 90px;
+		padding-left: 20px; padding-right: 40px;
 		padding-top: 10px; padding-bottom: 10px;
 	}
 }
-@media (max-width: 720px) {
+@media (max-width: 768px) {
     .navbar{
 		height: 138px;
-		padding-top: 0px; 
-		padding-bottom: 0px;
+		padding-left: 60px; padding-right: 60px;
+		padding-top: 0px; padding-bottom: 0px;
 	}
 }
 #header_div{

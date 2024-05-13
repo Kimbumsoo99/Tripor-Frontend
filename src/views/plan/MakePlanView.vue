@@ -38,7 +38,7 @@ const markerClickEvent = (tour) => {
     <div id="map_view">
         <KaKaoMap :tourData="tourData" :planList="planList" :planFlag="planFlag" @marker-click-event="markerClickEvent" />
     </div>
-    <AttractionPlan @search-trip="searchTrip" :currentTour="currentTour" @make-plan-polylines="makePlanPolylines" />
+    <!-- <AttractionPlan @search-trip="searchTrip" :currentTour="currentTour" @make-plan-polylines="makePlanPolylines" /> -->
 </template>
 
 <style scoped>
