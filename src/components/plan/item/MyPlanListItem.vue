@@ -1,9 +1,11 @@
 <script setup>
 import axios from "axios";
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 
 const props = defineProps({ plan: Object });
 const tripList = ref([]);
+const router = useRouter();
 
 onMounted(async () => {
     console.log(props.plan);
@@ -18,9 +20,18 @@ onMounted(async () => {
 });
 
 const planDetail = () => {
+    // router.push()
     console.log("자세히 보기");
 };
-const planDelete = () => {
+const planDelete = async () => {
+    const flag = confirm("정말 삭제하시겠습니까?\n복구할 수 없습니다.");
+    if (!flag) return;
+    await axios
+        .delete(`http://localhost/trip/plan/${props.plan.planId}`)
+        .then(() => {
+            router.go(0);
+        })
+        .catch((err) => console.error(err));
     console.log("플랜 삭제");
 };
 
