@@ -6,6 +6,7 @@ import FindPwdView from "@/views/user/FindPwdView.vue";
 import ProfileView from "@/views/user/ProfileView.vue";
 import MakePlanView from "@/views/plan/MakePlanView.vue";
 import MyPlanView from "@/views/plan/MyPlanView.vue";
+import MyPlanDetailView from "@/views/plan/MyPlanDetailView.vue";
 import ArticleListView from "@/views/board/ArticleListView.vue";
 import ArticleDetailView from "@/views/board/ArticleDetailView.vue";
 import WriteArticleView from "@/views/board/WriteArticleView.vue";
@@ -20,11 +21,11 @@ const router = createRouter({
       name: "home",
       component: HomeView,
       children: [
-          {
-              path: ":contentId",
-              name: "content",
-              component: AttractionInfo,
-          },
+        {
+          path: ":contentId",
+          name: "content",
+          component: AttractionInfo,
+        },
       ],
     },
     {
@@ -56,6 +57,11 @@ const router = createRouter({
       path: "/myplan",
       name: "myplan",
       component: MyPlanView,
+    },
+    {
+      path: "/myplan/:id",
+      name: "myplandetail",
+      component: MyPlanDetailView,
     },
     {
       path: "/board",

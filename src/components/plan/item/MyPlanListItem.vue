@@ -19,8 +19,8 @@ onMounted(async () => {
         .catch((err) => console.log(err));
 });
 
-const planDetail = () => {
-    // router.push()
+const planDetail = (id) => {
+    router.push({ name: 'myplandetail', params: { id: id } });
     console.log("자세히 보기");
 };
 const planDelete = async () => {
@@ -55,7 +55,7 @@ const findThumbnail = computed(() => {
         <div class="card-body">
             <h5 class="card-title">{{ plan.planName }}</h5>
             <p class="card-text h6">{{ tripList[0].title }} ~ {{ tripList[tripList.length - 1].title }}</p>
-            <a class="btn btn-primary me-1" href="#" @click.prevent="planDetail">자세히보기</a>
+            <a class="btn btn-primary me-1" href="#" @click.prevent="planDetail(plan.planId)">자세히보기</a>
             <a class="btn btn-outline-danger" href="#" @click.prevent="planDelete">삭제하기</a>
         </div>
     </div>
