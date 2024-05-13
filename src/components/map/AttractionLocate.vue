@@ -66,10 +66,10 @@ const getGugun = async function (sido) {
 
 <template>
     <div class="d-flex flex-column">
-        <div style="height: 70px; width: 100%" class="d-block d-xl-none"></div>
+        <div style="height: 70px; width: 100%" class="d-block d-md-none"></div>
         <div style="width: 100%; height: 25px"></div>
         <div id="test">
-            <span class="d-none d-xl-block">관광지를 선택하세요!</span>
+            <span class="d-none d-lg-block">관광지를 선택하세요!</span>
             <div style="width: 10px"></div>
             <select name="sido" v-model="selectSido">
                 <option value="">도 선택</option>
@@ -101,5 +101,6 @@ const getGugun = async function (sido) {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 80px;
 }
 </style>

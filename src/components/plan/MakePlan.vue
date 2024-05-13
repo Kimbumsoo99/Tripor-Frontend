@@ -98,6 +98,7 @@ const searchTrip = () => {
                         <div style="width: 5px"></div>
                         <button class="btn text-white btn-primary" type="button" style="overflow: hiddlen; white-space: nowrap" id="searchButton" @click.prevent="searchTrip">검색</button>
                     </div>
+                    <div style="height: 20px"></div>
                     <ul id="planItems" class="list-unstyled">
                         <PlanItem v-for="item in planList" :key="item.contentId" :item="item" @remove-from-plan-list="removeFromPlanList" />
                     </ul>
