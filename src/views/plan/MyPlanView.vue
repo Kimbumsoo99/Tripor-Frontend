@@ -1,5 +1,23 @@
 <script setup>
-const props = defineProps({ myPlans: Array });
+import MyPlanList from "@/components/plan/MyPlanList.vue";
+import NoPlan from "@/components/plan/NoPlan.vue";
+import axios from "axios";
+import { onMounted, ref } from "vue";
+
+const myPlans = ref(null);
+const memberId = ref("");
+
+onMounted(() => {
+    // 멤버 객체 token으로 가져오기
+    memberId.value = "show7441";
+    axios
+        .get(`http://localhost/trip/plan/m/${memberId.value}`)
+        .then((res) => {
+            console.log(res);
+            myPlans.value = res.data.items;
+        })
+        .catch((err) => console.log(err));
+});
 </script>
 
 <template>
@@ -8,48 +26,8 @@ const props = defineProps({ myPlans: Array });
             <div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
             <div id="planListDiv" style="width: 100%">
                 <div style="height: 90px"></div>
-                <template v-if="props.myPlans == null">
-                    <div class="position-absolute top-50 start-50 translate-middle-x">
-                        <h4>아직 여행 계획이 없어요</h4>
-                        <div>
-                            여행 계획 만들러 가기 &gt;&gt;
-                            <RouterLink :to="{ name: 'makeplan' }">GO!</RouterLink>
-                        </div>
-                    </div>
-                </template>
-                <div class="p-5 mb-3 d-flex flex-row flex-wrap">
-                    <!-- <c:forEach var="plan" items="${plans}">
-							<c:set var="loop_flag" value="false" />
-								<div class="card m-1" style="width: 24rem;">
-									<c:if test="${not empty plan.tripList}">
-										<c:forEach var="trip" items="${plan.tripList}">
-											<c:if test="${not loop_flag }">
-												<c:if test="${not empty trip.firstImage}">
-													<img class="card-img-top" style="height: 200px; object-fit: cover" src="${trip.firstImage}"
-														alt="Card image cap">
-													<c:set var="loop_flag" value="true" />
-												</c:if>
-											</c:if>
-										</c:forEach>
-									</c:if>
-		
-							<c:if test="${not loop_flag}">
-								<img class="card-img-top" style="height: 200px; object-fit: cover" src="${root}/img/no_image_logo.png"
-									alt="Tripor 로고">
-							</c:if>
-							<div class="card-body">
-								<h5 class="card-title">${plan.planName}</h5>
-								<p class="card-text h6">${plan.tripList[0].title}~
-									${plan.tripList[plan.tripList.size() - 1].title}</p>
-								<a class="btn btn-primary"
-									href="${root}/trip?action=detail&planid=${plan.planId}">자세히보기</a>
-							    <a class="btn btn-outline-danger" href="${root}/trip?action=deletePlan&planid=${plan.planId}">삭제하기</a>
-							    
-							  </div>
-							</div>
-				
-						</c:forEach> -->
-                </div>
+                <NoPlan v-if="myPlans == null" />
+                <MyPlanList v-else :myPlans="myPlans" />
             </div>
         </div>
     </div>

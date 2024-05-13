@@ -126,7 +126,7 @@ const searchTrip = () => {
     height: 100%;
     padding: 10px;
 }
-#makeplan_div{
+#makeplan_div {
     width: 300px;
 }
 #planNameGroup {
