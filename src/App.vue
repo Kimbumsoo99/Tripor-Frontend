@@ -13,11 +13,21 @@ import Aside from '@/components/layout/Aside.vue';
 
 </style>
 <style>
-* { 
-    font-family: "Gowun Dodum", sans-serif;
-    font-weight: 500;
-    font-size: 18px;
+@font-face {
+    font-family: 'GangwonEduPowerExtraBoldA';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff') format('woff');
+    font-weight: normal;
     font-style: normal;
+}
+@font-face {
+    font-family: 'SUIT-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+*{
+    font-family: 'SUIT-Regular';
+    font-size: 18px;
 }
 h4{
     color:#0077CC;
