@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
-const props = defineProps({ tourData: Array, region: String, planFlag: Boolean });
+const props = defineProps({ tourData: Array, region: String, planFlag: Boolean, planList: Array });
 const emit = defineEmits(["markerClickEvent"]);
 
 const markers = ref([]);
@@ -101,6 +101,38 @@ const showPlaceDetail = (e, p) => {
     const place = JSON.parse(decodeURIComponent(p));
 };
 
+let polylines = [];
+
+watch(
+    () => props.planList,
+    (planItems) => {
+        // 모든 선분 제거
+        for (let i = 0; i < polylines.length; i++) {
+            polylines[i].setMap(null);
+        }
+        polylines = []; // 선분 배열 초기화
+
+        if (planItems.length > 1) {
+            // 선분 다시 그리기
+            for (let i = 1; i < planItems.length; i++) {
+                const startItem = planItems[i - 1];
+                const endItem = planItems[i];
+                const polyline = new kakao.maps.Polyline({
+                    path: [new kakao.maps.LatLng(startItem.latitude, startItem.longitude), new kakao.maps.LatLng(endItem.latitude, endItem.longitude)],
+                    // 선분 스타일 설정
+                    strokeWeight: 3,
+                    strokeColor: "#db4040",
+                    strokeOpacity: 0.8,
+                    strokeStyle: "solid",
+                });
+                polyline.setMap(map.value);
+                polylines.push(polyline);
+            }
+        }
+    },
+    { deep: true }
+);
+
 const updateMapMarkers = async (tourList, oldTourList) => {
     let bounds = new kakao.maps.LatLngBounds();
     let flag = false;
@@ -124,19 +156,11 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${
-                                                item.firstImage
-                                                    ? item.firstImage
-                                                    : "src/assets/image/no_image_logo.png"
-                                            }" width="80px" height="80px">
+                                            <img src="${item.firstImage ? item.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
-                                            <div class="ellipsis">주소: ${
-                                                item.addr ? item.addr : "정보 없음"
-                                            }</div>
-                                            <div class="jibun ellipsis">전화번호: ${
-                                                item.tel ? item.tel : "정보 없음"
-                                            }</div>
+                                            <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
+                                            <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -241,9 +265,7 @@ const setMapCenter = (sido) => {
     font-weight: bold;
     overflow: hidden;
     background: #d95050;
-    background: #d95050
-        url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat
-        right 14px center;
+    background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
 }
 .customoverlay .title {
     display: block;

@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import PlanItem from "./item/PlanItem.vue";
 
-const emit = defineEmits(["searchTrip"]);
+const emit = defineEmits(["searchTrip", "makePlanPolylines"]);
 const props = defineProps({ currentTour: Object });
 
 const planList = ref([]);
@@ -17,8 +17,15 @@ watch(
     }
 );
 
+watch(
+    () => planList.value,
+    (plans) => {
+        emit("makePlanPolylines", plans);
+    },
+    { deep: true }
+);
+
 const planAdd = (tour) => {
-    console.log(tour);
     if (planList.value.some((planItem) => planItem.title === tour.title)) {
         alert("이미 추가된 항목입니다.");
         return;
