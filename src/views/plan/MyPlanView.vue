@@ -4,7 +4,7 @@ import NoPlan from "@/components/plan/NoPlan.vue";
 import axios from "axios";
 import { onMounted, ref } from "vue";
 
-const myPlans = ref(null);
+const myPlans = ref([]);
 const memberId = ref("");
 
 onMounted(() => {
@@ -26,7 +26,7 @@ onMounted(() => {
             <div style="width: 540px; height: 100%" class="d-none d-xl-block"></div>
             <div id="planListDiv" style="width: 100%">
                 <div style="height: 90px"></div>
-                <NoPlan v-if="myPlans == null" />
+                <NoPlan v-if="myPlans.length == 0" />
                 <MyPlanList v-else :myPlans="myPlans" />
             </div>
         </div>
