@@ -14,8 +14,11 @@ const removeFromPlanList = (item) => {
             <h5 class="mb-1">{{ props.item.title }}</h5>
             <p class="mb-1">{{ props.item.addr || "주소 정보 없음" }}</p>
             <p class="mb-1">{{ props.item.tel || "전화번호 정보 없음" }}</p>
-            <img :src="props.item.firstImage ? props.item.firstImage : '/src/assets/image/no_image_logo.png'" width="80" height="80" class="rounded float-right" />
-            <button @click.prevent="removeFromPlanList(item)" class="btn btn-danger btn-sm">X</button>
+            <div class="d-flex flex-row">
+                <img :src="props.item.firstImage ? props.item.firstImage : '/src/assets/image/no_image_logo.png'" width="80" height="80" class="rounded float-right" />
+                <div style="width: 10px"></div>
+                <button @click.prevent="removeFromPlanList(item)" class="btn btn-danger btn-sm" style="width: 35px; height: 35px">X</button>
+            </div>
             <hr />
         </div>
     </li>

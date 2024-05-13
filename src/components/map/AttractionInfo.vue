@@ -136,7 +136,7 @@ onMounted(() => {
     #placeDetail {
         width: 19%;
         top: 140px;
-        height: 82%;
+        height: 80%;
         right: 20px;
         position: absolute;
         overflow-y: auto;
@@ -152,7 +152,7 @@ onMounted(() => {
     #placeDetail {
         width: 85%;
         bottom: 20px;
-        height: 40%;
+        height: 30%;
         left: 40px;
         position: absolute;
         overflow-y: auto;

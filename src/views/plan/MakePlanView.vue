@@ -1,6 +1,6 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
-import AttractionPlan from "@/components/plan/AttractionPlan.vue";
+import MakePlan from "@/components/plan/MakePlan.vue";
 import axios from "axios";
 import { ref } from "vue";
 
@@ -38,7 +38,7 @@ const markerClickEvent = (tour) => {
     <div id="map_view">
         <KaKaoMap :tourData="tourData" :planList="planList" :planFlag="planFlag" @marker-click-event="markerClickEvent" />
     </div>
-    <AttractionPlan @search-trip="searchTrip" :currentTour="currentTour" @make-plan-polylines="makePlanPolylines" />
+    <MakePlan @search-trip="searchTrip" :currentTour="currentTour" @make-plan-polylines="makePlanPolylines" />
 </template>
 
 <style scoped>

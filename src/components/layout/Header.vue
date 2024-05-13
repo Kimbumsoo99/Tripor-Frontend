@@ -34,10 +34,10 @@ function closeCallback() {
 				</div>
 				<div class="container-fluid justify-content-center">
 						
-					<RouterLink :to="{ name: 'home' }" class="col-lg-2 d-flex justify-content-center pt-1" id="header_title">Tripːor</RouterLink>
-		
+					<RouterLink :to="{ name: 'home' }" class="col-lg-2 d-flex justify-content-center" id="header_title">Tripːor</RouterLink>
+					
 					<div
-						class="col-lg-2 d-none d-md-none collapse navbar-collapse d-flex flex-row justify-content-end"
+						class="col-lg-2 d-none d-lg-block collapse navbar-collapse d-flex flex-row justify-content-end"
 						id="header_join_login"
 						style="display: block; overflow: hidden; white-space: nowrap;">
 
@@ -56,6 +56,19 @@ function closeCallback() {
 </template>
 
 <style scoped>
+@media (min-width: 768px){
+	.navbar{
+		padding-left: 20px; padding-right: 40px;
+		padding-top: 10px; padding-bottom: 10px;
+	}
+}
+@media (max-width: 768px) {
+    .navbar{
+		height: 138px;
+		padding-left: 60px; padding-right: 60px;
+		padding-top: 0px; padding-bottom: 0px;
+	}
+}
 #header_div{
 	z-index: 10000;
 }
@@ -66,10 +79,6 @@ function closeCallback() {
   display: flex;
   justify-content: center;
   color: #0077CC;
-}
-.navbar{
-    padding-left: 110px; padding-right: 110px;
-    padding-top: 10px; padding-bottom: 10px;
 }
 #header_title {
     color: #0077CC;
