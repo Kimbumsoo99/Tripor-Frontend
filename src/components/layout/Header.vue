@@ -5,7 +5,7 @@
     <div id="header_div" class="fixed-top">
 		<div class="navbar navbar-expand-md bg-white navbar-light">
 			<div class="container-fluid justify-content-center">
-				<RouterLink :to="{ name: 'home' }" style="text-decoration: none;"><a href="" class="navbar-brand fw-bold fs-1 col-lg-2" id="header_title">Tripor</a></RouterLink>
+				<RouterLink :to="{ name: 'home' }" style="text-decoration: none;"><a href="" class="navbar-brand fw-bold fs-1 col-lg-2" id="header_title">Tripːor</a></RouterLink>
 				
 				<div
 					class="col-lg-2 d-none d-md-none d-lg-none collapse navbar-collapse d-flex flex-row justify-content-end"
@@ -39,7 +39,8 @@
 }
 #header_title {
     color: #0077CC;
-    font-family: "Poetsen One", sans-serif;
+	font-size: 30px;
+    font-family: "GangwonEduPowerExtraBoldA"
 }
 #contour{
     margin: 0;
