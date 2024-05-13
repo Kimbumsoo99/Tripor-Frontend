@@ -60,8 +60,8 @@ const searchTrip = () => {
         <div id="upper_div">
             <div style="height: 80px"></div>
             <div class="d-flex flex-row">
-                <div id="makeplan_div" class="d-none d-xl-block"></div>
-                <div class="d-flex flex-column p-3">
+                <div id="blank_div" class="d-none d-xl-block"></div>
+                <div id="makeplan_div" class="d-flex flex-column p-3" style="width: 300px">
                     <span class="mb-3 ms-2" id="planNameGroup">
                         <i class="bi bi-pen-fill me-1"></i>
                         <input value="의 여행 계획" name="planname" id="planName" />
@@ -95,10 +95,13 @@ const searchTrip = () => {
     display: block;
     height: 100%;
 }
-#makeplan_div {
+#blank_div {
     width: 350px;
     height: 100%;
     padding: 10px;
+}
+#makeplan_div{
+    width: 300px;
 }
 #planNameGroup {
     border: none;

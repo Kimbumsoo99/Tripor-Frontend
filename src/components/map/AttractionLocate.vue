@@ -97,7 +97,7 @@ const getGugun = async function (sido) {
 
 <style scoped>
 #test {
-    z-index: 10000000;
+    z-index: 1000000;
     display: flex;
     justify-content: center;
     align-items: center;
