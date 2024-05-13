@@ -99,7 +99,7 @@ const searchTrip = () => {
                         <button class="btn text-white btn-primary" type="button" style="overflow: hiddlen; white-space: nowrap" id="searchButton" @click.prevent="searchTrip">검색</button>
                     </div>
                     <ul id="planItems" class="list-unstyled">
-                        <PlanItem v-for="(item, idx) in planList" :key="idx" :item="item" @remove-from-plan-list="removeFromPlanList" />
+                        <PlanItem v-for="item in planList" :key="item.contentId" :item="item" @remove-from-plan-list="removeFromPlanList" />
                     </ul>
                     <button type="button" id="savePlanButton" class="btn btn-outline-primary mt-auto" @click="makePlan">일정 등록하기</button>
                     <div style="height: 5px"></div>
