@@ -41,7 +41,7 @@ const searchTrip = () => {
         <input type="hidden" id="planIdList" name="planIdList" value="" />
 
         <div id="upper_div">
-            <div style="height: 90px"></div>
+            <div style="height: 80px"></div>
             <div class="d-flex flex-row">
                 <div id="makeplan_div" class="d-none d-xl-block"></div>
                 <div class="d-flex flex-column p-3">
@@ -79,9 +79,9 @@ const searchTrip = () => {
     height: 100%;
 }
 #makeplan_div {
-    width: 380px;
+    width: 350px;
     height: 100%;
-    padding: 30px;
+    padding: 10px;
 }
 #planNameGroup {
     border: none;

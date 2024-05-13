@@ -67,7 +67,7 @@ const getGugun = async function (sido) {
 <template>
     <div class="d-flex flex-column">
         <div style="height: 70px; width: 100%" class="d-block d-xl-none"></div>
-
+        <div style="width: 100%; height: 25px"></div>
         <div id="test">
             <span class="d-none d-xl-block">관광지를 선택하세요!</span>
             <div style="width: 10px"></div>
@@ -97,10 +97,6 @@ const getGugun = async function (sido) {
 
 <style scoped>
 #test {
-    /* background-color: rgba(222, 237, 255, 0.85) !important;  */
-
-    width: 100%;
-    height: 85px;
     z-index: 10000000;
     display: flex;
     justify-content: center;
