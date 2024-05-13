@@ -25,6 +25,16 @@ watch(
     { deep: true }
 );
 
+const makePlan = () => {};
+
+const initPlan = () => {
+    if (planList.value.length === 0) return;
+    const flag = confirm("정말 초기화 하시겠습니까?\n현재까지 작성된 내용은 모두 사라집니다.");
+    if (flag) {
+        planList.value = [];
+    }
+};
+
 const planAdd = (tour) => {
     if (planList.value.some((planItem) => planItem.title === tour.title)) {
         alert("이미 추가된 항목입니다.");
@@ -65,9 +75,9 @@ const searchTrip = () => {
                     <ul id="planItems" class="list-unstyled">
                         <PlanItem v-for="(item, idx) in planList" :key="idx" :item="item" @remove-from-plan-list="removeFromPlanList" />
                     </ul>
-                    <button type="button" id="savePlanButton" class="btn btn-outline-primary mt-auto">일정 등록하기</button>
+                    <button type="button" id="savePlanButton" class="btn btn-outline-primary mt-auto" @click="makePlan">일정 등록하기</button>
                     <div style="height: 5px"></div>
-                    <button type="button" id="canclePlanButton" class="btn btn-outline-danger mt-auto">일정 초기화</button>
+                    <button type="button" id="canclePlanButton" class="btn btn-outline-danger mt-auto" @click="initPlan">일정 초기화</button>
                 </div>
             </div>
         </div>
