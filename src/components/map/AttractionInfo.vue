@@ -4,7 +4,7 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 
 const props = defineProps({ tourData: Array });
-const emit = defineEmits(["closeOverlay"]);
+const emit = defineEmits(["closeOverlay", "movedMarkers"]);
 
 const tourList = ref([]);
 
@@ -77,7 +77,9 @@ const sortList = computed(() => {
 });
 
 const movePlace = (contentId) => {
-    emit("closeOverlay");
+    axios.get(`http://localhost/trip/${contentId}`).then((res) => {
+        emit("movedMarkers", res.data.item);
+    });
     router.replace({ name: "content", params: { contentId: contentId } });
 };
 
