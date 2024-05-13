@@ -82,6 +82,35 @@ onMounted(() => {
     }
 });
 
+const movedMarkers = (tour) => {
+    closeOverlay();
+    const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
+    const content = `<div class="wrap">
+                                <div class="info">
+                                    <div class="title">
+                                        ${tour.title}
+                                    </div>
+                                    <div class="body">
+                                        <div class="img">
+                                            <img src="${tour.firstImage ? tour.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                        </div>
+                                        <div class="desc">
+                                            <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>
+                                            <div class="jibun ellipsis">전화번호: ${tour.tel ? tour.tel : "정보 없음"}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+    const overlay = new kakao.maps.CustomOverlay({
+        content: content,
+        map: null,
+        position: position,
+    });
+
+    currentMarkerOverlay.value = overlay;
+    overlay.setMap(map.value);
+};
+
 // 카카오 맵 초기화
 const initMap = () => {
     container.value = document.getElementById("map");
@@ -233,7 +262,7 @@ const setMapCenter = (sido) => {
 
 <template>
     <div id="map">
-        <RouterView :tourData="props.tourData" @close-overlay="closeOverlay" />
+        <RouterView :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers" />
     </div>
 </template>
 
