@@ -77,6 +77,7 @@ const sortList = computed(() => {
 });
 
 const movePlace = (contentId) => {
+    emit("closeOverlay");
     router.replace({ name: "content", params: { contentId: contentId } });
 };
 
