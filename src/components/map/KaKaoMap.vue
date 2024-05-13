@@ -124,18 +124,23 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${item.firstImage ? item.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                            <img src="${
+                                                item.firstImage
+                                                    ? item.firstImage
+                                                    : "src/assets/image/no_image_logo.png"
+                                            }" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
-                                            <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>
-                                            <div class="jibun ellipsis">전화번호: ${item.tel ? item.tel : "정보 없음"}</div>
+                                            <div class="ellipsis">주소: ${
+                                                item.addr ? item.addr : "정보 없음"
+                                            }</div>
+                                            <div class="jibun ellipsis">전화번호: ${
+                                                item.tel ? item.tel : "정보 없음"
+                                            }</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>`;
-        // <a onclick="showPlaceDetail(event, '${encodeURIComponent(JSON.stringify(item))}');"  href="#">
-        //                         상세보기
-        //                         </a>
 
         const overlay = new kakao.maps.CustomOverlay({
             content: content,
@@ -170,12 +175,6 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         bounds.extend(position);
     }
 
-    // close 버튼에 이벤트 등록
-    const closeButton = document.querySelectorAll(".close");
-    console.log(closeButton);
-    // closeButton.addEventListener("click", () => {
-    //     closeOverlay();
-    // });
     // 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
     if (flag !== false) {
         map.value.setBounds(bounds);
@@ -242,7 +241,9 @@ const setMapCenter = (sido) => {
     font-weight: bold;
     overflow: hidden;
     background: #d95050;
-    background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
+    background: #d95050
+        url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat
+        right 14px center;
 }
 .customoverlay .title {
     display: block;
