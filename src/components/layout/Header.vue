@@ -4,9 +4,10 @@
 <template>
     <div id="header_div" class="fixed-top">
 		<div class="navbar navbar-expand-md bg-white navbar-light">
-			<div class="container-fluid justify-content-center">
-				<RouterLink :to="{ name: 'home' }" style="text-decoration: none;"><a href="" class="navbar-brand fw-bold fs-1 col-lg-2" id="header_title">Tripːor</a></RouterLink>
-				
+			<div class="container-fluid">
+					
+				<RouterLink :to="{ name: 'home' }" style="text-decoration: none; height: 60px" class="navbar-brand fw-bold fs-1 col-lg-2 d-flex justify-content-center" id="header_title">Tripːor</RouterLink>
+	
 				<div
 					class="col-lg-2 d-none d-md-none d-lg-none collapse navbar-collapse d-flex flex-row justify-content-end"
 					id="header_join_login"
@@ -32,15 +33,18 @@
 .router-link-active {
   text-decoration: none;
   color: white;
+  height: 55px;
+  text-align: center;
 }
 .navbar{
+	height: 80px;
     padding-left: 110px; padding-right: 110px;
     padding-top: 10px; padding-bottom: 10px;
 }
 #header_title {
     color: #0077CC;
-	font-size: 30px;
-    font-family: "GangwonEduPowerExtraBoldA"
+	font-size: 32px;
+    font-family: "GangwonEduPowerExtraBoldA";
 }
 #contour{
     margin: 0;

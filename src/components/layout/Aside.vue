@@ -15,7 +15,7 @@ const toggle = () => {
 <template>
         <div
             id="aside_div"
-            class="d-none d-xl-block shadow-sm position-fixed ps-2 pt-4 pe-2 container bg-white">
+            class="d-none d-xl-block shadow-sm position-fixed ps-1 pe-1 container bg-white">
             <div style="height: 90px"></div>
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                 <RouterLink :to="{ name: 'home' }" style="text-decoration: none; color:#332D2D">
@@ -75,7 +75,7 @@ const toggle = () => {
 
 <style scoped>
 #aside_div{
-    width: 380px; 
+    width: 350px; 
     height: 100%; 
     z-index: 9; 
     padding-right: 0; 
