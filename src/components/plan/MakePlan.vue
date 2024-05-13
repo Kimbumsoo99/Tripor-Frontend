@@ -58,6 +58,7 @@ const initPlan = () => {
     const flag = confirm("정말 초기화 하시겠습니까?\n현재까지 작성된 내용은 모두 사라집니다.");
     if (flag) {
         planList.value = [];
+        searchKeyword.value = "";
     }
 };
 
@@ -79,10 +80,7 @@ const searchTrip = () => {
 </script>
 
 <template>
-    <form id="planListForm" method="POST" action="" style="width: 100%; height: 100%">
-        <input type="hidden" name="action" value="planAdd" />
-        <input type="hidden" id="planIdList" name="planIdList" value="" />
-
+    <form id="planListForm" action="" style="width: 100%; height: 100%">
         <div id="upper_div">
             <div style="height: 80px"></div>
             <div class="d-flex flex-row">
@@ -94,7 +92,7 @@ const searchTrip = () => {
                     </span>
 
                     <div class="d-flex flex-row" id="makePlace">
-                        <input class="form-control mr-sm-2 w-75 shadow-sm" type="search" placeholder="여행지를 검색하세요!" v-model="searchKeyword" aria-label="Search" id="searchInput" />
+                        <input class="form-control mr-sm-2 w-75 shadow-sm" type="search" placeholder="여행지를 검색하세요!" v-model="searchKeyword" aria-label="Search" @keydown.enter.prevent="searchTrip" id="searchInput" />
                         <div style="width: 5px"></div>
                         <button class="btn text-white btn-primary" type="button" style="overflow: hiddlen; white-space: nowrap" id="searchButton" @click.prevent="searchTrip">검색</button>
                     </div>
