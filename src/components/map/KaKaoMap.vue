@@ -51,6 +51,7 @@ const kakaoMapStatus = ref(false); // 카카오 맵 로드 확인
 
 //커스텀 오버레이 추적 변수
 const currentOverlay = ref(null);
+const currentMarker = ref(null);
 const currentMarkerOverlay = ref(null);
 const closeOverlay = (item = null) => {
     // 아이템 정보가 제공되었고, planItems 배열에서 아이템 검사
@@ -244,8 +245,13 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();
 
-                currentMarkerOverlay.value = overlay;
-                overlay.setMap(map.value);
+                currentMarker.value = marker;
+                const markerImage = new kakao.maps.MarkerImage("src/assets/image/test_marker.png", new kakao.maps.Size(55, 55), new kakao.maps.Point(55, 55));
+                marker.setImage(markerImage);
+                marker.setMap(map.value);
+
+                // currentMarkerOverlay.value = overlay;
+                // overlay.setMap(map.value);
 
                 currentOverlay.value = item;
                 map.value.setCenter(position);
