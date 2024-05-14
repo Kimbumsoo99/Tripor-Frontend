@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import SideMenu from "@/components/layout/SideMenu.vue";
 import { useMemberStore } from "@/stores/member";
@@ -9,6 +9,7 @@ const route = useRoute();
 const memberStore = useMemberStore();
 
 const { isLogin, userInfo } = storeToRefs(memberStore);
+const { userLogout } = memberStore;
 
 const isExpanded = ref(false);
 const sideFlag = ref(false);
@@ -20,6 +21,18 @@ const toggle = () => {
         isExpanded.value = false;
     }
 };
+
+const logout = () => {
+    userLogout();
+};
+
+onMounted(async () => {
+    const { getUserInfo } = memberStore;
+    let token = sessionStorage.getItem("accessToken");
+    if (token) {
+        await getUserInfo(token);
+    }
+});
 
 function openMobileMenu() {
     sideFlag.value = true;
@@ -49,7 +62,7 @@ function closeCallback() {
                         <template v-else>
                             <div>
                                 <span>{{ userInfo.memberName }} 님 로그인 중</span>
-                                <button id="logOutButton" class="btn text-white btn-primary m-1" onclick="">로그아웃</button>
+                                <button id="logOutButton" class="btn text-white btn-primary m-1" @click="logout">로그아웃</button>
                             </div>
                         </template>
                     </div>

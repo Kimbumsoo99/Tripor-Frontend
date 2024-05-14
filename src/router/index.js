@@ -23,6 +23,7 @@ const onlyAuthUser = async (to, from, next) => {
     const memberStore = useMemberStore();
     const { userInfo, isValidToken } = storeToRefs(memberStore);
     const { getUserInfo } = memberStore;
+    console.log("onlyAuthUser", isValidToken.value);
 
     let token = sessionStorage.getItem("accessToken");
 

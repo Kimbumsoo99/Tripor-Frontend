@@ -2,8 +2,20 @@
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
 import AttractionLocate from "@/components/map/AttractionLocate.vue";
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+const memberStore = useMemberStore();
 
+onMounted(async () => {
+    const { isValidToken } = storeToRefs(memberStore);
+    const { getUserInfo } = memberStore;
+    console.log("Home onMounted", isValidToken.value);
+    let token = sessionStorage.getItem("accessToken");
+    if (token) {
+        await getUserInfo(token);
+    }
+});
 const tourData = ref([]);
 
 const changeLocation = async (sido, gugun, type = false) => {
@@ -31,10 +43,9 @@ const setSido = (name) => {
     <div id="map_view">
         <KaKaoMap :tourData="tourData" :region="region" />
     </div>
-    <div style="display:flex; justify-content:center">
-        <AttractionLocate @get-locate="changeLocation" @set-sido="setSido" />        
+    <div style="display: flex; justify-content: center">
+        <AttractionLocate @get-locate="changeLocation" @set-sido="setSido" />
     </div>
-    
 </template>
 
 <style scoped>
