@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/user/LoginView.vue";
 import JoinView from "@/views/user/JoinView.vue";
+import JoinOkView from "@/views/user/JoinOkView.vue";
 import FindPwdView from "@/views/user/FindPwdView.vue";
 import ProfileView from "@/views/user/ProfileView.vue";
 import MakePlanView from "@/views/plan/MakePlanView.vue";
@@ -37,6 +38,11 @@ const router = createRouter({
       path: "/join",
       name: "join",
       component: JoinView,
+    },
+    {
+      path: "/join_ok",
+      name: "join_ok",
+      component: JoinOkView,
     },
     {
       path: "/findpwd",

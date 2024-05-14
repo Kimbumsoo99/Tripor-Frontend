@@ -1,10 +1,20 @@
 <script setup>
 import axios from 'axios'
 import { ref, onMounted, watch } from 'vue'
+import { useRouter } from "vue-router"
+
+const router = useRouter();
 
 const sidoList = ref([]);
 const gugunList = ref([]);
-const selectedSido = ref('');
+const memberName = ref('')
+const memberId = ref('')
+const memberPw = ref('')
+const memberPwCheck = ref('')
+const emailId = ref('')
+const emailDomain = ref('')
+const selectedSido = ref(0)
+const gugun = ref(0)
 
 const getSido = async function () {
   await axios.get('http://localhost/trip/sido').then((response) => {
@@ -27,13 +37,38 @@ const getGugun = async function (sido) {
 }
 
 
+const joinUser = async function () {
+  if (memberPw.value === memberPwCheck.value) {
+    await axios
+      .post("http://localhost/member", {
+        memberId: memberId.value,
+        memberPw: memberPw.value,
+        memberName: memberName.value,
+        emailId: emailId.value,
+        emailDomain: emailDomain.value,
+        sido: selectedSido.value,
+        gugun: gugun.value
+      })
+      .then(
+        router.push({ name: 'join_ok' })
+        )
+        .catch((err) => console.error(err));
+
+  } else {
+    alert('비밀번호가 일치하지 않습니다.');
+  }
+    
+    
+};
+
+
 </script>
 
 <template>
     <div class="shadow-sm rounded border p-5 mb-3 position-absolute start-50 translate-middle-x" id="join_div">
                 <h4>회원가입</h4>
                 <p class="mb-5">환영해요! 여행을 떠나볼까요?</p>
-                <form id="form-join" method="POST" action="">
+                <form id="form-join" method="POST" action="" @submit.prevent="joinUser">
                     <input type="hidden" name="action" value="join">
                     <div class="form_group">
                         <label>이름</label><br />
@@ -44,6 +79,7 @@ const getGugun = async function (sido) {
                             name="username"
                             style="width: 100%"
                             placeholder="이름을 입력해주세요."
+                            v-model="memberName"
                             required
                         />
                         <label>아이디</label><br />
@@ -54,6 +90,7 @@ const getGugun = async function (sido) {
                             name="userid"
                             style="width: 100%"
                             placeholder="아이디를 입력해주세요."
+                            v-model="memberId"
                             required
                         />
                         <label>비밀번호</label><br />
@@ -64,6 +101,7 @@ const getGugun = async function (sido) {
                             name="userpwd"
                             style="width: 100%"
                             placeholder="비밀번호를 입력해주세요."
+                            v-model="memberPw"
                             required
                         />
                         <label>비밀번호 확인</label><br />
@@ -74,6 +112,7 @@ const getGugun = async function (sido) {
                             name="userpwdcheck"
                             style="width: 100%"
                             placeholder="비밀번호를 한 번 더 입력해주세요."
+                            v-model="memberPwCheck"
                             required
                         />
                         <label>이메일</label><br />
@@ -85,6 +124,7 @@ const getGugun = async function (sido) {
 			                  name="emailid"
 			                  placeholder="이메일 아이디를 입력해주세요."
 			                  style="width: 46%"
+                        v-model="emailId"
 			                  required
 			                />
 			                <span>@</span>
@@ -94,6 +134,7 @@ const getGugun = async function (sido) {
 			                  style="width: 50%"
 			                  name="emaildomain"
 			                  aria-label="이메일 도메인 선택"
+                        v-model="emailDomain"
 			                >
 			                  <option selected>선택</option>
 			                  <option value="ssafy.com">ssafy.com</option>
@@ -122,9 +163,10 @@ const getGugun = async function (sido) {
 			                  style="width: 50%"
 			                  name="gugun"
 			                  aria-label="구군 선택"
+                        v-model="gugun"
 			                >
 			                  <option selected>선택</option>
-			                  <option v-for="gugun in gugunList" :key="gugun.gugunCode">{{ gugun.gugunName }}</option>
+			                  <option v-for="gugun in gugunList" :key="gugun.gugunCode" :value="gugun.gugunCode">{{ gugun.gugunName }}</option>
 			                </select>
 			              </div>
 							<button
