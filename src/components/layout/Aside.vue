@@ -55,6 +55,7 @@ const toggle = () => {
                         class="bi bi-caret-down-fill col-2"
                         id="foldIcon"></i>
                 </div>
+                
                 <div class="ps-5 pt-1" id="myPageExpand" v-if="isExpanded">
                      <div>
                         <RouterLink :to="{ name: 'myplan' }" style="text-decoration: none; color:#332D2D"><a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;나의 여행 계획</a></RouterLink>
