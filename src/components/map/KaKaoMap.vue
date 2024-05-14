@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import AttractionInfo from "./AttractionInfo.vue";
 
@@ -50,26 +50,32 @@ const map = ref(null);
 const container = ref(null);
 const kakaoMapStatus = ref(false); // 카카오 맵 로드 확인
 
+const currentContent = ref("");
+const contentList = ref([]);
+
 //커스텀 오버레이 추적 변수
 const currentOverlay = ref(null);
 const currentMarker = ref(null);
 const currentMarkerOverlay = ref(null);
-const closeOverlay = (item = null) => {
+const closeOverlay = async (item = null) => {
     // 아이템 정보가 제공되었고, planItems 배열에서 아이템 검사
     // if (item && planItems.some((planItem) => planItem.title === item.title)) {
     //     // 아이템이 planItems 배열에 있다면 함수 종료
     //     return;
     // }
 
+    console.log(currentMarker.value);
     if (currentMarker.value) {
         console.log(currentMarker.value);
         const index = currentMarker.value;
         const imageUrl = "src/assets/image/" + props.tourData[index].contentTypeId + ".png";
-        const imageSize = new kakao.maps.Size(45, 45);
-        const newMarkerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
-        markers.value[index].setImage(newMarkerImage);
-        markers.value[index].setZIndex(-1);
-        currentMarker.value = null;
+        await setTimeout(() => {
+            const imageSize = new kakao.maps.Size(45, 45);
+            const newMarkerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
+            markers.value[index].setImage(newMarkerImage);
+            markers.value[index].setZIndex(-1);
+            currentMarker.value = null;
+        }, 500);
     }
 
     // 아이템이 planItems 배열에 없거나, 아이템 정보가 제공되지 않았다면 기존 오버레이 숨김 로직 수행
@@ -108,6 +114,7 @@ const toggleMarkers = (tour) => {
 defineExpose({ toggleMarkers });
 
 const movedMarkers = (tour) => {
+    currentContent.value = tour;
     closeOverlay();
     childRef.value.show(tour);
     // const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
@@ -186,8 +193,8 @@ watch(
     { deep: true }
 );
 
-const childRef = ref(null)
-const contentId = ref(0)
+const childRef = ref(null);
+const contentId = ref(0);
 
 const updateMapMarkers = async (tourList, oldTourList) => {
     if (tourList.length == 0) return;
@@ -265,15 +272,20 @@ const updateMapMarkers = async (tourList, oldTourList) => {
 
                 currentMarker.value = index;
                 const markerImage = new kakao.maps.MarkerImage(imageUrl, new kakao.maps.Size(60, 60));
-                marker.setImage(markerImage);
-                marker.setMap(map.value);
-                marker.setZIndex(9999999999);
+
+                setTimeout(() => {
+                    marker.setImage(markerImage);
+                    marker.setMap(map.value);
+                    marker.setZIndex(9999999999);
+                }, 100);
 
                 // currentMarkerOverlay.value = overlay;
                 // overlay.setMap(map.value);
 
+                currentContent.value = item;
+
                 currentOverlay.value = item;
-                map.value.setCenter(position);
+                // map.value.setCenter(position);
                 contentId.value = item.contentId;
                 childRef.value.show(item);
                 // router.replace({ name: "content", params: { contentId: item.contentId } });
@@ -330,11 +342,63 @@ const setMapCenter = (sido) => {
         map.value.setLevel(8);
     }
 };
+
+const mergeSort = (arr) => {
+    if (arr.length <= 1) {
+        return arr;
+    }
+
+    const mid = Math.floor(arr.length / 2);
+    const left = arr.slice(0, mid);
+    const right = arr.slice(mid);
+
+    return merge(mergeSort(left), mergeSort(right));
+};
+
+const merge = (left, right) => {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex].distance < right[rightIndex].distance) {
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
+        }
+    }
+
+    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+};
+
+const sortList = computed(() => {
+    return mergeSort(contentList.value).slice(0, 4);
+});
+
+watch(
+    () => currentContent.value,
+    () => {
+        const placeSaveList = [];
+        props.tourData.forEach((i, index) => {
+            let distance = Math.sqrt(Math.pow(i.latitude - currentContent.value.latitude, 2) + Math.pow(i.longitude - currentContent.value.longitude, 2));
+
+            let placeSave = i;
+            placeSave.distance = distance;
+            placeSave.index = index;
+
+            placeSaveList.push(placeSave);
+        });
+        contentList.value = placeSaveList;
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
     <div id="map">
-        <AttractionInfo ref="childRef" :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers"/>
+        <AttractionInfo ref="childRef" :sortList="sortList" :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers" />
         <!-- <RouterView :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers" /> -->
     </div>
 </template>
