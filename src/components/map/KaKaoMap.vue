@@ -231,6 +231,7 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             kakao.maps.event.addListener(marker2, "click", () => {
                 closeOverlay();
 
+
                 currentMarkerOverlay.value = overlay;
                 overlay.setMap(map.value);
 
