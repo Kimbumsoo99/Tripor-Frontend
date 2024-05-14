@@ -205,9 +205,9 @@ onMounted(() => {
 }
 #title_data{
     width: 300px; 
-    white-space: nowrap; /* 요소의 텍스트가 너비를 넘어가면 줄 바꿈을 하지 않습니다. */
-    overflow: hidden; /* 요소의 내용이 너비를 넘어가면 숨깁니다. */
-    text-overflow: ellipsis; /* 넘치는 부분을 ...로 표시합니다. */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 </style>
