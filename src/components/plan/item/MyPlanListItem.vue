@@ -8,20 +8,16 @@ const tripList = ref([]);
 const router = useRouter();
 
 onMounted(async () => {
-    console.log(props.plan);
     await axios
         .get(`http://localhost/trip/plan/${props.plan.planId}/trip`)
         .then((res) => {
-            console.log(res);
             tripList.value = res.data.items;
-            console.log(tripList.value);
         })
         .catch((err) => console.log(err));
 });
 
 const planDetail = (id) => {
-    router.push({ name: 'myplandetail', params: { id: id } });
-    console.log("자세히 보기");
+    router.push({ name: "myplandetail", params: { id: id } });
 };
 const planDelete = async () => {
     const flag = confirm("정말 삭제하시겠습니까?\n복구할 수 없습니다.");
@@ -32,7 +28,6 @@ const planDelete = async () => {
             router.go(0);
         })
         .catch((err) => console.error(err));
-    console.log("플랜 삭제");
 };
 
 const findThumbnail = computed(() => {

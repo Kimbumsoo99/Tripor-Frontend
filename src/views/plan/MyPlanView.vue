@@ -13,7 +13,6 @@ onMounted(() => {
     axios
         .get(`http://localhost/trip/plan/m/${memberId.value}`)
         .then((res) => {
-            console.log(res);
             myPlans.value = res.data.items;
         })
         .catch((err) => console.log(err));

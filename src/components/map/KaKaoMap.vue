@@ -73,7 +73,7 @@ const closeOverlay = (item = null) => {
 onMounted(async () => {
     if (window.kakao && window.kakao.maps) {
         initMap();
-        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 100);
+        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 200);
     } else {
         const script = document.createElement("script");
         /* global kakao */
@@ -82,6 +82,17 @@ onMounted(async () => {
         document.head.appendChild(script);
     }
 });
+
+const toggleMarkers = (tour) => {
+    if (currentMarkerOverlay.value) {
+        closeOverlay();
+        currentMarkerOverlay.value = null;
+        return;
+    }
+    movedMarkers(tour);
+};
+
+defineExpose({ toggleMarkers });
 
 const movedMarkers = (tour) => {
     closeOverlay();
@@ -123,12 +134,6 @@ const initMap = () => {
 
     kakaoMapStatus.value = true;
     // initKakaoObj();
-};
-// 마커 오버레이 상세보기.
-const showPlaceDetail = (e, p) => {
-    console.log(e, p);
-    console.log("하이");
-    const place = JSON.parse(decodeURIComponent(p));
 };
 
 let polylines = [];
@@ -221,6 +226,18 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             });
             marker2.setMap(map.value);
             markers.value.push(marker2);
+
+            kakao.maps.event.addListener(marker2, "click", () => {
+                closeOverlay();
+
+                currentMarkerOverlay.value = overlay;
+                overlay.setMap(map.value);
+
+                map.value.setCenter(position);
+
+                emit("markerClickEvent", item);
+            });
+
             bounds.extend(position);
             continue;
         } else {
@@ -256,8 +273,6 @@ const updateMapMarkers = async (tourList, oldTourList) => {
 watch(
     () => props.tourData,
     async (tourList, oldTourList) => {
-        console.log("KAKAO MAP WATCH");
-        console.log(tourList);
         if (tourList.length == 0) return;
         markers.value.forEach((marker) => {
             marker.setMap(null);
@@ -274,7 +289,6 @@ watch(
 watch(
     () => props.region,
     (name) => {
-        console.log("내가 문제임");
         setMapCenter(name);
     }
 );
