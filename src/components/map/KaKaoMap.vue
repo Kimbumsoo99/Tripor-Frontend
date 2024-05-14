@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import AttractionInfo from "./AttractionInfo.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -60,6 +61,17 @@ const closeOverlay = (item = null) => {
     //     return;
     // }
 
+    if (currentMarker.value) {
+        console.log(currentMarker.value);
+        const index = currentMarker.value;
+        const imageUrl = "src/assets/image/" + props.tourData[index].contentTypeId + ".png";
+        const imageSize = new kakao.maps.Size(45, 45);
+        const newMarkerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
+        markers.value[index].setImage(newMarkerImage);
+        markers.value[index].setZIndex(-1);
+        currentMarker.value = null;
+    }
+
     // 아이템이 planItems 배열에 없거나, 아이템 정보가 제공되지 않았다면 기존 오버레이 숨김 로직 수행
     if (currentOverlay.value) {
         currentOverlay.value = null; // 참조 제거
@@ -97,31 +109,32 @@ defineExpose({ toggleMarkers });
 
 const movedMarkers = (tour) => {
     closeOverlay();
-    const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
-    const content = `<div class="wrap">
-                                <div class="info">
-                                    <div class="title">
-                                        ${tour.title}
-                                    </div>
-                                    <div class="body">
-                                        <div class="img">
-                                            <img src="${tour.firstImage ? tour.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
-                                        </div>
-                                        <div class="desc">
-                                            <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>
-                                            <div class="jibun ellipsis">전화번호: ${tour.tel ? tour.tel : "정보 없음"}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>`;
-    const overlay = new kakao.maps.CustomOverlay({
-        content: content,
-        map: null,
-        position: position,
-    });
+    childRef.value.show(tour);
+    // const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
+    // const content = `<div class="wrap">
+    //                             <div class="info">
+    //                                 <div class="title">
+    //                                     ${tour.title}
+    //                                 </div>
+    //                                 <div class="body">
+    //                                     <div class="img">
+    //                                         <img src="${tour.firstImage ? tour.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+    //                                     </div>
+    //                                     <div class="desc">
+    //                                         <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>
+    //                                         <div class="jibun ellipsis">전화번호: ${tour.tel ? tour.tel : "정보 없음"}</div>
+    //                                     </div>
+    //                                 </div>
+    //                             </div>
+    //                         </div>`;
+    // const overlay = new kakao.maps.CustomOverlay({
+    //     content: content,
+    //     map: null,
+    //     position: position,
+    // });
 
-    currentMarkerOverlay.value = overlay;
-    overlay.setMap(map.value);
+    // currentMarkerOverlay.value = overlay;
+    // overlay.setMap(map.value);
 };
 
 // 카카오 맵 초기화
@@ -173,11 +186,16 @@ watch(
     { deep: true }
 );
 
+const childRef = ref(null)
+const contentId = ref(0)
+
 const updateMapMarkers = async (tourList, oldTourList) => {
+    if (tourList.length == 0) return;
     let bounds = new kakao.maps.LatLngBounds();
     let flag = false;
 
-    for (const item of tourList) {
+    for (let index = 0; index < tourList.length; index++) {
+        const item = tourList[index];
         flag = true;
         const position = new kakao.maps.LatLng(item.latitude, item.longitude);
 
@@ -231,7 +249,6 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             kakao.maps.event.addListener(marker2, "click", () => {
                 closeOverlay();
 
-
                 currentMarkerOverlay.value = overlay;
                 overlay.setMap(map.value);
 
@@ -246,20 +263,23 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();
 
-                currentMarker.value = marker;
-                const markerImage = new kakao.maps.MarkerImage("src/assets/image/test_marker.png", new kakao.maps.Size(55, 55), new kakao.maps.Point(55, 55));
+                currentMarker.value = index;
+                const markerImage = new kakao.maps.MarkerImage(imageUrl, new kakao.maps.Size(60, 60));
                 marker.setImage(markerImage);
                 marker.setMap(map.value);
+                marker.setZIndex(9999999999);
 
                 // currentMarkerOverlay.value = overlay;
                 // overlay.setMap(map.value);
 
                 currentOverlay.value = item;
                 map.value.setCenter(position);
-                router.replace({ name: "content", params: { contentId: item.contentId } });
+                contentId.value = item.contentId;
+                childRef.value.show(item);
+                // router.replace({ name: "content", params: { contentId: item.contentId } });
             });
         }
-
+        marker.setZIndex(-1);
         marker.setMap(map.value);
         markers.value.push(marker);
         bounds.extend(position);
@@ -314,7 +334,8 @@ const setMapCenter = (sido) => {
 
 <template>
     <div id="map">
-        <RouterView :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers" />
+        <AttractionInfo ref="childRef" :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers"/>
+        <!-- <RouterView :tourData="props.tourData" @close-overlay="closeOverlay" @moved-markers="movedMarkers" /> -->
     </div>
 </template>
 
