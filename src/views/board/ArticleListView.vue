@@ -2,7 +2,14 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
+import { useRouter } from "vue-router";
 const { VITE_ARTICLE_LIST_SIZE } = import.meta.env;
+
+const router = useRouter();
+router.beforeRouteLeave = (to, from, next) => {
+    console.log(to);
+    console.log(from);
+};
 
 const articleList = ref([]);
 const currentPage = ref(1);
@@ -37,6 +44,7 @@ const onPageChange = (val) => {
 const getArticleList = function () {
     axios("http://localhost/article", { params: param.value })
         .then((response) => {
+            console.log(response);
             articleList.value = response.data.items.articles;
             currentPage.value = response.data.items.currentPage;
             totalPage.value = response.data.items.totalPageCount;

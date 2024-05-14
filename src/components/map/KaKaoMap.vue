@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, onUpdated, ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
+const route = useRoute();
 const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
@@ -9,6 +10,18 @@ const props = defineProps({ tourData: Array, region: String, planFlag: Boolean, 
 const emit = defineEmits(["markerClickEvent"]);
 
 const markers = ref([]);
+
+window.onload = () => {
+    if (props.planDetailFlag && props.tourData.length == 0) {
+        return;
+    }
+    if (route.params && route.params.contentId) {
+        router.push({ name: "home" });
+        return;
+    }
+    // MyPlanDetailView.vue에서 새로고침하는경우 새롭게 마커 업데이트
+    updateMapMarkers(props.tourData);
+};
 
 // 메타 정보
 const locationMap = {
@@ -60,7 +73,7 @@ const closeOverlay = (item = null) => {
 onMounted(async () => {
     if (window.kakao && window.kakao.maps) {
         initMap();
-        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 0);
+        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 100);
     } else {
         const script = document.createElement("script");
         /* global kakao */
