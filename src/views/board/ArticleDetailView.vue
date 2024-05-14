@@ -36,11 +36,11 @@ onMounted(() => {
 		<div id="article_div" class="mb-3 position-absolute top-50 start-50 translate-middle-x">
 			<RouterLink :to="{ name: 'board' }" style="text-decoration: none;"><span class="mb-3 text-primary" style="cursor: pointer">&lt; 뒤로가기</span></RouterLink>
 			
-			<h3 class="mt-3">{{ board.subject }}</h3>
+			<h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
 			<span style="font-size: medium"> {{board.memberId}} | {{board.registerDate}} | 조회수 {{board.hit}}</span> 
 
 			<hr>
-			<div>{{board.content}}</div>
+			<div id="content_data">{{board.content}}</div>
 			<hr>
 			<!-- <c:if test="${board.userId eq member.userId}">-->
 				<div class="d-flex justify-content-center">
@@ -59,4 +59,10 @@ onMounted(() => {
 	top: 1.5rem; 
 	width: 47%;
 }
+#title_data, #content_data{
+    width: 100%; 
+    white-space: normal;
+	word-break:break-word;
+}
+
 </style>
