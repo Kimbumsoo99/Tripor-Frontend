@@ -3,80 +3,36 @@ import { computed, onMounted, ref, watch, defineExpose } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 
-const props = defineProps({ tourData: Array, contentId: Number });
+const props = defineProps({ sortList: Array, contentId: Number });
 const emit = defineEmits(["closeOverlay", "movedMarkers"]);
 
 const tourList = ref([]);
 
-const route = useRoute();
-const router = useRouter();
-
 const place = ref("");
 
-const mergeSort = (arr) => {
-    if (arr.length <= 1) {
-        return arr;
-    }
+// watch(
+//     () => props.contentId,
+//     () => {
+//         axios.get(`http://localhost/trip/${props.contentId}`).then((res) => {
+//             place.value = res.data.item;
+//         });
 
-    const mid = Math.floor(arr.length / 2);
-    const left = arr.slice(0, mid);
-    const right = arr.slice(mid);
+//         const placeSaveList = [];
+//         props.tourData.forEach((i, index) => {
+//             let distance = Math.sqrt(Math.pow(i.latitude - place.value.latitude, 2) + Math.pow(i.longitude - place.value.longitude, 2));
 
-    return merge(mergeSort(left), mergeSort(right));
-};
+//             let placeSave = i;
+//             placeSave.distance = distance;
+//             placeSave.index = index;
 
-const merge = (left, right) => {
-    let result = [];
-    let leftIndex = 0;
-    let rightIndex = 0;
-
-    while (leftIndex < left.length && rightIndex < right.length) {
-        if (left[leftIndex].distance < right[rightIndex].distance) {
-            result.push(left[leftIndex]);
-            leftIndex++;
-        } else {
-            result.push(right[rightIndex]);
-            rightIndex++;
-        }
-    }
-
-    return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
-};
-
-watch(
-    () => props.tourData,
-    (t) => {
-        tourList.value = t;
-    }
-);
-
-watch(
-    () => props.contentId,
-    () => {
-        axios.get(`http://localhost/trip/${props.contentId}`).then((res) => {
-            place.value = res.data.item;
-        });
-
-        const placeSaveList = [];
-        props.tourData.forEach((i, index) => {
-            let distance = Math.sqrt(Math.pow(i.latitude - place.value.latitude, 2) + Math.pow(i.longitude - place.value.longitude, 2));
-
-            let placeSave = i;
-            placeSave.distance = distance;
-            placeSave.index = index;
-
-            placeSaveList.push(placeSave);
-        });
-        tourList.value = placeSaveList;
-    },
-);
-
-const sortList = computed(() => {
-    return mergeSort(tourList.value).slice(0, 4);
-});
+//             placeSaveList.push(placeSave);
+//         });
+//         tourList.value = placeSaveList;
+//     }
+// );
 
 const movePlace = async (content) => {
-    emit('movedMarkers', content)
+    emit("movedMarkers", content);
     // const response = await axios.get(`http://localhost/trip/${contentId}`);
     // place.value = response.data.item;
 };
@@ -99,10 +55,9 @@ const closeOverlay = () => {
 const show = (content) => {
     detailVisible.value = true;
     getAttractionInfo(content.contentId);
-}
+};
 
 defineExpose({ show });
-
 </script>
 
 <template>
