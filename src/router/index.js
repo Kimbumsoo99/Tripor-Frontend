@@ -5,6 +5,7 @@ import JoinView from "@/views/user/JoinView.vue";
 import JoinOkView from "@/views/user/JoinOkView.vue";
 import FindPwdView from "@/views/user/FindPwdView.vue";
 import ProfileView from "@/views/user/ProfileView.vue";
+import DeleteUserVue from "@/views/user/DeleteUserVue.vue";
 import MakePlanView from "@/views/plan/MakePlanView.vue";
 import MyPlanView from "@/views/plan/MyPlanView.vue";
 import MyPlanDetailView from "@/views/plan/MyPlanDetailView.vue";
@@ -30,29 +31,34 @@ const router = createRouter({
       ],
     },
     {
-      path: "/login",
+      path: "/user/login",
       name: "login",
       component: LoginView,
     },
     {
-      path: "/join",
+      path: "/user/join",
       name: "join",
       component: JoinView,
     },
     {
-      path: "/join_ok",
+      path: "/user/join_ok",
       name: "join_ok",
       component: JoinOkView,
     },
     {
-      path: "/findpwd",
+      path: "/user/findpwd",
       name: "findpwd",
       component: FindPwdView,
     },
     {
-      path: "/profile",
+      path: "/user/profile",
       name: "profile",
       component: ProfileView,
+    },
+    {
+      path: "/user/delete",
+      name: "deleteuser",
+      component: DeleteUserVue,
     },
     {
       path: "/makeplan",

@@ -63,10 +63,6 @@ const toggle = () => {
                     <div>
                         <RouterLink :to="{ name: 'profile' }" style="text-decoration: none; color:#332D2D"><a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;회원정보 수정</a></RouterLink>
                     </div>
-                    <div style="height: 10px"></div>
-                    <div>
-                        <a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;회원탈퇴</a>
-                    </div>
                     
                 </div>
             </div>
