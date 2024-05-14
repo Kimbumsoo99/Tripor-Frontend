@@ -1,9 +1,30 @@
 <script setup>
+import { ref } from 'vue';
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+const memberStore = useMemberStore();
+
+const { isLogin, userInfo } = storeToRefs(memberStore);
+const { userLogout } = memberStore;
 const emit = defineEmits(['closeSide'])
+
+const logout = () => {
+    userLogout();
+};
 
 const closeSide = () => {
     emit('closeSide')
 }
+
+const isExpanded = ref(false);
+
+const toggle = () => {
+    if (isExpanded.value === false) {
+        isExpanded.value = true;
+    } else {
+        isExpanded.value = false;
+    }
+};
 </script>
 
 <template>
@@ -56,10 +77,6 @@ const closeSide = () => {
 							<div>
 								<RouterLink :to="{ name: 'profile' }" style="text-decoration: none; color:#332D2D"><a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;회원정보 수정</a></RouterLink>
 							</div>
-							<div style="height: 10px"></div>
-							<div>
-								<a style="cursor: pointer" onclick="">-&nbsp;&nbsp;&nbsp;회원탈퇴</a>
-							</div>
 							
 						</div>
 					</div>
@@ -67,12 +84,13 @@ const closeSide = () => {
 				<div
 					id="aside_join_login"
 					style="display: block; overflow: hidden; white-space: nowrap;">
-
-					<RouterLink :to="{ name: 'join' }" style="text-decoration: none; color: #0077CC"><button id="joinButton" class="btn btn-outline-primary m-1">회원가입</button></RouterLink>
-					<RouterLink :to="{ name: 'login' }" style="text-decoration: none; color: white"><button id="logInButton" class="btn text-white btn-primary m-1">로그인</button></RouterLink>
-					<div style="display:none">
-						<span>{} 님 로그인 중</span>
-						<button id="logOutButton" class="btn text-white btn-primary m-1" onclick="">로그아웃</button>
+					<div v-if="userInfo == null">
+						<RouterLink :to="{ name: 'join' }" style="text-decoration: none; color: #0077CC"><button id="joinButton" class="btn btn-outline-primary m-1">회원가입</button></RouterLink>
+						<RouterLink :to="{ name: 'login' }" style="text-decoration: none; color: white"><button id="logInButton" class="btn text-white btn-primary m-1">로그인</button></RouterLink>
+					</div>
+					<div v-else>
+						<span class="me-1">{{ userInfo.memberName }} 님 로그인 중</span>
+						<button id="logOutButton" class="btn text-white btn-primary m-1" @click="logout">로그아웃</button>
 					</div>
 			</div>
 		</div>
