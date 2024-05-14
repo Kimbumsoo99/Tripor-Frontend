@@ -8,7 +8,10 @@
 			<div>
 				<form method="POST" action="">
 					<h5 class="mb-5">마이페이지</h5>
-					<h4 class="mb-4">회원정보</h4>
+					<div class="d-flex flex-row justify-content-between">
+							<h4 class="mb-4">회원정보</h4>
+							<RouterLink :to="{ name: 'deleteuser' }" style="text-decoration: none; font-size: 14px">회원탈퇴&#8594;</RouterLink>
+					</div>
 					<input type="hidden" name="action" value="modify"/>
 					<div class="form_group">
 						<div class="d-flex flex-row mb-3">
@@ -33,6 +36,8 @@
 								required />
 						</div>
 						<button class="col-12 btn btn-primary mb-3">정보수정</button>
+						
+						
 					</div>
 				</form>
 			</div>
