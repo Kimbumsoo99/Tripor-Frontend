@@ -95,7 +95,7 @@ onMounted(() => {
                                     <th class="board__column th-num col-2 col-sm-2">번호</th>
                                     <th class="board__column th-title col-4 col-sm-5">제목</th>
                                     <th class="board__column th-author col-2 col-sm-3">작성자</th>
-                                    <th class="board__column th-date col-3 d-none d-md-block">작성일</th>
+                                    <!-- <th class="board__column th-date col-3 d-none d-md-block">작성일</th> -->
                                     <th class="board__column th-views col-1 col-sm-2">조회</th>
                                 </tr>
                             </thead>
@@ -105,20 +105,21 @@ onMounted(() => {
                                         {{ article.articleId }}
                                     </td>
                                     <th class="board__column col-4 col-sm-5">
+                                        <div id="title_data">
                                         <RouterLink
                                             :to="{
                                                 name: 'detail',
                                                 params: { id: article.articleId },
                                             }"
                                             >{{ article.subject }}</RouterLink
-                                        >
+                                        ></div>
                                     </th>
                                     <td class="board__column col-2 col-sm-3">
                                         {{ article.memberId }}
                                     </td>
-                                    <td class="board__column col-3 d-none d-md-block">
+                                    <!-- <td class="board__column col-3 d-none d-md-block">
                                         {{ article.registerDate }}
-                                    </td>
+                                    </td> -->
                                     <td class="board__column col-1 col-sm-2">{{ article.hit }}</td>
                                 </tr>
                             </tbody>
@@ -145,7 +146,7 @@ onMounted(() => {
 #board_div {
     position: relative;
     top: 1.5rem;
-    width: 47%;
+    width: 49%;
 }
 .board-table {
     font-size: 13px;
@@ -202,4 +203,11 @@ onMounted(() => {
     text-decoration: none;
     font-size: 16px;
 }
+#title_data{
+    width: 300px; 
+    white-space: nowrap; /* 요소의 텍스트가 너비를 넘어가면 줄 바꿈을 하지 않습니다. */
+    overflow: hidden; /* 요소의 내용이 너비를 넘어가면 숨깁니다. */
+    text-overflow: ellipsis; /* 넘치는 부분을 ...로 표시합니다. */
+}
+
 </style>
