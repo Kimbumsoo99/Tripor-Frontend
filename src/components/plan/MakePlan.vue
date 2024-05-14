@@ -31,6 +31,7 @@ watch(
 );
 
 const makePlan = async () => {
+    if (planList.value.length === 0) return;
     const makeFlag = confirm("이대로 여행 계획을 세우시겠습니까?");
     if (!makeFlag) {
         return;
