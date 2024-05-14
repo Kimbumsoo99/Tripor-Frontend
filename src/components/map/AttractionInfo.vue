@@ -1,9 +1,9 @@
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, defineExpose } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 
-const props = defineProps({ tourData: Array });
+const props = defineProps({ tourData: Array, contentId: Number });
 const emit = defineEmits(["closeOverlay", "movedMarkers"]);
 
 const tourList = ref([]);
@@ -51,9 +51,9 @@ watch(
 );
 
 watch(
-    () => route.params.contentId,
-    (contentId) => {
-        axios.get(`http://localhost/trip/${contentId}`).then((res) => {
+    () => props.contentId,
+    () => {
+        axios.get(`http://localhost/trip/${props.contentId}`).then((res) => {
             place.value = res.data.item;
         });
 
@@ -69,41 +69,44 @@ watch(
         });
         tourList.value = placeSaveList;
     },
-    { immediate: true }
 );
 
 const sortList = computed(() => {
     return mergeSort(tourList.value).slice(0, 4);
 });
 
-const movePlace = (contentId) => {
-    axios.get(`http://localhost/trip/${contentId}`).then((res) => {
-        emit("movedMarkers", res.data.item);
-    });
-    router.replace({ name: "content", params: { contentId: contentId } });
+const movePlace = async (content) => {
+    emit('movedMarkers', content)
+    // const response = await axios.get(`http://localhost/trip/${contentId}`);
+    // place.value = response.data.item;
 };
 
-const getAttractionInfo = async () => {
+const getAttractionInfo = async (contentId) => {
     try {
-        const response = await axios.get(`http://localhost/trip/${route.params.contentId}`);
+        const response = await axios.get(`http://localhost/trip/${contentId}`);
         place.value = response.data.item;
     } catch (error) {
         console.error(error);
     }
 };
 
+let detailVisible = ref(false);
+
 const closeOverlay = () => {
-    emit("closeOverlay");
-    router.replace({ name: "home" });
+    detailVisible.value = false;
 };
 
-onMounted(() => {
-    getAttractionInfo();
-});
+const show = (content) => {
+    detailVisible.value = true;
+    getAttractionInfo(content.contentId);
+}
+
+defineExpose({ show });
+
 </script>
 
 <template>
-    <div id="placeDetail" class="bg-light p-3">
+    <div id="placeDetail" class="bg-light p-3" v-if="detailVisible">
         <div class="d-flex flex-row justify-content-between">
             <h4>{{ place.title }}</h4>
             <i class="bi bi-x-lg" style="cursor: pointer" @click="closeOverlay"></i>
@@ -127,7 +130,7 @@ onMounted(() => {
         </template>
         <hr />
         <div style="font-weight: bold; color: gray; font-size: 24px">주변 관광지 추천</div>
-        <div v-for="p in sortList" :key="p.contentId" class="text-primary" style="font-size: 20px; cursor: pointer" @click="movePlace(p.contentId)">
+        <div v-for="p in sortList" :key="p.contentId" class="text-primary" style="font-size: 20px; cursor: pointer" @click="movePlace(p)">
             {{ p.title }}
         </div>
     </div>
