@@ -1,28 +1,15 @@
 <script setup>
-import AttractionInfo from "./AttractionInfo.vue";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onUpdated, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
-const props = defineProps({ tourData: Array, region: String, planFlag: Boolean, planList: Array });
+const props = defineProps({ tourData: Array, region: String, planFlag: Boolean, planList: Array, planDetailFlag: Boolean });
 const emit = defineEmits(["markerClickEvent"]);
 
 const markers = ref([]);
 
-watch(
-    () => props.tourData,
-    async (tourList, oldTourList) => {
-        console.log(tourList);
-        if (tourList.length == 0) return;
-        markers.value.forEach((marker) => {
-            marker.setMap(null);
-        });
-        markers.value = [];
-        await updateMapMarkers(tourList, oldTourList);
-    }
-);
 // 메타 정보
 const locationMap = {
     서울: { lat: 37.5666103, lng: 126.9783882 },
@@ -70,9 +57,10 @@ const closeOverlay = (item = null) => {
 };
 
 // 지도 표시
-onMounted(() => {
+onMounted(async () => {
     if (window.kakao && window.kakao.maps) {
         initMap();
+        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 0);
     } else {
         const script = document.createElement("script");
         /* global kakao */
@@ -132,32 +120,36 @@ const showPlaceDetail = (e, p) => {
 
 let polylines = [];
 
+const makePolyLine = (tourList) => {
+    // 모든 선분 제거
+    for (let i = 0; i < polylines.length; i++) {
+        polylines[i].setMap(null);
+    }
+    polylines = []; // 선분 배열 초기화
+
+    if (tourList.length > 1) {
+        // 선분 다시 그리기
+        for (let i = 1; i < tourList.length; i++) {
+            const startItem = tourList[i - 1];
+            const endItem = tourList[i];
+            const polyline = new kakao.maps.Polyline({
+                path: [new kakao.maps.LatLng(startItem.latitude, startItem.longitude), new kakao.maps.LatLng(endItem.latitude, endItem.longitude)],
+                // 선분 스타일 설정
+                strokeWeight: 3,
+                strokeColor: "#db4040",
+                strokeOpacity: 0.8,
+                strokeStyle: "solid",
+            });
+            polyline.setMap(map.value);
+            polylines.push(polyline);
+        }
+    }
+};
+
 watch(
     () => props.planList,
     (planItems) => {
-        // 모든 선분 제거
-        for (let i = 0; i < polylines.length; i++) {
-            polylines[i].setMap(null);
-        }
-        polylines = []; // 선분 배열 초기화
-
-        if (planItems.length > 1) {
-            // 선분 다시 그리기
-            for (let i = 1; i < planItems.length; i++) {
-                const startItem = planItems[i - 1];
-                const endItem = planItems[i];
-                const polyline = new kakao.maps.Polyline({
-                    path: [new kakao.maps.LatLng(startItem.latitude, startItem.longitude), new kakao.maps.LatLng(endItem.latitude, endItem.longitude)],
-                    // 선분 스타일 설정
-                    strokeWeight: 3,
-                    strokeColor: "#db4040",
-                    strokeOpacity: 0.8,
-                    strokeStyle: "solid",
-                });
-                polyline.setMap(map.value);
-                polylines.push(polyline);
-            }
-        }
+        makePolyLine(planItems);
     },
     { deep: true }
 );
@@ -210,6 +202,14 @@ const updateMapMarkers = async (tourList, oldTourList) => {
 
                 emit("markerClickEvent", item);
             });
+        } else if (props.planDetailFlag === true) {
+            const marker2 = new kakao.maps.Marker({
+                position: position,
+            });
+            marker2.setMap(map.value);
+            markers.value.push(marker2);
+            bounds.extend(position);
+            continue;
         } else {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();
@@ -228,14 +228,32 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         bounds.extend(position);
     }
 
-    // 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
+    if (props.planDetailFlag) {
+        makePolyLine(tourList);
+    }
     if (flag !== false) {
+        // 모든 마커가 포함되도록 지도의 중심과 줌 레벨 조정
         map.value.setBounds(bounds);
     } else {
         alert("해당 관광 정보 지역이 없습니다.");
         updateMapMarkers(oldTourList);
     }
 };
+
+watch(
+    () => props.tourData,
+    async (tourList, oldTourList) => {
+        console.log("KAKAO MAP WATCH");
+        console.log(tourList);
+        if (tourList.length == 0) return;
+        markers.value.forEach((marker) => {
+            marker.setMap(null);
+        });
+        markers.value = [];
+        await updateMapMarkers(tourList, oldTourList);
+    },
+    { deep: true }
+);
 
 // 마커 이미지
 
