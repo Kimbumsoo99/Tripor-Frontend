@@ -29,42 +29,59 @@ onMounted(() => {
 
 <template>
     <div class="position-relative">
-        <div class="p-5 mb-3" style="position: absolute; left: 400px; top: 75px">
-            <span class="text-primary" @click="router.go(-1)" style="cursor: pointer">&lt; 뒤로가기</span>
-            <h3 class="d-flex justify-content-center mb-3" style="overflow: hidden; white-space: nowrap; font-weight: bold">
-                {{ planInfo.planName }}
-            </h3>
-            <h6 class="d-flex justify-content-center mb-3">{{ planInfo.planRegisterDate }}</h6>
+        <div class="d-flex flex-row">
+            <div style="width: 400px; height: 100%" class="d-none d-xl-block"></div>
+            <div class="p-5 mb-3">
+                <div style="height: 70px"></div>
+                <span class="text-primary" @click="router.go(-1)" style="cursor: pointer">&lt; 뒤로가기</span>
+                <h3 class="d-flex justify-content-center mb-3" style="overflow: hidden; white-space: nowrap; font-weight: bold">
+                    {{ planInfo.planName }}
+                </h3>
+                <h6 class="d-flex justify-content-center mb-3">{{ planInfo.planRegisterDate }}</h6>
 
-            <div class="d-flex flex-row">
-                <div>
-                    <div id="plan-map" style="width: 800px; height: 600px">
-                        <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" />
+                <div id="plan_div">
+                    
+                    <div id="plan-map" style="width: 800px; height: 600px; margin-bottom: 10px">
+                            <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" />
                     </div>
-
-                    <div id="plan-distance"></div>
-                    <div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" @click="router.go(0)">최적 경로 찾기</button></div>
-                    <div id="plan-div-id" style="display: none">${plan.planId}</div>
-                </div>
-                <div style="width: 20px"></div>
-                <div>
-                    <div v-for="(trip, index) in tripList" :key="trip.contentId">
-                        <h5 style="cursor: pointer" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</h5>
-                        <div><i class="bi bi-geo-alt"></i>&nbsp;{{ trip.addr }}</div>
-                        <!-- <div><img style="width: 300px" src="${trip.firstImage}"/></div> -->
-                        <div style="height: 20px"></div>
+                    <div style="width: 20px"></div>
+                    <div>
+                        <div v-for="(trip, index) in tripList" :key="trip.contentId">
+                            <h5 style="cursor: pointer" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</h5>
+                            <div><i class="bi bi-geo-alt"></i>&nbsp;{{ trip.addr }}</div>
+                            <!-- <div><img style="width: 300px" src="${trip.firstImage}"/></div> -->
+                            <div style="height: 20px"></div>
+                        </div>
                     </div>
                 </div>
+                <div>
+                        <div id="plan-distance"></div>
+                        <div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" @click="router.go(0)">최적 경로 찾기</button></div>
+                        <div id="plan-div-id" style="display: none">${plan.planId}</div>
+                    </div>
             </div>
+            
         </div>
     </div>
 </template>
 
 <style scoped>
 #title {
-    -webkit-user-select: none; /* Chrome all, Safari all */
-    -moz-user-select: none; /* Firefox all */
-    -ms-user-select: none; /* IE 10+ */
-    user-select: none; /* Likely future */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}
+@media (min-width: 1199px) {
+    #plan_div{
+		display:flex;
+        flex-direction: row;
+	}
+}
+@media (max-width: 1199px) {
+    #plan_div{
+		display:flex;
+        flex-direction: column;
+	}
 }
 </style>

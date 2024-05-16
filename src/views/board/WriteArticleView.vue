@@ -3,6 +3,7 @@ import BoardFormItem from "@/components/board/item/BoardFormItem.vue";
 import { ref } from "vue";
 
 const type = ref("write");
+
 </script>
 
 <template>
