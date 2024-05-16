@@ -11,8 +11,9 @@ const memberStore = useMemberStore();
 const { isLogin, isLoginError, userInfo } = storeToRefs(memberStore);
 const { userLogin, getUserInfo } = memberStore;
 
-const memberId = ref("");
+const memberId = ref($cookies.get("id"));
 const memberPw = ref("");
+const saveid = ref($cookies.get("issave"));
 
 const login = async () => {
     const loginUser = {
@@ -26,6 +27,14 @@ const login = async () => {
     if (isLogin.value) {
         getUserInfo(token);
         console.log("userInfo : " + userInfo.value);
+
+        if(saveid.value){
+            $cookies.set("id", memberId.value);
+            $cookies.set("issave", true);
+        } else {
+            $cookies.set("id", '');
+            $cookies.set("issave", false);
+        }
         router.push({ name: "home" });
     }
 };
@@ -40,7 +49,7 @@ const login = async () => {
             <div class="form_group">
                 <div class="d-flex flex-row justify-content-between">
                     <label>아이디</label><br />
-                    <span> <input style="width: 15px; height: 15px" class="m-1" type="checkbox" id="saveid" name="saveid" /> 아이디 저장 <br /> </span>
+                    <span> <input style="width: 15px; height: 15px" class="m-1" type="checkbox" id="saveid" name="saveid" v-model="saveid" /> 아이디 저장 <br /> </span>
                 </div>
                 <input class="form-contro p-1 mb-3" type="text" id="userid" v-model="memberId" value="" style="width: 100%" placeholder="아이디를 입력해주세요." required />
 
