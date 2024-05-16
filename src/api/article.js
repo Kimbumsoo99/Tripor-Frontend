@@ -3,11 +3,11 @@ import axios from "axios";
 
 const local = localAxios();
 
-function listArticle(param, success, fail) {
-    console.log("listArticle");
-    console.log(param);
-    local.get(`/board`, { params: param }).then(success).catch(fail);
-}
+// function listArticle(param, success, fail) {
+//     console.log("listArticle");
+//     console.log(param);
+//     local.get(`/board`, { params: param }).then(success).catch(fail);
+// }
 
 function detailArticle(articleId, success, fail) {
     local.get(`article/${articleId}`).then(success).catch(fail);
@@ -50,8 +50,8 @@ function modifyArticle(article, success, fail) {
     local.put(`/board`, JSON.stringify(article)).then(success).catch(fail);
 }
 
-function deleteArticle(articleno, success, fail) {
-    local.delete(`/board/${articleno}`).then(success).catch(fail);
-}
+// function deleteArticle(articleno, success, fail) {
+//     local.delete(`/board/${articleno}`).then(success).catch(fail);
+// }
 
-export { listArticle, detailArticle, registArticle, getModifyArticle, modifyArticle, deleteArticle };
+export { detailArticle, registArticle, getModifyArticle, modifyArticle };

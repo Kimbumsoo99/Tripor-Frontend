@@ -3,6 +3,7 @@ import KaKaoMap from "@/components/map/KaKaoMap.vue";
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { shortestPathByPlanList } from "@/api/trip";
 
 const route = useRoute();
 const router = useRouter();
@@ -10,10 +11,19 @@ const router = useRouter();
 const planInfo = ref({});
 const tripList = ref([]);
 
+const shortList = ref(null);
+const originList = ref(null);
+
+const shortFlag = ref(false);
+
+const planId = ref("");
+
 const getPlanInfo = async function () {
-    const response = await axios.get(`http://localhost/trip/plan/${route.params.id}`);
+    planId.value = route.params.id;
+    const response = await axios.get(`http://localhost/trip/plan/${planId.value}`);
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;
+    originList.value = tripList.value;
 };
 
 const kakaoMapRef = ref(null);
@@ -46,6 +56,28 @@ const getTimeFromDistance = (distance) => {
         bycicleHour.value = Math.floor(bycicleTime / 60);
     }
     bycicleMin.value = bycicleTime % 60;
+};
+
+const findShortPath = () => {
+    if (!shortList.value) {
+        shortestPathByPlanList(
+            planId.value,
+            (res) => {
+                shortList.value = res.data.items;
+                shortFlag.value = true;
+                tripList.value = shortList.value;
+            },
+            (err) => console.log(err)
+        );
+    } else {
+        shortFlag.value = true;
+        tripList.value = shortList.value;
+    }
+};
+
+const getOriginPath = () => {
+    tripList.value = originList.value;
+    shortFlag.value = false;
 };
 
 onMounted(() => {
@@ -92,7 +124,10 @@ onMounted(() => {
                 </ul>
                 <div>
                     <div id="plan-distance"></div>
-                    <div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" @click="router.go(0)">최적 경로 찾기</button></div>
+                    <div id="plan-shortest-path">
+                        <button type="button" v-if="shortFlag" class="btn btn-outline-primary" @click="getOriginPath">되돌리기</button>
+                        <button type="button" v-else class="btn btn-outline-primary" @click="findShortPath">최적 경로 찾기</button>
+                    </div>
                     <div id="plan-div-id" style="display: none">${plan.planId}</div>
                 </div>
             </div>

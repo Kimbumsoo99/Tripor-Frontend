@@ -22,8 +22,8 @@ window.onload = () => {
     }
     console.log(props.tourData);
     // MyPlanDetailView.vue에서 새로고침하는경우 새롭게 마커 업데이트
-
-    setTimeout(() => updateMapMarkers(props.tourData), 300);
+    if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 300);
+    else updateMapMarkers(props.tourData);
 };
 
 // 메타 정보
@@ -172,16 +172,15 @@ const initMap = () => {
 };
 
 // 선분 관련
-let polylines = [];
+const currentPolyLine = ref(null);
 
 const makePolyLine = (tourList) => {
     // 모든 선분 제거
-    for (let i = 0; i < polylines.length; i++) {
-        polylines[i].setMap(null);
+    if (currentPolyLine.value) {
+        currentPolyLine.value.setMap(null);
     }
-    polylines = []; // 선분 배열 초기화
-
     if (tourList.length > 1) {
+        console.log();
         let polyPath = [];
         // 선분 다시 그리기
         const polyline = new kakao.maps.Polyline({
@@ -197,6 +196,7 @@ const makePolyLine = (tourList) => {
         }
         polyline.setPath(polyPath);
         polyline.setMap(map.value);
+        currentPolyLine.value = polyline;
         emit("getTimeFromDistance", polyline.getLength().toFixed(2));
     }
 };
@@ -205,6 +205,7 @@ const makePolyLine = (tourList) => {
 watch(
     () => props.planList,
     (planItems) => {
+        console.log(planItems);
         makePolyLine(planItems);
     },
     { deep: true }
@@ -224,7 +225,7 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         const position = new kakao.maps.LatLng(item.latitude, item.longitude);
 
         const imageUrl = "src/assets/image/" + item.contentTypeId + ".png";
-        const imageSize = new kakao.maps.Size(45, 45);
+        const imageSize = new kakao.maps.Size(35, 35);
         const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
         const selectedMarkerImage = new kakao.maps.MarkerImage(imageUrl, new kakao.maps.Size(60, 60));
         const marker = new kakao.maps.Marker({
@@ -267,7 +268,6 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                 closeOverlay();
 
                 currentOverlay.value = item;
-                map.value.setCenter(position);
 
                 emit("markerClickEvent", item);
             });
