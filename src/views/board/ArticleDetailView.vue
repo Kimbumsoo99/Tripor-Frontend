@@ -3,11 +3,13 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle } from "@/api/article.js";
+const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
 
 const route = useRoute();
 const router = useRouter();
 
 const { id } = route.params;
+const imagesPath = ref([]);
 
 const board = ref({});
 
@@ -15,8 +17,10 @@ const getBoard = async function () {
     detailArticle(
         id,
         (res) => {
-            console.log(res);
             board.value = res.data.item;
+            for (const image of board.value.fileInfos) {
+                imagesPath.value.push(VITE_UPLOAD_FILE_PATH + "/" + image.saveFolder + "/" + image.saveFile);
+            }
         },
         (err) => console.log(err)
     );
@@ -50,14 +54,15 @@ onMounted(() => {
 
             <hr />
             <div id="content_data">{{ board.content }}</div>
+
+            <div v-for="(image, idx) in imagesPath" :key="idx">
+                <img :src="image" width="800px" style="border: solid 1px black" />
+            </div>
             <hr />
-            <!-- <c:if test="${board.userId eq member.userId}">-->
             <div class="d-flex justify-content-center">
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
                 <input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" @click="boardRemove" value="삭제하기" />
             </div>
-
-            <!-- </c:if>  -->
         </div>
     </div>
 </template>
