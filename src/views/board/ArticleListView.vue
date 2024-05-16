@@ -143,10 +143,20 @@ onMounted(() => {
 </template>
 
 <style scoped>
-#board_div {
-    position: relative;
-    top: 1.5rem;
-    width: 49%;
+@media (min-width: 1199px) {
+    #board_div{
+		position: relative; 
+		top: 130px; 
+		width: 49%;
+		margin-left: 100px;
+	}
+}
+@media (max-width: 1199px) {
+    #board_div{
+		position: relative; 
+		top: 130px; 
+		width: 80%;
+	}
 }
 .board-table {
     font-size: 13px;

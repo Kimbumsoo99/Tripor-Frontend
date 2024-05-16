@@ -30,7 +30,7 @@ const boardInsert = async function () {
 <template>
     <div class="position-relative">
         <div style="height: 280px"></div>
-        <form action="" method="POST" class="editor__form mb-3 position-absolute top-50 start-50 translate-middle-x" id="editor-form" style="width: 45%" @submit.prevent="boardInsert">
+        <form action="" method="POST" class="editor__form mb-3 position-absolute top-50 start-50 translate-middle-x" id="editor-form" @submit.prevent="boardInsert">
             <h4 class="d-flex justify-content-center" style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
             <div style="height: 10px"></div>
             <input type="hidden" name="action" value="write" />
@@ -46,4 +46,20 @@ const boardInsert = async function () {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 1199px) {
+    #editor-form{
+		position: relative; 
+		top: 130px; 
+		width: 49%;
+		margin-left: 100px;
+	}
+}
+@media (max-width: 1199px) {
+    #editor-form{
+		position: relative; 
+		top: 130px; 
+		width: 80%;
+	}
+}
+</style>
