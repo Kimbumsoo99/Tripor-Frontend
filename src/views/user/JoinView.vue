@@ -16,6 +16,9 @@ const emailDomain = ref('')
 const selectedSido = ref(0)
 const gugun = ref(0)
 
+const duplicatedId = ref(false);
+const incorrectPw = ref(false)
+
 const getSido = async function () {
   await axios.get('http://localhost/trip/sido').then((response) => {
     sidoList.value = response.data.items
@@ -39,26 +42,30 @@ const getGugun = async function (sido) {
 
 const joinUser = async function () {
   if (memberPw.value === memberPwCheck.value) {
-    await axios
-      .post("http://localhost/member", {
-        memberId: memberId.value,
-        memberPw: memberPw.value,
-        memberName: memberName.value,
-        emailId: emailId.value,
-        emailDomain: emailDomain.value,
-        sido: selectedSido.value,
-        gugun: gugun.value
-      })
-      .then(
-        router.push({ name: 'join_ok' })
-        )
-        .catch((err) => console.error(err));
+    incorrectPw.value = false;
+    try {
+      const response = await axios
+        .post("http://localhost/member", {
+          memberId: memberId.value,
+          memberPw: memberPw.value,
+          memberName: memberName.value,
+          emailId: emailId.value,
+          emailDomain: emailDomain.value,
+          sido: selectedSido.value,
+          gugun: gugun.value
+        });
+      router.push({ name: 'join_ok' });
+    } catch(error) {
+      if (error.response.status == 500) { // 아이디 중복
+          duplicatedId.value = true;
+      } else {
+          duplicatedId.value = false;
+      }
+    }
 
   } else {
-    alert('비밀번호가 일치하지 않습니다.');
+    incorrectPw.value = true;
   }
-    
-    
 };
 
 
@@ -93,6 +100,7 @@ const joinUser = async function () {
                             v-model="memberId"
                             required
                         />
+                        
                         <label>비밀번호</label><br />
                         <input
                             class="p-1 mb-3"
@@ -168,15 +176,20 @@ const joinUser = async function () {
 			                  <option selected>선택</option>
 			                  <option v-for="gugun in gugunList" :key="gugun.gugunCode" :value="gugun.gugunCode">{{ gugun.gugunName }}</option>
 			                </select>
-			              </div>
-							<button
+                      <br>
+                      
+			                </div>
+                      <div class="col-12" id="msg">
+                          <p v-if="duplicatedId">{{memberId}}은(는) 중복된 아이디입니다.</p>
+                          <p v-if="incorrectPw">비밀번호가 일치하지 않습니다.</p>
+                      </div>
+                      <button
                        	 	type="submit"
                        	 	id="regist"
                             class="col-12 btn btn-primary mb-3 mt-2"
                         	>
                             회원가입
                         </button>
-                        
                     </div>
                 </form>
             </div>
@@ -187,5 +200,10 @@ const joinUser = async function () {
     position: absolute;
     top: 130px;
     width: 45%;  
+}
+#msg{
+  text-align: center; 
+	font-size: 16px;
+	color: rgb(220, 0, 0);
 }
 </style>
