@@ -15,10 +15,23 @@
 </template>
 
 <style scoped>
-#join_ok_div{
-    text-align:center;
-    position: absolute;
-    top: 130px;
-    width: 45%;  
+@media (min-width: 1199px) {
+    #join_ok_div{
+        white-space : nowrap;
+        text-align: center;
+        position: absolute;
+        top: 130px;
+        width: 55%;  
+        margin-left: 100px;
+    }
+}
+@media (max-width: 1199px) {
+    #join_ok_div{
+        white-space : nowrap;
+        text-align: center;
+        position: absolute;
+        top: 130px;
+        width: 100%;  
+    }
 }
 </style>
