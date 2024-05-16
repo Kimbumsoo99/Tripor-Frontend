@@ -9,8 +9,8 @@ function listArticle(param, success, fail) {
     local.get(`/board`, { params: param }).then(success).catch(fail);
 }
 
-function detailArticle(articleno, success, fail) {
-    local.get(`/board/${articleno}`).then(success).catch(fail);
+function detailArticle(articleId, success, fail) {
+    local.get(`article/${articleId}`).then(success).catch(fail);
 }
 
 function registArticle(article, images, success, fail) {
