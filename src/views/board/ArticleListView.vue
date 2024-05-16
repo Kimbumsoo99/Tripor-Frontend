@@ -2,6 +2,8 @@
 import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
+import VSelect from "@/components/common/VSelect.vue";
+import { listArticle } from "@/api/article";
 import { useRouter } from "vue-router";
 const { VITE_ARTICLE_LIST_SIZE, VITE_ARTICLE_NAVIGATION_SIZE } = import.meta.env;
 
@@ -44,18 +46,29 @@ const onPageChange = (val) => {
 };
 
 const getArticleList = function () {
-    axios("http://localhost/article", { params: param.value })
-        .then((response) => {
-            console.log(response);
-            articleList.value = response.data.items.articles;
-            currentPage.value = response.data.meta.currentPage;
-            totalPage.value = response.data.meta.totalPageCount;
-            totalCount.value = response.data.meta.totalCount;
-        })
-        .catch((error) => {
-            console.log("에러발생");
-            console.error(error);
-        });
+    listArticle(
+        param.value,
+        (res) => {
+            console.log(res);
+            articleList.value = res.data.items.articles;
+            currentPage.value = res.data.meta.currentPage;
+            totalPage.value = res.data.meta.totalPageCount;
+            totalCount.value = res.data.meta.totalCount;
+        },
+        (err) => console.log(err)
+    );
+    // axios("http://localhost/article", { params: param.value })
+    //     .then((response) => {
+    //         console.log(response);
+    //         articleList.value = response.data.items.articles;
+    //         currentPage.value = response.data.meta.currentPage;
+    //         totalPage.value = response.data.meta.totalPageCount;
+    //         totalCount.value = response.data.meta.totalCount;
+    //     })
+    //     .catch((error) => {
+    //         console.log("에러발생");
+    //         console.error(error);
+    //     });
 };
 
 const computedIndex = computed(() => {
@@ -64,6 +77,24 @@ const computedIndex = computed(() => {
         return totalCount.value - index - (currentPage.value - 1) * VITE_ARTICLE_LIST_SIZE;
     });
 });
+
+const onKeySelect = (value) => {
+    param.value.key = value;
+};
+
+const searchArticle = () => {
+    listArticle(
+        param.value,
+        (res) => {
+            console.log(res);
+            articleList.value = res.data.items.articles;
+            currentPage.value = res.data.meta.currentPage;
+            totalPage.value = res.data.meta.totalPageCount;
+            totalCount.value = res.data.meta.totalCount;
+        },
+        (err) => console.log(err)
+    );
+};
 
 onMounted(() => {
     getArticleList();
@@ -87,14 +118,10 @@ onMounted(() => {
                         <form id="form-search" class="d-flex" action="">
                             <input type="hidden" name="action" value="list" />
                             <input type="hidden" name="pgno" value="1" />
-                            <select id="key" name="key" class="form-select form-select-sm ms-3 me-1 w-50" aria-label="검색조건">
-                                <option selected>검색조건</option>
-                                <option value="subject">제목</option>
-                                <option value="user_id">작성자</option>
-                            </select>
+                            <VSelect @on-key-select="onKeySelect" />
                             <div class="input-group input-group-sm me-3">
-                                <input id="word" name="word" type="text" class="form-control" placeholder="검색어..." />
-                                <button id="btn-search" class="btn btn-dark" type="button">검색</button>
+                                <input v-model="param.word" type="text" class="form-control" placeholder="검색어..." />
+                                <button id="btn-search" class="btn btn-dark" type="button" @click.prevent="searchArticle">검색</button>
                             </div>
                         </form>
                         <div style="height: 10px"></div>

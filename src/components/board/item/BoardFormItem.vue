@@ -29,7 +29,9 @@ if (props.type === "modify") {
     getModifyArticle(
         id,
         ({ data }) => {
+            console.log("getModifyArticle 로딩", data);
             article.value = data.item;
+            images.value.files = data.item.fileinfos;
         },
         (err) => {
             console.log(err);
@@ -117,18 +119,18 @@ const upload = () => {
 
 <style scoped>
 @media (min-width: 1199px) {
-    #editor-form{
-		position: relative; 
-		top: 130px; 
-		width: 49%;
-		margin-left: 100px;
-	}
+    #editor-form {
+        position: relative;
+        top: 130px;
+        width: 49%;
+        margin-left: 100px;
+    }
 }
 @media (max-width: 1199px) {
-    #editor-form{
-		position: relative; 
-		top: 130px; 
-		width: 80%;
-	}
+    #editor-form {
+        position: relative;
+        top: 130px;
+        width: 80%;
+    }
 }
 </style>

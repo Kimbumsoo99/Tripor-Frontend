@@ -1,12 +1,15 @@
 <script setup>
 import { ref } from "vue";
-defineProps({ selectOption: Array });
+const selectOption = ref([
+    { text: "검색 조건", value: "" },
+    { text: "제목", value: "subject" },
+    { text: "작성자", value: "memberId" },
+]);
 const emit = defineEmits(["onKeySelect"]);
 
 const key = ref("");
 
 const onSelect = () => {
-    console.log(key.value + "선택!!!");
     emit("onKeySelect", key.value);
 };
 </script>

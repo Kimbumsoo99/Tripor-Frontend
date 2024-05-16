@@ -3,11 +3,9 @@ import axios from "axios";
 
 const local = localAxios();
 
-// function listArticle(param, success, fail) {
-//     console.log("listArticle");
-//     console.log(param);
-//     local.get(`/board`, { params: param }).then(success).catch(fail);
-// }
+function listArticle(param, success, fail) {
+    local.get(`/article`, { params: param }).then(success).catch(fail);
+}
 
 function detailArticle(articleId, success, fail) {
     local.get(`article/${articleId}`).then(success).catch(fail);
@@ -54,4 +52,4 @@ function modifyArticle(article, success, fail) {
 //     local.delete(`/board/${articleno}`).then(success).catch(fail);
 // }
 
-export { detailArticle, registArticle, getModifyArticle, modifyArticle };
+export { listArticle, detailArticle, registArticle, getModifyArticle, modifyArticle };
