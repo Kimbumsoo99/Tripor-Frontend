@@ -11,16 +11,7 @@ const memberStore = useMemberStore();
 const { isLogin, userInfo } = storeToRefs(memberStore);
 const { userLogout } = memberStore;
 
-const isExpanded = ref(false);
 const sideFlag = ref(false);
-
-const toggle = () => {
-    if (isExpanded.value === false) {
-        isExpanded.value = true;
-    } else {
-        isExpanded.value = false;
-    }
-};
 
 const logout = () => {
     userLogout();
@@ -61,7 +52,7 @@ function closeCallback() {
                         </template>
                         <template v-else>
                             <div>
-                                <span>{{ userInfo.memberName }} 님 로그인 중</span>
+                                <span class="me-1">{{ userInfo.memberName }} 님 로그인 중</span>
                                 <button id="logOutButton" class="btn text-white btn-primary m-1" @click="logout">로그아웃</button>
                             </div>
                         </template>
