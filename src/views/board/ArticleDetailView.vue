@@ -54,9 +54,10 @@ onMounted(() => {
 
             <hr />
             <div id="content_data">{{ board.content }}</div>
+            <div style="height: 15px"></div>
 
             <div v-for="(image, idx) in imagesPath" :key="idx">
-                <img :src="image" width="800px" style="border: solid 1px black" />
+                <img :src="image" width="100%" style="border: solid 1px black" />
             </div>
             <hr />
             <div class="d-flex justify-content-center">
