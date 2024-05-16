@@ -1,4 +1,20 @@
 <script setup>
+import axios from 'axios'
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia"; 
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const memberStore = useMemberStore();
+
+const { userInfo } = memberStore;
+
+const userRemove = async function () {
+    await axios.delete(`http://localhost/member/${userInfo.memberId}`);
+    alert('회원탈퇴가 완료되었습니다.');
+    router.push({ name:'home' });
+}
 
 </script>
 
@@ -9,15 +25,28 @@
         <h4>정말로 탈퇴하시겠어요?</h4>
         <p>탈퇴 버튼 클릭 시, 계정은 삭제되며 복구되지 않습니다.</p>
         <div style="height: 10px"></div>
-        <button class="col-3 btn btn-primary mb-3">탈퇴하기</button>
+        <button class="btn btn-primary mb-3" style="width: 100px" @click="userRemove">탈퇴하기</button>
     </div>
 </template>
 
 <style scoped>
-#delete_user_div{
-    text-align:center;
-    position: absolute;
-    top: 130px;
-    width: 45%;  
+@media (min-width: 1199px) {
+    #delete_user_div{
+        white-space : nowrap;
+        text-align: center;
+        position: absolute;
+        top: 130px;
+        width: 55%;  
+        margin-left: 100px;
+    }
+}
+@media (max-width: 1199px) {
+    #delete_user_div{
+        white-space : nowrap;
+        text-align: center;
+        position: absolute;
+        top: 130px;
+        width: 100%;  
+    }
 }
 </style>
