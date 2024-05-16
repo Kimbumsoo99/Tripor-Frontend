@@ -50,11 +50,13 @@ let detailVisible = ref(false);
 
 const closeOverlay = () => {
     detailVisible.value = false;
+    place.value = null;
 };
 
 const show = (content) => {
     detailVisible.value = true;
-    getAttractionInfo(content.contentId);
+    place.value = content;
+    // getAttractionInfo(content.contentId);
 };
 
 defineExpose({ show });
