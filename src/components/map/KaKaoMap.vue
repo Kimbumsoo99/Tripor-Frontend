@@ -64,18 +64,13 @@ const closeOverlay = async (item = null) => {
     //     return;
     // }
 
-    console.log(currentMarker.value);
     if (currentMarker.value) {
-        console.log(currentMarker.value);
         const index = currentMarker.value;
-        const imageUrl = "src/assets/image/" + props.tourData[index].contentTypeId + ".png";
-        await setTimeout(() => {
-            const imageSize = new kakao.maps.Size(45, 45);
-            const newMarkerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
-            markers.value[index].setImage(newMarkerImage);
-            markers.value[index].setZIndex(-1);
-            currentMarker.value = null;
-        }, 500);
+
+        markers.value[index].marker.setMap(map.value);
+        markers.value[index].selectedMarker.setMap(null);
+
+        currentMarker.value = null;
     }
 
     // 아이템이 planItems 배열에 없거나, 아이템 정보가 제공되지 않았다면 기존 오버레이 숨김 로직 수행
@@ -113,9 +108,21 @@ const toggleMarkers = (tour) => {
 
 defineExpose({ toggleMarkers });
 
+const findIndexByContentId = (contentId) => {
+    return props.tourData.findIndex((item) => item.contentId === contentId);
+};
+
 const movedMarkers = (tour) => {
     currentContent.value = tour;
+    markers.value[currentMarker.value].selectedMarker.setMap(null);
     closeOverlay();
+
+    const index = findIndexByContentId(tour.contentId);
+    console.log(index);
+
+    currentMarker.value = index;
+    markers.value[index].selectedMarker.setMap(map.value);
+
     childRef.value.show(tour);
     // const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
     // const content = `<div class="wrap">
@@ -209,10 +216,18 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         const imageUrl = "src/assets/image/" + item.contentTypeId + ".png";
         const imageSize = new kakao.maps.Size(45, 45);
         const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
+        const selectedMarkerImage = new kakao.maps.MarkerImage(imageUrl, new kakao.maps.Size(60, 60));
         const marker = new kakao.maps.Marker({
             position: position,
             image: markerImage,
         });
+        const marker2 = new kakao.maps.Marker({
+            position: position,
+            image: selectedMarkerImage,
+        });
+
+        marker.setZIndex(-1);
+        marker2.setZIndex(999999999);
 
         const content = `<div class="wrap">
                                 <div class="info">
@@ -246,38 +261,37 @@ const updateMapMarkers = async (tourList, oldTourList) => {
 
                 emit("markerClickEvent", item);
             });
+            marker.setZIndex(-1);
+            marker.setMap(map.value);
+            markers.value.push(marker);
+            console.log(markers.value);
         } else if (props.planDetailFlag === true) {
-            const marker2 = new kakao.maps.Marker({
-                position: position,
-            });
-            marker2.setMap(map.value);
-            markers.value.push(marker2);
-
-            kakao.maps.event.addListener(marker2, "click", () => {
-                closeOverlay();
-
-                currentMarkerOverlay.value = overlay;
-                overlay.setMap(map.value);
-
-                map.value.setCenter(position);
-
-                emit("markerClickEvent", item);
-            });
-
-            bounds.extend(position);
-            continue;
+            // const marker2 = new kakao.maps.Marker({
+            //     position: position,
+            // });
+            // marker2.setMap(map.value);
+            // markers.value.push(marker2);
+            // kakao.maps.event.addListener(marker2, "click", () => {
+            //     closeOverlay();
+            //     currentMarkerOverlay.value = overlay;
+            //     overlay.setMap(map.value);
+            //     map.value.setCenter(position);
+            //     emit("markerClickEvent", item);
+            // });
+            // bounds.extend(position);
+            // continue;
         } else {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();
+                marker2.setMap(map.value);
 
                 currentMarker.value = index;
-                const markerImage = new kakao.maps.MarkerImage(imageUrl, new kakao.maps.Size(60, 60));
 
-                setTimeout(() => {
-                    marker.setImage(markerImage);
-                    marker.setMap(map.value);
-                    marker.setZIndex(9999999999);
-                }, 100);
+                // setTimeout(() => {
+                //     marker.setImage(markerImage);
+                //     marker.setMap(map.value);
+                //     marker.setZIndex(9999999999);
+                // }, 100);
 
                 // currentMarkerOverlay.value = overlay;
                 // overlay.setMap(map.value);
@@ -290,10 +304,13 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                 childRef.value.show(item);
                 // router.replace({ name: "content", params: { contentId: item.contentId } });
             });
+            marker.setZIndex(-1);
+            marker.setMap(map.value);
+            marker2.setMap(null);
+            marker2.setZIndex(9999999999);
+            markers.value.push({ marker, selectedMarker: marker2 });
         }
-        marker.setZIndex(-1);
-        marker.setMap(map.value);
-        markers.value.push(marker);
+
         bounds.extend(position);
     }
 
@@ -313,13 +330,25 @@ watch(
     () => props.tourData,
     async (tourList, oldTourList) => {
         if (tourList.length == 0) return;
-        markers.value.forEach((marker) => {
-            marker.setMap(null);
-        });
+        if (props.planFlag) {
+            markers.value.forEach((marker) => {
+                marker.setMap(null);
+            });
+        } else if (props.planDetailFlag) {
+            markers.value.forEach((marker) => {
+                marker.setMap(null);
+            });
+        } else {
+            markers.value.forEach((marker) => {
+                marker.marker.setMap(null);
+                marker.selectedMarker.setMap(null);
+            });
+        }
         markers.value = [];
+        console.log("DD");
         await updateMapMarkers(tourList, oldTourList);
-    },
-    { deep: true }
+    }
+    // { deep: true }
 );
 
 // 마커 이미지
