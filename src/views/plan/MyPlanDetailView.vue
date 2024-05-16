@@ -22,6 +22,32 @@ const onTitleClickHandler = (tour) => {
     kakaoMapRef.value.toggleMarkers(tour);
 };
 
+const totalDistance = ref(0);
+const walkHour = ref(0);
+const walkMin = ref(0);
+const bycicleHour = ref(0);
+const bycicleMin = ref(0);
+
+const getTimeFromDistance = (distance) => {
+    totalDistance.value = distance;
+    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+    const walkkTime = (distance / 67) | 0;
+
+    // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+    if (walkkTime > 60) {
+        walkHour.value = Math.floor(walkkTime / 60);
+    }
+    walkMin.value = walkkTime % 60;
+
+    // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+    const bycicleTime = (distance / 227) | 0;
+    // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+    if (bycicleTime > 60) {
+        bycicleHour.value = Math.floor(bycicleTime / 60);
+    }
+    bycicleMin.value = bycicleTime % 60;
+};
+
 onMounted(() => {
     getPlanInfo();
 });
@@ -41,7 +67,7 @@ onMounted(() => {
 
                 <div id="plan_div">
                     <div id="plan-map" style="width: 800px; height: 600px; margin-bottom: 10px">
-                        <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" />
+                        <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" @get-time-from-distance="getTimeFromDistance" />
                     </div>
                     <div style="width: 20px"></div>
                     <div>
@@ -53,6 +79,17 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
+                <ul class="dotOverlay distanceInfo">
+                    <li>
+                        <span class="label">총 거리 {{ totalDistance }} M</span>
+                    </li>
+                    <li>
+                        <span class="label">도보 {{ walkHour }}시간 {{ walkMin }}분</span>
+                    </li>
+                    <li>
+                        <span class="label">자전거 {{ bycicleHour }}시간 {{ bycicleMin }}분</span>
+                    </li>
+                </ul>
                 <div>
                     <div id="plan-distance"></div>
                     <div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" @click="router.go(0)">최적 경로 찾기</button></div>

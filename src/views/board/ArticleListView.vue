@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
 import { useRouter } from "vue-router";
-const { VITE_ARTICLE_LIST_SIZE } = import.meta.env;
+const { VITE_ARTICLE_LIST_SIZE, VITE_ARTICLE_NAVIGATION_SIZE } = import.meta.env;
 
 const router = useRouter();
 router.beforeRouteLeave = (to, from, next) => {
@@ -19,6 +19,7 @@ const totalCount = ref(0);
 const param = ref({
     pgno: currentPage.value,
     spp: VITE_ARTICLE_LIST_SIZE,
+    nav: VITE_ARTICLE_NAVIGATION_SIZE,
     key: "",
     word: "",
 });

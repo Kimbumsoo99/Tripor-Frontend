@@ -8,7 +8,7 @@ const router = useRouter();
 
 const { VITE_KAKAOMAP_KEY_JS } = import.meta.env;
 const props = defineProps({ tourData: Array, region: String, planFlag: Boolean, planList: Array, planDetailFlag: Boolean });
-const emit = defineEmits(["markerClickEvent"]);
+const emit = defineEmits(["markerClickEvent", "getTimeFromDistance"]);
 
 const markers = ref([]);
 
@@ -171,6 +171,7 @@ const initMap = () => {
     // initKakaoObj();
 };
 
+// 선분 관련
 let polylines = [];
 
 const makePolyLine = (tourList) => {
@@ -181,23 +182,25 @@ const makePolyLine = (tourList) => {
     polylines = []; // 선분 배열 초기화
 
     if (tourList.length > 1) {
+        let polyPath = [];
         // 선분 다시 그리기
-        for (let i = 1; i < tourList.length; i++) {
-            const startItem = tourList[i - 1];
-            const endItem = tourList[i];
-            const polyline = new kakao.maps.Polyline({
-                path: [new kakao.maps.LatLng(startItem.latitude, startItem.longitude), new kakao.maps.LatLng(endItem.latitude, endItem.longitude)],
-                // 선분 스타일 설정
-                strokeWeight: 3,
-                strokeColor: "#db4040",
-                strokeOpacity: 0.8,
-                strokeStyle: "solid",
-            });
-            polyline.setMap(map.value);
-            polylines.push(polyline);
+        const polyline = new kakao.maps.Polyline({
+            // path: [new kakao.maps.LatLng(startItem.latitude, startItem.longitude), new kakao.maps.LatLng(endItem.latitude, endItem.longitude)],
+            // 선분 스타일 설정
+            strokeWeight: 3,
+            strokeColor: "#db4040",
+            strokeOpacity: 0.8,
+            strokeStyle: "solid",
+        });
+        for (let i = 0; i < tourList.length; i++) {
+            polyPath.push(new kakao.maps.LatLng(tourList[i].latitude, tourList[i].longitude));
         }
+        polyline.setPath(polyPath);
+        polyline.setMap(map.value);
+        emit("getTimeFromDistance", polyline.getLength().toFixed(2));
     }
 };
+// 선분 관련
 
 watch(
     () => props.planList,
