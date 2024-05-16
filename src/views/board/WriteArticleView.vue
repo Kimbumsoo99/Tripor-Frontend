@@ -3,6 +3,7 @@ import BoardFormItem from "@/components/board/item/BoardFormItem.vue";
 import { ref } from "vue";
 
 const type = ref("write");
+
 </script>
 
 <template>
@@ -12,4 +13,20 @@ const type = ref("write");
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@media (min-width: 1199px) {
+    #editor-form{
+		position: relative; 
+		top: 130px; 
+		width: 49%;
+		margin-left: 100px;
+	}
+}
+@media (max-width: 1199px) {
+    #editor-form{
+		position: relative; 
+		top: 130px; 
+		width: 80%;
+	}
+}
+</style>

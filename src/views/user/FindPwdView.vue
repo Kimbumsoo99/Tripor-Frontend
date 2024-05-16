@@ -36,9 +36,19 @@
 </template>
 
 <style scoped>
-#findPwd_div{
-    position: absolute;
-    top: 130px;
-    width: 45%; 
+@media (min-width: 1199px) {
+    #findPwd_div{
+		position: relative; 
+		top: 130px; 
+		width: 45%;
+		margin-left: 100px;
+	}
+}
+@media (max-width: 1199px) {
+    #findPwd_div{
+		position: relative; 
+		top: 130px; 
+		width: 80%;
+	}
 }
 </style>
