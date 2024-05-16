@@ -32,7 +32,7 @@ const boardRemove = async function () {
 };
 
 const updateHit = async function () {
-    const response = await axios.put(`http://localhost/article/hit/${route.params.id}`, {
+    await axios.put(`http://localhost/article/hit/${route.params.id}`, {
         articleId: board.value.articleId,
     });
 };
