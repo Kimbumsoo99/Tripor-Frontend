@@ -3,6 +3,12 @@ import { ref, watch } from "vue";
 import PlanItem from "./item/PlanItem.vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const memberStore = useMemberStore();
+
+const { userInfo } = storeToRefs(memberStore);
 
 const router = useRouter();
 
@@ -10,7 +16,7 @@ const emit = defineEmits(["searchTrip", "makePlanPolylines"]);
 const props = defineProps({ currentTour: Object });
 
 const planList = ref([]);
-const userPlanName = ref("Tripor의 여행계획");
+const userPlanName = ref(userInfo.value.memberName + "의 여행계획");
 
 const searchKeyword = ref("");
 

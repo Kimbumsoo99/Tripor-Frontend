@@ -2,6 +2,12 @@
 import axios from "axios";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const memberStore = useMemberStore();
+
+const { userInfo } = storeToRefs(memberStore);
 
 const router = useRouter();
 
@@ -9,10 +15,9 @@ const subject = ref("");
 const content = ref("");
 
 const boardInsert = async function () {
-    console.log("!!");
     await axios
         .post("http://localhost/article", {
-            memberId: "show7441",
+            memberId: userInfo.value.memberId,
             subject: subject.value,
             content: content.value,
         })
