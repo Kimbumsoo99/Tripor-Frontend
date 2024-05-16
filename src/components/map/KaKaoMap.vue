@@ -20,8 +20,10 @@ window.onload = () => {
         router.push({ name: "home" });
         return;
     }
+    console.log(props.tourData);
     // MyPlanDetailView.vue에서 새로고침하는경우 새롭게 마커 업데이트
-    updateMapMarkers(props.tourData);
+
+    setTimeout(() => updateMapMarkers(props.tourData), 300);
 };
 
 // 메타 정보
@@ -87,7 +89,7 @@ const closeOverlay = async (item = null) => {
 onMounted(async () => {
     if (window.kakao && window.kakao.maps) {
         initMap();
-        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 200);
+        if (props.planDetailFlag) setTimeout(() => updateMapMarkers(props.tourData), 300);
     } else {
         const script = document.createElement("script");
         /* global kakao */
@@ -100,7 +102,6 @@ onMounted(async () => {
 const toggleMarkers = (tour) => {
     if (currentMarkerOverlay.value) {
         closeOverlay();
-        currentMarkerOverlay.value = null;
         return;
     }
     movedMarkers(tour);
@@ -113,6 +114,37 @@ const findIndexByContentId = (contentId) => {
 };
 
 const movedMarkers = (tour) => {
+    if (props.planDetailFlag) {
+        const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
+        const content = `<div class="wrap">
+                                <div class="info">
+                                    <div class="title">
+                                        ${tour.title}
+                                    </div>
+                                    <div class="body">
+                                        <div class="img">
+                                            <img src="${tour.firstImage ? tour.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                        </div>
+                                        <div class="desc">
+                                            <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>
+                                            <div class="jibun ellipsis">전화번호: ${tour.tel ? tour.tel : "정보 없음"}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+        const overlay = new kakao.maps.CustomOverlay({
+            content: content,
+            map: null,
+            position: position,
+        });
+
+        currentMarkerOverlay.value = overlay;
+        overlay.setMap(map.value);
+
+        map.value.setCenter(position);
+
+        return;
+    }
     currentContent.value = tour;
     markers.value[currentMarker.value].selectedMarker.setMap(null);
     closeOverlay();
@@ -124,31 +156,6 @@ const movedMarkers = (tour) => {
     markers.value[index].selectedMarker.setMap(map.value);
 
     childRef.value.show(tour);
-    // const position = new kakao.maps.LatLng(tour.latitude, tour.longitude);
-    // const content = `<div class="wrap">
-    //                             <div class="info">
-    //                                 <div class="title">
-    //                                     ${tour.title}
-    //                                 </div>
-    //                                 <div class="body">
-    //                                     <div class="img">
-    //                                         <img src="${tour.firstImage ? tour.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
-    //                                     </div>
-    //                                     <div class="desc">
-    //                                         <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>
-    //                                         <div class="jibun ellipsis">전화번호: ${tour.tel ? tour.tel : "정보 없음"}</div>
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                         </div>`;
-    // const overlay = new kakao.maps.CustomOverlay({
-    //     content: content,
-    //     map: null,
-    //     position: position,
-    // });
-
-    // currentMarkerOverlay.value = overlay;
-    // overlay.setMap(map.value);
 };
 
 // 카카오 맵 초기화
@@ -266,20 +273,19 @@ const updateMapMarkers = async (tourList, oldTourList) => {
             markers.value.push(marker);
             console.log(markers.value);
         } else if (props.planDetailFlag === true) {
-            // const marker2 = new kakao.maps.Marker({
-            //     position: position,
-            // });
-            // marker2.setMap(map.value);
-            // markers.value.push(marker2);
-            // kakao.maps.event.addListener(marker2, "click", () => {
-            //     closeOverlay();
-            //     currentMarkerOverlay.value = overlay;
-            //     overlay.setMap(map.value);
-            //     map.value.setCenter(position);
-            //     emit("markerClickEvent", item);
-            // });
-            // bounds.extend(position);
-            // continue;
+            const marker2 = new kakao.maps.Marker({
+                position: position,
+            });
+            marker2.setMap(map.value);
+            markers.value.push(marker2);
+            kakao.maps.event.addListener(marker2, "click", () => {
+                closeOverlay();
+                currentMarkerOverlay.value = overlay;
+                overlay.setMap(map.value);
+                emit("markerClickEvent", item);
+            });
+            bounds.extend(position);
+            continue;
         } else {
             kakao.maps.event.addListener(marker, "click", () => {
                 closeOverlay();

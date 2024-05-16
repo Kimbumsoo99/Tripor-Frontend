@@ -40,9 +40,8 @@ onMounted(() => {
                 <h6 class="d-flex justify-content-center mb-3">{{ planInfo.planRegisterDate }}</h6>
 
                 <div id="plan_div">
-                    
                     <div id="plan-map" style="width: 800px; height: 600px; margin-bottom: 10px">
-                            <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" />
+                        <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" />
                     </div>
                     <div style="width: 20px"></div>
                     <div>
@@ -55,12 +54,11 @@ onMounted(() => {
                     </div>
                 </div>
                 <div>
-                        <div id="plan-distance"></div>
-                        <div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" @click="router.go(0)">최적 경로 찾기</button></div>
-                        <div id="plan-div-id" style="display: none">${plan.planId}</div>
-                    </div>
+                    <div id="plan-distance"></div>
+                    <div id="plan-shortest-path"><button type="button" class="btn btn-outline-primary" @click="router.go(0)">최적 경로 찾기</button></div>
+                    <div id="plan-div-id" style="display: none">${plan.planId}</div>
+                </div>
             </div>
-            
         </div>
     </div>
 </template>
@@ -69,19 +67,19 @@ onMounted(() => {
 #title {
     -webkit-user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none; 
+    -ms-user-select: none;
     user-select: none;
 }
 @media (min-width: 1199px) {
-    #plan_div{
-		display:flex;
+    #plan_div {
+        display: flex;
         flex-direction: row;
-	}
+    }
 }
 @media (max-width: 1199px) {
-    #plan_div{
-		display:flex;
+    #plan_div {
+        display: flex;
         flex-direction: column;
-	}
+    }
 }
 </style>
