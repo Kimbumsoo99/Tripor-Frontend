@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
 import { useRouter } from "vue-router";
 const { VITE_ARTICLE_LIST_SIZE } = import.meta.env;
@@ -14,6 +14,7 @@ router.beforeRouteLeave = (to, from, next) => {
 const articleList = ref([]);
 const currentPage = ref(1);
 const totalPage = ref(0);
+const totalCount = ref(0);
 
 const param = ref({
     pgno: currentPage.value,
@@ -46,14 +47,22 @@ const getArticleList = function () {
         .then((response) => {
             console.log(response);
             articleList.value = response.data.items.articles;
-            currentPage.value = response.data.items.currentPage;
-            totalPage.value = response.data.items.totalPageCount;
+            currentPage.value = response.data.meta.currentPage;
+            totalPage.value = response.data.meta.totalPageCount;
+            totalCount.value = response.data.meta.totalCount;
         })
         .catch((error) => {
             console.log("에러발생");
             console.error(error);
         });
 };
+
+const computedIndex = computed(() => {
+    return articleList.value.map((article, index) => {
+        console.log(totalCount.value, index, currentPage.value);
+        return totalCount.value - index - (currentPage.value - 1) * VITE_ARTICLE_LIST_SIZE;
+    });
+});
 
 onMounted(() => {
     getArticleList();
@@ -100,19 +109,20 @@ onMounted(() => {
                                 </tr>
                             </thead>
                             <tbody class="board__contents" id="board-body">
-                                <tr v-for="article in articleList" :key="article.articleId">
+                                <tr v-for="(article, index) in articleList" :key="article.articleId">
                                     <td class="board__column col-2 col-sm-2">
-                                        {{ article.articleId }}
+                                        {{ computedIndex[index] }}
                                     </td>
                                     <th class="board__column col-4 col-sm-5">
                                         <div id="title_data">
-                                        <RouterLink
-                                            :to="{
-                                                name: 'detail',
-                                                params: { id: article.articleId },
-                                            }"
-                                            >{{ article.subject }}</RouterLink
-                                        ></div>
+                                            <RouterLink
+                                                :to="{
+                                                    name: 'detail',
+                                                    params: { id: article.articleId },
+                                                }"
+                                                >{{ article.subject }}</RouterLink
+                                            >
+                                        </div>
                                     </th>
                                     <td class="board__column col-2 col-sm-3">
                                         {{ article.memberId }}
@@ -144,19 +154,19 @@ onMounted(() => {
 
 <style scoped>
 @media (min-width: 1199px) {
-    #board_div{
-		position: relative; 
-		top: 130px; 
-		width: 49%;
-		margin-left: 100px;
-	}
+    #board_div {
+        position: relative;
+        top: 130px;
+        width: 49%;
+        margin-left: 100px;
+    }
 }
 @media (max-width: 1199px) {
-    #board_div{
-		position: relative; 
-		top: 130px; 
-		width: 80%;
-	}
+    #board_div {
+        position: relative;
+        top: 130px;
+        width: 80%;
+    }
 }
 .board-table {
     font-size: 13px;
@@ -213,11 +223,10 @@ onMounted(() => {
     text-decoration: none;
     font-size: 16px;
 }
-#title_data{
-    width: 300px; 
+#title_data {
+    width: 300px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 </style>
