@@ -43,7 +43,7 @@ const makePlan = async () => {
         return;
     }
     const tripList = planList.value.map((item) => item.contentId);
-    const memberId = "show7441"; // 후에 member token 활용하기
+    const memberId = userInfo.value.memberId;
     const planName = userPlanName.value;
 
     const params = { tripList, memberId, planName };

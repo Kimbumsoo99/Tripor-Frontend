@@ -3,13 +3,18 @@ import MyPlanList from "@/components/plan/MyPlanList.vue";
 import NoPlan from "@/components/plan/NoPlan.vue";
 import axios from "axios";
 import { onMounted, ref } from "vue";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const memberStore = useMemberStore();
+
+const { userInfo } = storeToRefs(memberStore);
 
 const myPlans = ref([]);
 const memberId = ref("");
 
 onMounted(() => {
-    // 멤버 객체 token으로 가져오기
-    memberId.value = "show7441";
+    memberId.value = userInfo.value.memberId;;
     axios
         .get(`http://localhost/trip/plan/m/${memberId.value}`)
         .then((res) => {
