@@ -6,4 +6,9 @@ const shortestPathByPlanList = (planId, success, fail) => {
     local.get(`trip/plan/${planId}/trip/s`).then(success).catch(fail);
 };
 
-export { shortestPathByPlanList };
+const saveMemoAPI = (plan, success, fail) => {
+    console.log(plan);
+    local.patch(`trip/plan/${plan.planId}/memo`, plan).then(success).catch(fail);
+};
+
+export { shortestPathByPlanList, saveMemoAPI };

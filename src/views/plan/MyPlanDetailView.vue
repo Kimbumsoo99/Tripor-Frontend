@@ -4,6 +4,7 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { shortestPathByPlanList } from "@/api/trip";
+import { saveMemoAPI } from "@/api/trip";
 import OpenAI from "openai";
 
 const route = useRoute();
@@ -29,6 +30,7 @@ const getPlanInfo = async function () {
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;
     originList.value = tripList.value;
+    memoField.value = planInfo.value.memo;
 };
 
 const kakaoMapRef = ref(null);
@@ -185,6 +187,18 @@ const hideLoadingSpinner = () => {
     spinnerVisible.value = false;
 };
 
+const saveMemo = () => {
+    planInfo.value.memo = memoField.value;
+    console.log(planInfo.value);
+    saveMemoAPI(
+        planInfo.value,
+        (res) => {
+            console.log(res);
+        },
+        (err) => console.log(err)
+    );
+};
+
 onMounted(() => {
     getPlanInfo();
 });
@@ -203,7 +217,7 @@ onMounted(() => {
                 <h6 class="d-flex justify-content-center mb-3">{{ planInfo.planRegisterDate }}</h6>
 
                 <div id="plan_div">
-                    <div id="plan-map" style="width: 100%; height: 600px; margin-bottom: 10px;">
+                    <div id="plan-map" style="width: 100%; height: 600px; margin-bottom: 10px">
                         <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" @get-time-from-distance="getTimeFromDistance" />
                     </div>
                     <div style="width: 20px"></div>
@@ -215,29 +229,29 @@ onMounted(() => {
                         </div>
 
                         <div v-if="memoSelected" class="p-1 mb-1" style="width: 100%; height: 560px; overflow-y: auto; display: flex; flex-direction: column">
-                            <div class="border rounded mb-1 p-1" style="font-size: 16px; background-color:#daf0ff; cursor:pointer" @click="aiExpand">
+                            <div class="border rounded mb-1 p-1" style="font-size: 16px; background-color: #daf0ff; cursor: pointer" @click="aiExpand">
                                 <i class="bi bi-stars"></i>
                                 AI의 도움을 받아 여행 예산과 일정을 세워보세요!
                             </div>
                             <form class="border rounded p-1 mb-1 ai_form" v-if="aiExpanded" @submit.prevent="getGPTResponse">
                                 <ul>
-                                    <li><label>여행 인원</label> <input type="text" v-model="q1" placeholder="몇 명이 함께 여행하나요?"></li>
-                                    <li><label>여행 기간</label> <input type="text" v-model="q2" placeholder="몇 일 동안 여행할 계획인가요?"></li>
-                                    <li><label>이동 수단</label> <input type="text" v-model="q3" placeholder="어떤 이동 수단을 사용할 계획인가요 (자가용, 대중교통 등)?"></li>
-                                    <li><label>기타 활동</label> <input type="text" v-model="q4" placeholder="계획된 장소 외에 추가로 방문하고 싶은 곳이 있나요?"></li>
+                                    <li><label>여행 인원</label> <input type="text" v-model="q1" placeholder="몇 명이 함께 여행하나요?" /></li>
+                                    <li><label>여행 기간</label> <input type="text" v-model="q2" placeholder="몇 일 동안 여행할 계획인가요?" /></li>
+                                    <li><label>이동 수단</label> <input type="text" v-model="q3" placeholder="어떤 이동 수단을 사용할 계획인가요 (자가용, 대중교통 등)?" /></li>
+                                    <li><label>기타 활동</label> <input type="text" v-model="q4" placeholder="계획된 장소 외에 추가로 방문하고 싶은 곳이 있나요?" /></li>
                                 </ul>
                                 <div class="d-flex flex-row-reverse m-1">
                                     <button class="btn btn-outline-secondary" type="submit" style="font-size: 15px">메모 생성</button>
                                     <span class="loader" v-if="spinnerVisible"></span>
                                 </div>
                             </form>
-                            <div contenteditable="true" id="memo" ref="memo" style="flex: 1; margin-bottom: 5px;" v-html="memoField"></div>
+                            <div contenteditable="true" id="memo" ref="memo" style="flex: 1; margin-bottom: 5px" v-html="memoField"></div>
                             <div class="d-flex flex-row-reverse">
-                                <button class="btn btn-primary">저장</button>
+                                <button class="btn btn-primary" @click.prevent="saveMemo">저장</button>
                             </div>
                         </div>
 
-                        <div v-else class="border rounded p-3" style="margin-bottom: 10px; width: 100%; height: 560px; overflow-y: auto;">
+                        <div v-else class="border rounded p-3" style="margin-bottom: 10px; width: 100%; height: 560px; overflow-y: auto">
                             <div v-for="(trip, index) in tripList" :key="trip.contentId">
                                 <div style="cursor: pointer; font-weight: bold; font-size: 21px; color: #0077cc" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</div>
                                 <div style="font-size: 15px"><i class="bi bi-geo-alt"></i>&nbsp;{{ trip.addr }}</div>
@@ -349,15 +363,15 @@ onMounted(() => {
         display: flex;
         flex-direction: row;
     }
-    #plan_map{
-        width: 660px; 
+    #plan_map {
+        width: 660px;
         margin-bottom: 10px;
     }
     #upperdiv {
         width: 70%;
     }
-    #schedule_memo{
-        width: 700px; 
+    #schedule_memo {
+        width: 700px;
         height: 540px;
     }
 }
@@ -366,15 +380,15 @@ onMounted(() => {
         display: flex;
         flex-direction: column;
     }
-    #plan_map{
-        width: 1300px; 
+    #plan_map {
+        width: 1300px;
         margin-bottom: 10px;
     }
     #upperdiv {
         width: 100%;
     }
-    #schedule_memo{
-        width: 100%; 
+    #schedule_memo {
+        width: 100%;
         height: 650px;
     }
 }
