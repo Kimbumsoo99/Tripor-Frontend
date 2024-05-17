@@ -19,6 +19,10 @@ const shortFlag = ref(false);
 
 const planId = ref("");
 
+window.onload = async () => {
+    setTimeout(getPlanInfo, 500);
+};
+
 const getPlanInfo = async function () {
     planId.value = route.params.id;
     const response = await axios.get(`http://localhost/trip/plan/${planId.value}`);
@@ -85,32 +89,31 @@ const memoSelected = ref(false);
 
 const memoOpen = () => {
     memoSelected.value = true;
-}
+};
 
 const scheduleOpen = () => {
     memoSelected.value = false;
-}
+};
 
 const aiExpanded = ref(false);
 
 const aiExpand = () => {
     aiExpanded.value = !aiExpanded.value;
-}
+};
 
-const q1 = ref('');
-const q2 = ref('');
-const q3 = ref('');
-const q4 = ref('');
-const q5 = ref('');
+const q1 = ref("");
+const q2 = ref("");
+const q3 = ref("");
+const q4 = ref("");
+const q5 = ref("");
 
-const memo = ref('');
-const memoField = ref("")
+const memo = ref("");
+const memoField = ref("");
 
 const memoText = () => {
     memoField.value = memo.textContent;
-    console.log(memo.value.textContent)
-}
-
+    console.log(memo.value.textContent);
+};
 
 // chatGPT description
 const getGPTResponse = async () => {
@@ -118,13 +121,16 @@ const getGPTResponse = async () => {
         showLoadingSpinner();
 
         const openai = new OpenAI({
-        apiKey: `${import.meta.env.VITE_OPENAI_API_KEY}`,
-        dangerouslyAllowBrowser: true,
-        })
+            apiKey: `${import.meta.env.VITE_OPENAI_API_KEY}`,
+            dangerouslyAllowBrowser: true,
+        });
 
-        let places = '';
+        let places = "";
         for (let i = 0; i < tripList.value.length; i++) {
-            places += `${i + 1}` + ')' + `${tripList.value[i].title}
+            places +=
+                `${i + 1}` +
+                ")" +
+                `${tripList.value[i].title}
 
             `;
         }
@@ -151,25 +157,25 @@ const getGPTResponse = async () => {
         `;
 
         const response = await openai.chat.completions.create({
-        messages: [
-            {
-            role: 'user',
-            content: prompt,
-            },
-        ],
-        model: 'gpt-3.5-turbo',
-        })
+            messages: [
+                {
+                    role: "user",
+                    content: prompt,
+                },
+            ],
+            model: "gpt-3.5-turbo",
+        });
 
         memoField.value = response.choices[0].message.content;
 
         hideLoadingSpinner();
-  } catch (error) {
-      console.log('chatGPT: 🚨 에러가 발생했습니다.')
-    console.log(error)
-  }
-}
+    } catch (error) {
+        console.log("chatGPT: 🚨 에러가 발생했습니다.");
+        console.log(error);
+    }
+};
 
-const spinnerVisible = ref(false)
+const spinnerVisible = ref(false);
 
 const showLoadingSpinner = () => {
     spinnerVisible.value = true;
@@ -203,16 +209,15 @@ onMounted(() => {
                     <div style="width: 20px"></div>
                     <div id="schedule_memo">
                         <div class="d-flex flex-row justify-content-around" style="height: 40px">
-                            <span style="cursor:pointer" @click="scheduleOpen" :class="{ boldmenu : !memoSelected }">schedule</span>
+                            <span style="cursor: pointer" @click="scheduleOpen" :class="{ boldmenu: !memoSelected }">schedule</span>
                             <span>|</span>
-                            <span style="cursor:pointer" @click="memoOpen" :class="{ boldmenu : memoSelected }">memo</span>
+                            <span style="cursor: pointer" @click="memoOpen" :class="{ boldmenu: memoSelected }">memo</span>
                         </div>
 
                         <div v-if="memoSelected" class="p-1 mb-1" style="width: 100%; height: 560px; overflow-y: auto; display: flex; flex-direction: column">
                             <div class="border rounded mb-1 p-1" style="font-size: 16px; background-color:#daf0ff; cursor:pointer" @click="aiExpand">
                                 <i class="bi bi-stars"></i>
                                 AI의 도움을 받아 여행 예산과 일정을 세워보세요!
-                                
                             </div>
                             <form class="border rounded p-1 mb-1 ai_form" v-if="aiExpanded" @submit.prevent="getGPTResponse">
                                 <ul>
@@ -234,17 +239,15 @@ onMounted(() => {
 
                         <div v-else class="border rounded p-3" style="margin-bottom: 10px; width: 100%; height: 560px; overflow-y: auto;">
                             <div v-for="(trip, index) in tripList" :key="trip.contentId">
-                                <div style="cursor: pointer; font-weight: bold; font-size: 21px; color: #0077CC" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</div>
+                                <div style="cursor: pointer; font-weight: bold; font-size: 21px; color: #0077cc" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</div>
                                 <div style="font-size: 15px"><i class="bi bi-geo-alt"></i>&nbsp;{{ trip.addr }}</div>
 
                                 <div style="height: 20px"></div>
                             </div>
                         </div>
-
                     </div>
-                    
                 </div>
-    
+
                 <ul class="dotOverlay distanceInfo">
                     <li>
                         <span class="label">총 거리 {{ totalDistance }} M</span>
@@ -270,7 +273,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.boldmenu{
+.boldmenu {
     font-weight: bold;
 }
 #title {
@@ -279,7 +282,7 @@ onMounted(() => {
     -ms-user-select: none;
     user-select: none;
 }
-#memo{
+#memo {
     color: #222222;
     border: solid #aaaaaa 1px;
     border-radius: 10px;
@@ -289,7 +292,7 @@ onMounted(() => {
     margin-bottom: 10px;
     overflow-y: auto;
 }
-.ai_form{
+.ai_form {
     background-color: #f8f8f8;
 }
 .ai_form input {
@@ -304,38 +307,42 @@ onMounted(() => {
     z-index: 5;
 }
 
-.ai_form input::placeholder { color: #aaaaaa; }
-.ai_form input:focus { outline: none; }
+.ai_form input::placeholder {
+    color: #aaaaaa;
+}
+.ai_form input:focus {
+    outline: none;
+}
 
-.ai_form label{
+.ai_form label {
     margin: 5px;
     font-size: 15px;
 }
 
 .loader {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: block;
-  margin:15px auto;
-  color: #70a3c7;
-  box-sizing: border-box;
-  animation: animloader 1s linear infinite alternate;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: block;
+    margin: 15px auto;
+    color: #70a3c7;
+    box-sizing: border-box;
+    animation: animloader 1s linear infinite alternate;
 }
 
 @keyframes animloader {
-  0% {
-    box-shadow: -38px -12px ,  -14px 0,  14px 0, 38px 0;
-  }
-  33% {
-    box-shadow: -38px 0px, -14px -12px,  14px 0, 38px 0;
-  }
-  66% {
-    box-shadow: -38px 0px , -14px 0, 14px -12px, 38px 0;
-  }
-  100% {
-    box-shadow: -38px 0 , -14px 0, 14px 0 , 38px -12px;
-  }
+    0% {
+        box-shadow: -38px -12px, -14px 0, 14px 0, 38px 0;
+    }
+    33% {
+        box-shadow: -38px 0px, -14px -12px, 14px 0, 38px 0;
+    }
+    66% {
+        box-shadow: -38px 0px, -14px 0, 14px -12px, 38px 0;
+    }
+    100% {
+        box-shadow: -38px 0, -14px 0, 14px 0, 38px -12px;
+    }
 }
 @media (min-width: 1199px) {
     #plan_div {
@@ -346,14 +353,13 @@ onMounted(() => {
         width: 660px; 
         margin-bottom: 10px;
     }
-    #upperdiv{
-        width: 70%; 
+    #upperdiv {
+        width: 70%;
     }
     #schedule_memo{
         width: 700px; 
         height: 540px;
     }
-
 }
 @media (max-width: 1199px) {
     #plan_div {
@@ -364,7 +370,7 @@ onMounted(() => {
         width: 1300px; 
         margin-bottom: 10px;
     }
-    #upperdiv{
+    #upperdiv {
         width: 100%;
     }
     #schedule_memo{

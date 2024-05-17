@@ -357,7 +357,6 @@ watch(
             });
         }
         markers.value = [];
-        console.log("DD");
         await updateMapMarkers(tourList, oldTourList);
     }
     // { deep: true }
