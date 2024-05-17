@@ -193,11 +193,19 @@ const saveMemo = () => {
     saveMemoAPI(
         planInfo.value,
         (res) => {
-            console.log(res);
+            saveMemoSuccess.value = res.data;
+            setTimeout(() => {
+                saveMemoSuccess.value.result = "";
+            }, 3000);
         },
         (err) => console.log(err)
     );
 };
+
+const saveMemoSuccess = ref({
+    result: "",
+    msg: "",
+});
 
 onMounted(() => {
     getPlanInfo();
@@ -246,6 +254,8 @@ onMounted(() => {
                                 </div>
                             </form>
                             <div contenteditable="true" id="memo" ref="memo" style="flex: 1; margin-bottom: 5px" v-html="memoField"></div>
+                            <div class="alert alert-info" role="alert" v-if="saveMemoSuccess.result == 'ok'">{{ saveMemoSuccess.msg }}</div>
+                            <div class="alert alert-danger" role="alert" v-else-if="saveMemoSuccess.result == 'err'">{{ saveMemoSuccess.msg }}</div>
                             <div class="d-flex flex-row-reverse">
                                 <button class="btn btn-primary" @click.prevent="saveMemo">저장</button>
                             </div>
