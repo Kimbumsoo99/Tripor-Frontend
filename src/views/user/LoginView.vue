@@ -15,12 +15,22 @@ const memberId = ref($cookies.get("id"));
 const memberPw = ref("");
 const saveid = ref($cookies.get("issave"));
 
+const apiResult = ref({
+    result: "",
+    msg: "",
+});
+
 const login = async () => {
     const loginUser = {
         memberId: memberId.value,
         memberPw: memberPw.value,
     };
-    await userLogin(loginUser);
+    const response = await userLogin(loginUser);
+    apiResult.value = response;
+    if (apiResult.value.result === "err") {
+        setTimeout(() => (apiResult.value.result = ""), 3000);
+        return;
+    }
     let token = sessionStorage.getItem("accessToken");
     console.log(token);
     console.log("isLogin: " + isLogin.value);
@@ -28,11 +38,11 @@ const login = async () => {
         getUserInfo(token);
         console.log("userInfo : " + userInfo.value);
 
-        if(saveid.value){
+        if (saveid.value) {
             $cookies.set("id", memberId.value);
             $cookies.set("issave", true);
         } else {
-            $cookies.set("id", '');
+            $cookies.set("id", "");
             $cookies.set("issave", false);
         }
         router.push({ name: "home" });
@@ -55,7 +65,7 @@ const login = async () => {
 
                 <label>비밀번호</label><br />
                 <input class="form-control p-1 mb-5" type="password" id="userpwd" @keyup.enter="login" v-model="memberPw" style="width: 100%" placeholder="비밀번호를 입력해주세요." required />
-                <p id="pwd_ans" style="color: red" class="d-flex justify-content-center"></p>
+                <div class="alert alert-danger" role="alert" v-if="apiResult.result == 'err'">{{ apiResult.msg }}</div>
                 <button type="submit" id="regist" class="col-12 btn btn-primary mb-3">로그인</button>
                 <div class="d-flex justify-content-center">
                     <a href="#" class="text-decoration-none text-primary" onclick="">
@@ -73,18 +83,18 @@ const login = async () => {
 
 <style scoped>
 @media (min-width: 1199px) {
-    #login_div{
-		position: relative; 
-		top: 130px; 
-		width: 45%;
-		margin-left: 100px;
-	}
+    #login_div {
+        position: relative;
+        top: 130px;
+        width: 45%;
+        margin-left: 100px;
+    }
 }
 @media (max-width: 1199px) {
-    #login_div{
-		position: relative; 
-		top: 130px; 
-		width: 80%;
-	}
+    #login_div {
+        position: relative;
+        top: 130px;
+        width: 80%;
+    }
 }
 </style>
