@@ -102,7 +102,7 @@ onMounted(() => {
                         <KaKaoMap v-if="tripList.length > 0" :tourData="tripList" :planDetailFlag="true" ref="kakaoMapRef" @get-time-from-distance="getTimeFromDistance" />
                     </div>
                     <div style="width: 20px"></div>
-                    <div>
+                    <div class="border rounded p-3" style="margin-bottom: 10px; height: 600px; overflow-y: auto;">
                         <div v-for="(trip, index) in tripList" :key="trip.contentId">
                             <h5 style="cursor: pointer" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</h5>
                             <div><i class="bi bi-geo-alt"></i>&nbsp;{{ trip.addr }}</div>
