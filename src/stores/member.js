@@ -18,6 +18,7 @@ export const useMemberStore = defineStore(
 
         const userLogin = async (loginUser) => {
             console.log(loginUser);
+            let data = "";
             await userConfirm(
                 loginUser,
                 (response) => {
@@ -34,15 +35,16 @@ export const useMemberStore = defineStore(
                         sessionStorage.setItem("accessToken", accessToken);
                         sessionStorage.setItem("refreshToken", refreshToken);
                     }
+                    data = response.data;
                 },
                 (error) => {
-                    console.log("로그인 실패!!!!");
                     isLogin.value = false;
                     isLoginError.value = true;
                     isValidToken.value = false;
-                    console.error(error);
+                    data = error.response.data;
                 }
             );
+            return data;
         };
 
         const getUserInfo = async (token) => {
