@@ -227,15 +227,16 @@ const hideLoadingSpinner = () => {
     <form action="" method="POST" class="editor__form mb-3 position-absolute top-50 start-50 translate-middle-x" id="editor-form" @submit.prevent="submitHandler">
         <h4 class="d-flex justify-content-center" style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
         <div style="height: 10px"></div>
-        <div class="d-flex flex-row mb-3 mt-3"><label style="width: 90px">제목</label> <input class="editor__title-input p-1 mb-3 ms-3 border rounded" type="text" id="editor-title-input" name="subject" v-model="article.subject" style="width: 100%" value="" required /></div>
-        <template v-if="input.image.length != 0">
-            <h4 style="text-align: center">이미지</h4>
+        <div class="d-flex flex-row mb-1 mt-3"><label style="width: 90px">제목</label> <input class="editor__title-input p-1 mb-3 ms-3 border rounded" type="text" id="editor-title-input" name="subject" v-model="article.subject" style="width: 100%" value="" required /></div>
+        <template v-if="input.image.length != 0" class="d-flex flex-row">
+            <label style="width: 90px; height: 40px">사진 추가</label>
             <div class="image-slider">
                 <button @click.prevent="prevImage" class="nav-btn prev-btn">&lt;</button>
                 <div class="image-list">
+                    
                     <div v-for="(file, index) in input.image" :key="file.imageId" class="image-div" :class="{ active: index === currentIndex }">
                         <img :src="getImageSrc(file)" />
-                        <button type="button" class="btn btn-outline-danger delete-btn" @click.prevent="deleteImageFile(file.imageId)">Delete</button>
+                        <button type="button" class="m-1 p-1 btn btn-outline-danger delete-btn" @click.prevent="deleteImageFile(file.imageId)">Delete</button>
                     </div>
                 </div>
                 <button @click.prevent="nextImage" class="nav-btn next-btn">&gt;</button>
@@ -245,8 +246,8 @@ const hideLoadingSpinner = () => {
             </div>
         </template>
         <template v-else>
-            <div style="height: 150px">
-                <h4 style="text-align: center">이미지 추가하기</h4>
+            <div style="height: 120px" class="d-flex flex-row">
+                <label style="width: 90px">사진 추가</label>
                 <div class="file-none-input-wrapper">
                     <input multiple @change="upload" ref="images" type="file" class="file-input" />
                 </div>
@@ -330,8 +331,7 @@ const hideLoadingSpinner = () => {
     position: relative;
     width: 100%;
     max-width: 1000px;
-    height: 600px;
-    margin: 0 auto;
+    margin-bottom: 20px;
 }
 
 .image-list {
