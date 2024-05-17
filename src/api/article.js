@@ -7,30 +7,11 @@ function listArticle(param, success, fail) {
     local.get(`/article`, { params: param }).then(success).catch(fail);
 }
 
-function detailArticle(articleId, success, fail) {
-    local.get(`article/${articleId}`).then(success).catch(fail);
-}
-
-function registArticle(article, images, success, fail) {
-    console.log("boardjs article", article);
-    console.log("image", images);
-
+async function insertImage(image, success, fail) {
     const formData = new FormData();
-
-    // Add image file to FormData
-    // formData.append("image", image);
-    // Add images to FormData
-    if (images && images.length > 0) {
-        for (let i = 0; i < images.length; i++) {
-            formData.append("images", images[i]); // Note: using "images" to allow multiple files with the same key
-        }
-    }
-
-    // Add BoardDto fields to FormData as JSON
-    formData.append("article", new Blob([JSON.stringify(article)], { type: "application/json" }));
-
-    axios
-        .post(`http://localhost/article`, formData, {
+    formData.append("image", image);
+    await axios
+        .post(`http://localhost/article/image`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
@@ -39,17 +20,41 @@ function registArticle(article, images, success, fail) {
         .catch(fail);
 }
 
-function getModifyArticle(articleno, success, fail) {
+function deleteImage(image, success, fail) {
+    local.delete(`/article/image/${image}`, image).then(success).catch(fail);
+}
+
+function detailArticle(articleId, success, fail) {
+    local.get(`article/${articleId}`).then(success).catch(fail);
+}
+
+function registArticle(article, images, success, fail) {
+    console.log("boardjs article", article);
+    console.log("image", images);
+
+    const articlePostDto = { articleDto: article, fileInfos: images };
+    console.log(articlePostDto);
+    local
+        .post(`/article`, {
+            articleDto: article,
+            fileInfos: images,
+        })
+        .then(success)
+        .catch(fail);
+}
+
+async function getModifyArticle(articleno, success, fail) {
     console.log("getModifyArticle");
-    local.get(`/article/${articleno}`).then(success).catch(fail);
+    await local.get(`/article/${articleno}`).then(success).catch(fail);
 }
 
 function modifyArticle(article, success, fail) {
-    local.put(`/board`, JSON.stringify(article)).then(success).catch(fail);
+    console.log(article);
+    local.put(`/article`, article).then(success).catch(fail);
 }
 
 // function deleteArticle(articleno, success, fail) {
 //     local.delete(`/board/${articleno}`).then(success).catch(fail);
 // }
 
-export { listArticle, detailArticle, registArticle, getModifyArticle, modifyArticle };
+export { insertImage, deleteImage, listArticle, detailArticle, registArticle, getModifyArticle, modifyArticle };

@@ -39,8 +39,21 @@ const updateHit = async function () {
 
 onMounted(() => {
     getBoard();
+    console.log(board.value);
     updateHit();
 });
+
+const currentIndex = ref(0);
+
+const prevImage = () => {
+    if (currentIndex.value == 0) return;
+    currentIndex.value = (currentIndex.value - 1 + board.value.fileInfos.length) % board.value.fileInfos.length;
+};
+
+const nextImage = () => {
+    if (currentIndex.value == board.value.fileInfos.length - 1) return;
+    currentIndex.value = (currentIndex.value + 1) % board.value.fileInfos.length;
+};
 </script>
 
 <template>
@@ -51,14 +64,25 @@ onMounted(() => {
 
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
             <span style="font-size: medium"> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}</span>
-
             <hr />
+
+            <div class="image-slider">
+                <button @click.prevent="prevImage" class="nav-btn prev-btn">&lt;</button>
+                <div class="image-list">
+                    <div v-for="(file, index) in imagesPath" :key="file.imageId" class="image-div" :class="{ active: index === currentIndex }">
+                        <img :src="file" />
+                        <button type="button" class="btn btn-outline-danger delete-btn" @click.prevent="deleteImageFile(file.imageId)">Delete</button>
+                    </div>
+                </div>
+                <button @click.prevent="nextImage" class="nav-btn next-btn">&gt;</button>
+            </div>
+
             <div id="content_data">{{ board.content }}</div>
             <div style="height: 15px"></div>
 
-            <div v-for="(image, idx) in imagesPath" :key="idx">
+            <!-- <div v-for="(image, idx) in imagesPath" :key="idx">
                 <img :src="image" width="100%" style="border: solid 1px black" />
-            </div>
+            </div> -->
             <hr />
             <div class="d-flex justify-content-center">
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
@@ -84,6 +108,55 @@ onMounted(() => {
         width: 80%;
     }
 }
+.prev-btn {
+    margin-right: 20px;
+}
+.next-btn {
+    margin-left: 20px;
+}
+.image-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 600px;
+    margin: 0 auto;
+}
+
+.image-list {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+}
+
+.image-div {
+    position: relative;
+    flex: 0 0 100%;
+    height: 400px;
+    border: solid 1px black;
+    margin: 5px;
+    display: none;
+}
+
+.image-div img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.image-div.active {
+    display: block;
+}
+
+.nav-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+}
+
 #title_data,
 #content_data {
     width: 100%;
