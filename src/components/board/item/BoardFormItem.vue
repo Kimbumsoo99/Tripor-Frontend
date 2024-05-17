@@ -158,26 +158,17 @@ const aiExpand = () => {
     aiExpanded.value = !aiExpanded.value;
 };
 
-const categoryItems = [
-    { code: 12, name: "관광지" },
-    { code: 14, name: "문화시설" },
-    { code: 15, name: "축제공연행사" },
-    { code: 25, name: "여행코스" },
-    { code: 28, name: "레포츠" },
-    { code: 32, name: "숙박" },
-    { code: 38, name: "쇼핑" },
-    { code: 39, name: "음식점" },
-];
 
-const q1 = ref("");
-const q2 = ref("");
-const q3 = ref("");
-const q4 = ref("");
-const q5 = ref("");
-const q6 = ref("");
-const q7 = ref("");
-const q8 = ref("");
-const q9 = ref("");
+const q1 = ref('');
+const q2 = ref('');
+const q3 = ref('');
+const q4 = ref('');
+const q5 = ref('');
+const q6 = ref('');
+const q7 = ref('');
+const q8 = ref('');
+const q9 = ref('');
+
 
 // chatGPT description
 const getGPTResponse = async () => {
