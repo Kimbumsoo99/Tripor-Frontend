@@ -30,7 +30,7 @@ const getPlanInfo = async function () {
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;
     originList.value = tripList.value;
-    memoField.value = planInfo.value.memo;
+    loadMemo.value = planInfo.value.memo;
 };
 
 const kakaoMapRef = ref(null);
@@ -168,7 +168,7 @@ const getGPTResponse = async () => {
             model: "gpt-3.5-turbo",
         });
 
-        memoField.value = response.choices[0].message.content;
+        loadMemo.value = response.choices[0].message.content;
 
         hideLoadingSpinner();
     } catch (error) {
@@ -187,9 +187,15 @@ const hideLoadingSpinner = () => {
     spinnerVisible.value = false;
 };
 
+const loadMemo = ref("");
+
+const memoChange = (e) => {
+    memoField.value = e.target.innerHTML;
+};
+
 const saveMemo = () => {
     planInfo.value.memo = memoField.value;
-    console.log(planInfo.value);
+    console.log(memoField.value);
     saveMemoAPI(
         planInfo.value,
         (res) => {
@@ -253,7 +259,7 @@ onMounted(() => {
                                     <span class="loader" v-if="spinnerVisible"></span>
                                 </div>
                             </form>
-                            <div contenteditable="true" id="memo" ref="memo" style="flex: 1; margin-bottom: 5px" v-html="memoField"></div>
+                            <div contenteditable="true" id="memo" ref="memo" style="flex: 1; margin-bottom: 5px" v-html="loadMemo" @input="memoChange"></div>
                             <div class="alert alert-info" role="alert" v-if="saveMemoSuccess.result == 'ok'">{{ saveMemoSuccess.msg }}</div>
                             <div class="alert alert-danger" role="alert" v-else-if="saveMemoSuccess.result == 'err'">{{ saveMemoSuccess.msg }}</div>
                             <div class="d-flex flex-row-reverse">
