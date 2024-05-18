@@ -74,7 +74,6 @@ const nextImage = () => {
                 <div class="image-list">
                     <div v-for="(file, index) in imagesPath" :key="file.imageId" class="image-div" :class="{ active: index === currentIndex }">
                         <img :src="file" />
-                        <button type="button" class="btn btn-outline-danger delete-btn" @click.prevent="deleteImageFile(file.imageId)">Delete</button>
                     </div>
                 </div>
                 <button @click.prevent="nextImage" class="nav-btn next-btn">&gt;</button>

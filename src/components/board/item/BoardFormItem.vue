@@ -71,7 +71,7 @@ const writeArticle = () => {
 };
 
 const updateArticle = () => {
-    article.value.fileInfos = input.value.image;
+    if(input.value.image !== null) article.value.fileInfos = input.value.image;
     modifyArticle(
         article.value,
         (res) => {
