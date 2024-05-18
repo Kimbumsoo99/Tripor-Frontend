@@ -6,6 +6,8 @@ import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 
+import draggable from "vuedraggable";
+
 const memberStore = useMemberStore();
 
 const { userInfo } = storeToRefs(memberStore);
@@ -104,9 +106,14 @@ const searchTrip = () => {
                         <button class="btn text-white btn-primary" type="button" style="overflow: hiddlen; white-space: nowrap" id="searchButton" @click.prevent="searchTrip">검색</button>
                     </div>
                     <div style="height: 20px"></div>
-                    <ul id="planItems" class="list-unstyled">
+                    <draggable v-model="planList" item-key="planId" tag="ul" id="planItems" class="list-unstyled">
+                        <template #item="{ element: plan }">
+                            <PlanItem :item="plan" @remove-from-plan-list="removeFromPlanList" />
+                        </template>
+                    </draggable>
+                    <!-- <ul id="planItems" class="list-unstyled">
                         <PlanItem v-for="item in planList" :key="item.contentId" :item="item" @remove-from-plan-list="removeFromPlanList" />
-                    </ul>
+                    </ul> -->
                     <button type="button" id="savePlanButton" class="btn btn-outline-primary mt-auto" @click="makePlan">일정 등록하기</button>
                     <div style="height: 5px"></div>
                     <button type="button" id="canclePlanButton" class="btn btn-outline-danger mt-auto" @click="initPlan">일정 초기화</button>
