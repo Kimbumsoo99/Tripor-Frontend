@@ -11,6 +11,8 @@ const router = useRouter();
 const { id } = route.params;
 const imagesPath = ref([]);
 
+const imageSliderVisible = ref(true);
+
 const board = ref({});
 
 const getBoard = async function () {
@@ -21,6 +23,7 @@ const getBoard = async function () {
             for (const image of board.value.fileInfos) {
                 imagesPath.value.push(VITE_UPLOAD_FILE_PATH + "/" + image.saveFolder + "/" + image.saveFile);
             }
+            if(imagesPath.value.length === 0) imageSliderVisible.value = false;
         },
         (err) => console.log(err)
     );
@@ -66,7 +69,7 @@ const nextImage = () => {
             <span style="font-size: medium"> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}</span>
             <hr />
 
-            <div class="image-slider">
+            <div class="image-slider" v-if="imageSliderVisible">
                 <button @click.prevent="prevImage" class="nav-btn prev-btn">&lt;</button>
                 <div class="image-list">
                     <div v-for="(file, index) in imagesPath" :key="file.imageId" class="image-div" :class="{ active: index === currentIndex }">
@@ -121,7 +124,7 @@ const nextImage = () => {
     position: relative;
     width: 100%;
     max-width: 1000px;
-    height: 600px;
+    height: 460px;
     margin: 0 auto;
 }
 
