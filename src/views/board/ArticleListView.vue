@@ -174,6 +174,7 @@ onMounted(() => {
                         <PageNavigation :current-page="currentPage" :total-page="totalPage" @pageChange="onPageChange" />
                     </div>
                     <!--  페이지 추가  -->
+                    <div style="height: 30px"></div>
                 </div>
             </div>
         </div>

@@ -4,6 +4,12 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle } from "@/api/article.js";
 const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const memberStore = useMemberStore();
+
+const { userInfo } = storeToRefs(memberStore);
 
 const route = useRoute();
 const router = useRouter();
@@ -15,11 +21,16 @@ const imageSliderVisible = ref(true);
 
 const board = ref({});
 
+const currentUserWriter = ref(false);
+
+console.log(currentUserWriter)
+
 const getBoard = async function () {
     detailArticle(
         id,
         (res) => {
             board.value = res.data.item;
+            if(board.value.memberId == userInfo.value.memberId) currentUserWriter.value = true;
             for (const image of board.value.fileInfos) {
                 imagesPath.value.push(VITE_UPLOAD_FILE_PATH + "/" + image.saveFolder + "/" + image.saveFile);
             }
@@ -86,10 +97,11 @@ const nextImage = () => {
                 <img :src="image" width="100%" style="border: solid 1px black" />
             </div> -->
             <hr />
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center" v-if="currentUserWriter">
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
                 <input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" @click="boardRemove" value="삭제하기" />
             </div>
+            <div style="height: 30px"></div>
         </div>
     </div>
 </template>

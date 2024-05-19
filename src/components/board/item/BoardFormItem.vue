@@ -71,7 +71,7 @@ const writeArticle = () => {
 };
 
 const updateArticle = () => {
-    if(input.value.image !== null) article.value.fileInfos = input.value.image;
+    article.value.fileInfos = input.value.image;
     modifyArticle(
         article.value,
         (res) => {
@@ -292,6 +292,7 @@ const hideLoadingSpinner = () => {
                 <span class="mb-3 text-primary" style="cursor: pointer"> <button type="button" class="btn btn-outline-primary" @click="moveDetail">수정 취소</button></span>
             </div>
         </template>
+        <div style="height: 30px"></div>
     </form>
 </template>
 
