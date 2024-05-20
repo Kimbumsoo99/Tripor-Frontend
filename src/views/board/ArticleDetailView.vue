@@ -162,31 +162,33 @@ const deleteComment = async function (id){
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
                 <input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" @click="boardRemove" value="삭제하기" />
             </div>
-            <div style="height: 10px"></div>
+            <div style="height: 30px"></div>
 
 
         
             <div v-for="(comment, index) in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row m-2"> 
-                <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
-                <div style="width: 28px"></div>
+                <div class="profile-image-area m-2"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
+                <div style="width: 20px"></div>
                 <div style="width: 100%">
-                    <div class="d-flex justify-content-between mb-1">
+                    <div class="d-flex justify-content-between m-2">
                         <div style="font-size: 15px">{{ comment.memberId }}&nbsp;|&nbsp;{{ comment.commentRegisterDate }}</div>
                         <div class="d-flex flex-row">
-                            <div style="font-size: 15px; margin-right: 10px; cursor: pointer;">답글 달기</div>
-                            <div style="font-size: 15px; cursor: pointer;" @click="toggleCommentMode(index)">수정/삭제</div>
+                            <!-- <div style="font-size: 15px; margin-right: 10px; cursor: pointer;">답글 달기</div> -->
+                            <div v-if="comment.memberId == userInfo.memberId" style="font-size: 15px; cursor: pointer;" @click="toggleCommentMode(index)">수정/삭제</div>
                         </div>
                     </div>
                     <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
                         <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
-                        <button class="btn btn-outline-secondary me-1" @click="updateComment(comment.commentId)">수정하기</button>
-                        <button class="btn btn-outline-danger" @click="deleteComment(comment.commentId)">삭제하기</button>
+                        <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(comment.commentId)">수정하기</button>
+                        <button class="btn btn-outline-danger btn-sm" @click="deleteComment(comment.commentId)">삭제하기</button>
                     </div>
-                    <div v-else>
+                    <div v-else class="m-2">
                         {{ comment.commentContent }}
                     </div>
                 </div>
             </div>
+
+            <!-- 답글 -->
             <!-- <div class="d-flex flex-row">
                 <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px;"></i> </div>
                 <div id="comment_div" class="d-flex flex-row m-1" style="width: 100%">
@@ -202,8 +204,6 @@ const deleteComment = async function (id){
                     </div>
                 </div>
             </div> -->
-
-            <div style="height: 20px"></div>
             
             <div id="write_comment_div" class="m-2">
                 <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
