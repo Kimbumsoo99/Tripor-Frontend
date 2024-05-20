@@ -8,7 +8,7 @@ const emit = defineEmits(["closeOverlay", "movedMarkers"]);
 
 const tourList = ref([]);
 
-const place = ref("");
+const place = ref({});
 
 // watch(
 //     () => props.contentId,
@@ -53,13 +53,18 @@ const closeOverlay = () => {
     place.value = null;
 };
 
+const hide = () => {
+    detailVisible.value = false;
+    place.value = null;
+};
+
 const show = (content) => {
     detailVisible.value = true;
     place.value = content;
     // getAttractionInfo(content.contentId);
 };
 
-defineExpose({ show });
+defineExpose({ show, hide });
 </script>
 
 <template>
