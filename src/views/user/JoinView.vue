@@ -2,6 +2,8 @@
 import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
+import { insertImage } from "@/api/article.js";
+const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
 
 const router = useRouter();
 
@@ -15,6 +17,7 @@ const emailId = ref("");
 const emailDomain = ref("");
 const selectedSido = ref("");
 const gugun = ref("");
+const profile = ref(null);
 
 const duplicatedId = ref(false);
 const incorrectPw = ref(false);
@@ -51,6 +54,7 @@ const joinUser = async function () {
                 emailDomain: emailDomain.value,
                 sido: selectedSido.value,
                 gugun: gugun.value,
+                profile: profile.value,
             });
             router.push({ name: "join_ok" });
         } catch (error) {
@@ -65,6 +69,20 @@ const joinUser = async function () {
         incorrectPw.value = true;
     }
 };
+
+const images = ref([]);
+
+const upload = async () => {
+    console.log(images.value.files[0]);
+    await insertImage(
+        images.value.files[0],
+        (res) => {
+            console.log(res);
+            profile.value = `${VITE_UPLOAD_FILE_PATH}/${res.data.fileInfo.saveFolder}/${res.data.fileInfo.saveFile}`;
+        },
+        (err) => console.log(err)
+    );
+};
 </script>
 
 <template>
@@ -74,6 +92,8 @@ const joinUser = async function () {
         <form id="form-join" method="POST" action="" @submit.prevent="joinUser">
             <input type="hidden" name="action" value="join" />
             <div class="form_group">
+                <input type="file" ref="images" @change="upload" name="photo" accept="image/*" />
+                <hr />
                 <label>이름</label><br />
                 <input class="p-1 mb-3" type="text" id="username" name="username" style="width: 100%" placeholder="이름을 입력해주세요." v-model="memberName" required />
                 <label>아이디</label><br />
