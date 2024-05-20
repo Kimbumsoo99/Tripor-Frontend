@@ -75,6 +75,7 @@ const writeComment = async function () {
             commentContent: newComment.value
         });
         console.log(response);
+        router.go(0);
     } catch (error) {
         console.log(error);
     }
@@ -85,8 +86,44 @@ const comments = ref({});
 const getComments = async function() {
     try {
         const response = await axios.get(`http://localhost/article/${board.value.articleId}/comments`);
-        comments.value = response.data.items;
+        comments.value = response.data.items.map(comment => ({
+            ...comment,
+            updateCommentMode: false,
+        }));
         console.log(comments.value);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const fixedcomment = ref('')
+
+const toggleCommentMode = (idx) => {
+    comments.value[idx].updateCommentMode = !comments.value[idx].updateCommentMode;
+    if(comments.value[idx].updateCommentMode){
+        fixedcomment.value = comments.value[idx].commentContent;
+    }
+}
+
+const updateComment = async function (id) {
+    try {
+        const response = await axios.put(`http://localhost/article/${board.value.articleId}/comments/${id}`, {
+            memberId: userInfo.value.memberId,
+            commentContent: fixedcomment.value
+        });
+        console.log(response);
+        router.go(0);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const deleteComment = async function (id){
+    try{
+        const response = await axios.delete(`http://localhost/article/${board.value.articleId}/comments/${id}`);
+        console.log(response);
+        router.go(0);
     } catch (error) {
         console.log(error);
     }
@@ -129,18 +166,23 @@ const getComments = async function() {
 
 
         
-            <div v-for="comment in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row m-2"> 
+            <div v-for="(comment, index) in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row m-2"> 
                 <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
                 <div style="width: 28px"></div>
                 <div style="width: 100%">
                     <div class="d-flex justify-content-between mb-1">
                         <div style="font-size: 15px">{{ comment.memberId }}&nbsp;|&nbsp;{{ comment.commentRegisterDate }}</div>
                         <div class="d-flex flex-row">
-                            <div style="font-size: 15px; margin-right: 10px">답글 달기</div>
-                            <div style="font-size: 15px">수정/삭제</div>
+                            <div style="font-size: 15px; margin-right: 10px; cursor: pointer;">답글 달기</div>
+                            <div style="font-size: 15px; cursor: pointer;" @click="toggleCommentMode(index)">수정/삭제</div>
                         </div>
                     </div>
-                    <div>
+                    <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
+                        <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
+                        <button class="btn btn-outline-secondary me-1" @click="updateComment(comment.commentId)">수정하기</button>
+                        <button class="btn btn-outline-danger" @click="deleteComment(comment.commentId)">삭제하기</button>
+                    </div>
+                    <div v-else>
                         {{ comment.commentContent }}
                     </div>
                 </div>
@@ -163,7 +205,7 @@ const getComments = async function() {
 
             <div style="height: 20px"></div>
             
-            <div id="write_comment_div">
+            <div id="write_comment_div" class="m-2">
                 <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
                 <button class="btn btn-outline-secondary" @click="writeComment">댓글달기</button>
             </div>
