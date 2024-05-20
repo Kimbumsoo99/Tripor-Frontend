@@ -18,12 +18,8 @@ const { id } = route.params;
 const imagesPath = ref([]);
 
 const imageSliderVisible = ref(true);
-
 const board = ref({});
-
 const currentUserWriter = ref(false);
-
-console.log(currentUserWriter)
 
 const getBoard = async function () {
     detailArticle(
@@ -35,6 +31,7 @@ const getBoard = async function () {
                 imagesPath.value.push(VITE_UPLOAD_FILE_PATH + "/" + image.saveFolder + "/" + image.saveFile);
             }
             if(imagesPath.value.length === 0) imageSliderVisible.value = false;
+            getComments();
         },
         (err) => console.log(err)
     );
@@ -53,7 +50,7 @@ const updateHit = async function () {
 
 onMounted(() => {
     getBoard();
-    console.log(board.value);
+    // getComments();
     updateHit();
 });
 
@@ -69,7 +66,31 @@ const nextImage = () => {
     currentIndex.value = (currentIndex.value + 1) % board.value.fileInfos.length;
 };
 
-const modifyProfile = ref(userInfo.value.profile);
+const newComment = ref('')
+
+const writeComment = async function () {
+    try {
+        const response = await axios.post(`http://localhost/article/${board.value.articleId}/comment`, {
+            memberId: userInfo.value.memberId,
+            commentContent: newComment.value
+        });
+        console.log(response);
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const comments = ref({});
+
+const getComments = async function() {
+    try {
+        const response = await axios.get(`http://localhost/article/${board.value.articleId}/comments`);
+        comments.value = response.data.items;
+        console.log(comments.value);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 </script>
 
@@ -104,30 +125,27 @@ const modifyProfile = ref(userInfo.value.profile);
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
                 <input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" @click="boardRemove" value="삭제하기" />
             </div>
-
-
             <div style="height: 10px"></div>
 
 
-            
-            <!-- 댓글 한 개-->
-            <div id="comment_div" class="d-flex flex-row m-1">
+        
+            <div v-for="comment in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row m-2"> 
                 <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
                 <div style="width: 28px"></div>
                 <div style="width: 100%">
-                    <div class="d-flex justify-content-between">
-                        <div style="font-size: 15px">김딱수&nbsp;|&nbsp;날짜</div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <div style="font-size: 15px">{{ comment.memberId }}&nbsp;|&nbsp;{{ comment.commentRegisterDate }}</div>
                         <div class="d-flex flex-row">
                             <div style="font-size: 15px; margin-right: 10px">답글 달기</div>
                             <div style="font-size: 15px">수정/삭제</div>
                         </div>
                     </div>
                     <div>
-                        좋은 글 잘 봤습니다^^
+                        {{ comment.commentContent }}
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-row">
+            <!-- <div class="d-flex flex-row">
                 <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px;"></i> </div>
                 <div id="comment_div" class="d-flex flex-row m-1" style="width: 100%">
                     <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
@@ -141,20 +159,15 @@ const modifyProfile = ref(userInfo.value.profile);
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div style="height: 20px"></div>
             
             <div id="write_comment_div">
-                <form>
-                    <textarea style="width: 100%" id="content" rows="4" class="border rounded input-group-lg" type="text" name="content" required></textarea>
-                    <button class="btn btn-outline-secondary">댓글달기</button>
-                </form>
+                <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
+                <button class="btn btn-outline-secondary" @click="writeComment">댓글달기</button>
             </div>
             <div style="height: 30px"></div>
-
-
-
             
         </div>
     </div>
@@ -180,8 +193,8 @@ const modifyProfile = ref(userInfo.value.profile);
     align-content: center;
 }
 .profile-image-area{
-    width: 50px;
-    height: 50px;
+    width: 58px;
+    height: 58px;
     border: 1px solid #ccc;
     border-radius: 50%;
 
