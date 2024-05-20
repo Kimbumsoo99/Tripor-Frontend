@@ -68,6 +68,9 @@ const nextImage = () => {
     if (currentIndex.value == board.value.fileInfos.length - 1) return;
     currentIndex.value = (currentIndex.value + 1) % board.value.fileInfos.length;
 };
+
+const modifyProfile = ref(userInfo.value.profile);
+
 </script>
 
 <template>
@@ -77,7 +80,7 @@ const nextImage = () => {
             <RouterLink :to="{ name: 'board' }" style="text-decoration: none"><span class="mb-3 text-primary" style="cursor: pointer">&lt; 뒤로가기</span></RouterLink>
 
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
-            <span style="font-size: medium"> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}</span>
+            <div style="font-size: medium" class="d-flex flex-row"><span class="writer-profile-img-area me-1"><img src="@/assets/image/default_profile_img.png" id="profileImage"></span> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}</div>
             <hr />
 
             <div class="image-slider" v-if="imageSliderVisible">
@@ -101,12 +104,94 @@ const nextImage = () => {
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
                 <input id="article-delete" type="button" class="btn text-white btn-outline-primary m-1" @click="boardRemove" value="삭제하기" />
             </div>
+
+
+            <div style="height: 10px"></div>
+
+
+            
+            <!-- 댓글 한 개-->
+            <div id="comment_div" class="d-flex flex-row m-1">
+                <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
+                <div style="width: 28px"></div>
+                <div style="width: 100%">
+                    <div class="d-flex justify-content-between">
+                        <div style="font-size: 15px">김딱수&nbsp;|&nbsp;날짜</div>
+                        <div class="d-flex flex-row">
+                            <div style="font-size: 15px; margin-right: 10px">답글 달기</div>
+                            <div style="font-size: 15px">수정/삭제</div>
+                        </div>
+                    </div>
+                    <div>
+                        좋은 글 잘 봤습니다^^
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-row">
+                <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px;"></i> </div>
+                <div id="comment_div" class="d-flex flex-row m-1" style="width: 100%">
+                    <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
+                    <div style="width: 28px"></div>
+                    <div>
+                        <div style="font-size: 15px">
+                            김딱수&nbsp;|&nbsp;날짜
+                        </div>
+                        <div>
+                            좋은 글 잘 봤습니다^^
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 20px"></div>
+            
+            <div id="write_comment_div">
+                <form>
+                    <textarea style="width: 100%" id="content" rows="4" class="border rounded input-group-lg" type="text" name="content" required></textarea>
+                    <button class="btn btn-outline-secondary">댓글달기</button>
+                </form>
+            </div>
             <div style="height: 30px"></div>
+
+
+
+            
         </div>
     </div>
 </template>
 
 <style scoped>
+#comment_div{
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 10px;
+}
+.writer-profile-img-area{
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+
+    position: relative;
+
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+.profile-image-area{
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+
+    position: relative;
+
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
 @media (min-width: 1199px) {
     #article_div {
         position: relative;
