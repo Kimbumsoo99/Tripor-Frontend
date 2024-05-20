@@ -36,10 +36,6 @@ const getPlanInfo = async function () {
     loadMemo.value = planInfo.value.memo;
 };
 
-const tripIndex = computed(() => {
-    return tripList.value.map((item, index) => ({ ...item, index: index + 1 }));
-});
-
 const kakaoMapRef = ref(null);
 
 const onTitleClickHandler = (tour) => {

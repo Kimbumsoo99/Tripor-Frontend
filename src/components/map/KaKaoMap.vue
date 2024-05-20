@@ -314,7 +314,8 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                 // router.replace({ name: "content", params: { contentId: item.contentId } });
             });
             kakao.maps.event.addListener(marker2, "click", () => {
-                marker2.setMap(null);
+                childRef.value.hide();
+                closeOverlay();
             });
             marker.setZIndex(-1);
             marker.setMap(map.value);
