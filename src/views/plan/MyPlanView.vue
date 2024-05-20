@@ -14,7 +14,7 @@ const myPlans = ref([]);
 const memberId = ref("");
 
 onMounted(() => {
-    memberId.value = userInfo.value.memberId;;
+    memberId.value = userInfo.value.memberId;
     axios
         .get(`http://localhost/trip/plan/m/${memberId.value}`)
         .then((res) => {

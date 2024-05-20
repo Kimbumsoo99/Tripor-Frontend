@@ -1,11 +1,13 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { shortestPathByPlanList } from "@/api/trip";
 import { saveMemoAPI } from "@/api/trip";
 import OpenAI from "openai";
+import draggable from "vuedraggable";
+import PlanDetailTitle from "@/components/plan/item/PlanDetailTitle.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -27,11 +29,16 @@ window.onload = async () => {
 const getPlanInfo = async function () {
     planId.value = route.params.id;
     const response = await axios.get(`http://localhost/trip/plan/${planId.value}`);
+    console.log("RESPONSE", response);
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;
     originList.value = tripList.value;
     loadMemo.value = planInfo.value.memo;
 };
+
+const tripIndex = computed(() => {
+    return tripList.value.map((item, index) => ({ ...item, index: index + 1 }));
+});
 
 const kakaoMapRef = ref(null);
 
@@ -268,12 +275,11 @@ onMounted(() => {
                         </div>
 
                         <div v-else class="border rounded p-3" style="margin-bottom: 10px; width: 100%; height: 560px; overflow-y: auto">
-                            <div v-for="(trip, index) in tripList" :key="trip.contentId">
-                                <div style="cursor: pointer; font-weight: bold; font-size: 21px; color: #0077cc" id="title" @click="onTitleClickHandler(trip)">{{ index + 1 }}&#41; {{ trip.title }}</div>
-                                <div style="font-size: 15px"><i class="bi bi-geo-alt"></i>&nbsp;{{ trip.addr }}</div>
-
-                                <div style="height: 20px"></div>
-                            </div>
+                            <draggable v-model="tripList" item-key="contentId" tag="ul" class="list-unstyled">
+                                <template #item="{ element: trip, index }">
+                                    <PlanDetailTitle :trip="trip" :index="index + 1" @onTitleClickHandler="onTitleClickHandler" />
+                                </template>
+                            </draggable>
                         </div>
                     </div>
                 </div>

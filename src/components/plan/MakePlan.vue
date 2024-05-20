@@ -5,7 +5,6 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
-
 import draggable from "vuedraggable";
 
 const memberStore = useMemberStore();
