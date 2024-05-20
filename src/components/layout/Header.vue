@@ -51,8 +51,12 @@ function closeCallback() {
                             <RouterLink :to="{ name: 'login' }" style="text-decoration: none; color: white"><button id="logInButton" class="btn text-white btn-primary m-1">로그인</button></RouterLink>
                         </template>
                         <template v-else>
-                            <div>
-                                <span class="me-1">{{ userInfo.memberName }} 님 로그인 중</span>
+                            <div class="d-flex flex-row align-items-center">
+                                <!-- <div class="profile-image-area me-1">
+									<img src="@/assets/image/default_profile_img.png" id="profileImage">
+									
+								</div> -->
+                                <span class="me-1">{{ userInfo.memberName }}님 로그인 중</span>
                                 <button id="logOutButton" class="btn text-white btn-primary m-1" @click="logout">로그아웃</button>
                             </div>
                         </template>
@@ -66,6 +70,19 @@ function closeCallback() {
 </template>
 
 <style scoped>
+.profile-image-area{
+    width: 33px;
+    height: 33px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+
+    position: relative;
+
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
 @media (min-width: 768px) {
     .home-style .navbar {
         padding-left: 20px;
