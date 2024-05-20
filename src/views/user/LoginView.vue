@@ -48,6 +48,11 @@ const login = async () => {
         router.push({ name: "home" });
     }
 };
+
+const showPassword = ref(false);
+const toggleShow = () => {
+    showPassword.value = !showPassword.value;
+}
 </script>
 
 <template>
@@ -61,10 +66,13 @@ const login = async () => {
                     <label>아이디</label><br />
                     <span> <input style="width: 15px; height: 15px" class="m-1" type="checkbox" id="saveid" name="saveid" v-model="saveid" /> 아이디 저장 <br /> </span>
                 </div>
-                <input class="form-contro p-1 mb-3" type="text" id="userid" v-model="memberId" value="" style="width: 100%" placeholder="아이디를 입력해주세요." required />
-
+                <input class="p-1 mb-3" type="text" id="userid" v-model="memberId" value="" style="width: 100%" placeholder="아이디를 입력해주세요." required />
                 <label>비밀번호</label><br />
-                <input class="form-control p-1 mb-5" type="password" id="userpwd" @keyup.enter="login" v-model="memberPw" style="width: 100%" placeholder="비밀번호를 입력해주세요." required />
+                <div class="input password">
+                    <input v-if="showPassword" class="p-1 mb-5" type="text" id="userpwd" @keyup.enter="login" v-model="memberPw" style="width: 100%" placeholder="비밀번호를 입력해주세요." required />
+                    <input v-else class="p-1 mb-5" type="password" id="userpwd" @keyup.enter="login" v-model="memberPw" style="width: 100%" placeholder="비밀번호를 입력해주세요." required />
+                    <div class="eyes" @click="toggleShow" ><i class="fa" :class="{ 'fa-eye': showPassword, 'fa-eye-slash': !showPassword }"></i></div>
+                </div>
                 <div class="alert alert-danger" role="alert" v-if="apiResult.result == 'err'">{{ apiResult.msg }}</div>
                 <button type="submit" id="regist" class="col-12 btn btn-primary mb-3">로그인</button>
                 <div class="d-flex justify-content-center">
@@ -82,6 +90,21 @@ const login = async () => {
 </template>
 
 <style scoped>
+.input {
+  position: relative;
+}
+
+.input .eyes {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  color: gray;
+  font-size: 20px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 100000000000;
+}
 @media (min-width: 1199px) {
     #login_div {
         position: relative;

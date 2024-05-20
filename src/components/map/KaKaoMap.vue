@@ -414,7 +414,7 @@ const merge = (left, right) => {
 };
 
 const sortList = computed(() => {
-    return mergeSort(contentList.value).slice(0, 4);
+    return mergeSort(contentList.value).slice(1, 4);
 });
 
 watch(
