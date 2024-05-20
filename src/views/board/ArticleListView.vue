@@ -189,12 +189,24 @@ onMounted(() => {
         width: 49%;
         margin-left: 100px;
     }
+    #title_data {
+        width: 400px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 @media (max-width: 1199px) {
     #board_div {
         position: relative;
         top: 130px;
         width: 80%;
+    }
+    #title_data {
+        width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 .board-table {
@@ -251,11 +263,5 @@ onMounted(() => {
 #board_div a {
     text-decoration: none;
     font-size: 16px;
-}
-#title_data {
-    width: 300px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 </style>

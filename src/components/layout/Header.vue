@@ -42,7 +42,7 @@ function closeCallback() {
                 <div id="mobile_menu" class="d-block d-md-none">
                     <i class="bi bi-list" style="font-size: 24px; cursor: pointer" @click="openMobileMenu"></i>
                 </div>
-                <div class="container-fluid justify-content-center">
+                <div class="container-fluid justify-content-center ps-3 pe-3">
                     <RouterLink :to="{ name: 'home' }" class="col-lg-2 d-flex justify-content-center" id="header_title">Tripːor</RouterLink>
 
                     <div class="col-lg-2 d-none d-lg-block collapse navbar-collapse d-flex flex-row justify-content-end" id="header_join_login" style="display: block; overflow: hidden; white-space: nowrap">
@@ -57,6 +57,7 @@ function closeCallback() {
                             </div>
                         </template>
                     </div>
+                    <div style="width: 60px" class="d-none d-lg-block"></div>
                 </div>
             </div>
             <div id="contour"></div>
@@ -81,12 +82,6 @@ function closeCallback() {
         padding-top: 0px;
         padding-bottom: 0px;
     }
-}
-.navbar {
-    padding-left: 20px;
-    padding-right: 60px;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 #header_div {
     z-index: 10000;
