@@ -38,7 +38,10 @@ const getBoard = async function () {
 };
 
 const boardRemove = async function () {
-    await axios.delete(`http://localhost/article/${route.params.id}`);
+    const response = await axios.delete(`http://localhost/article/${route.params.id}`);
+    let msg = "글 삭제 시 문제 발생했습니다.";
+    if (response.status == 200) msg = "글 삭제가 완료되었습니다.";
+    alert(msg);
     router.push({ name: "board" });
 };
 
@@ -123,6 +126,9 @@ const deleteComment = async function (id){
     try{
         const response = await axios.delete(`http://localhost/article/${board.value.articleId}/comments/${id}`);
         console.log(response);
+        let msg = "댓글 삭제 시 문제 발생했습니다.";
+        if (response.status == 200) msg = "댓글 삭제가 완료되었습니다.";
+        alert(msg);
         router.go(0);
     } catch (error) {
         console.log(error);
@@ -133,12 +139,17 @@ const deleteComment = async function (id){
 
 <template>
     <div class="position-relative">
-        <div style="height: 280px"></div>
+        <div style="height: 270px"></div>
         <div id="article_div" class="mb-3 position-absolute top-50 start-50 translate-middle-x">
             <RouterLink :to="{ name: 'board' }" style="text-decoration: none"><span class="mb-3 text-primary" style="cursor: pointer">&lt; 뒤로가기</span></RouterLink>
 
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
-            <div style="font-size: medium" class="d-flex flex-row"><span class="writer-profile-img-area me-1"><img src="@/assets/image/default_profile_img.png" id="profileImage"></span> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}</div>
+            <!-- <img :src="modifyProfile ? modifyProfile : '/src/assets/image/default_profile_img.png'" id="profileImage" /> -->
+            <div style="font-size: medium" class="d-flex flex-row">
+                <span class="writer-profile-img-area me-1">
+                    <img src="@/assets/image/default_profile_img.png" id="profileImage">
+                </span> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
+            </div>
             <hr />
 
             <div class="image-slider" v-if="imageSliderVisible">
