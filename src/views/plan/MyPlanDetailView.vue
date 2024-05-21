@@ -69,10 +69,12 @@ const getTimeFromDistance = (distance) => {
 };
 
 const findShortPath = () => {
+    console.log(shortList.value);
     if (!shortList.value) {
         shortestPathByPlanList(
             planId.value,
             (res) => {
+                console.log(res);
                 shortList.value = res.data.items;
                 shortFlag.value = true;
                 tripList.value = shortList.value;
@@ -172,6 +174,7 @@ const getGPTResponse = async () => {
         });
 
         loadMemo.value = response.choices[0].message.content;
+        memoField.value = response.choices[0].message.content;
 
         hideLoadingSpinner();
     } catch (error) {
@@ -198,7 +201,7 @@ const memoChange = (e) => {
 
 const saveMemo = () => {
     planInfo.value.memo = memoField.value;
-    console.log(memoField.value);
+    loadMemo.value = memoField.value;
     saveMemoAPI(
         planInfo.value,
         (res) => {
