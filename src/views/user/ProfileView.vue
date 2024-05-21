@@ -136,7 +136,8 @@ const upload = async () => {
     font-size: 16px;
     color: rgb(220, 0, 0);
 }
-.profile-image-area {
+.profile-image-area{
+    object-fit: cover;
     width: 150px;
     height: 150px;
     border: 1px solid #ccc;
