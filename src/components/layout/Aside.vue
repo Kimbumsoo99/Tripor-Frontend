@@ -27,7 +27,7 @@ const toggle = () => {
             <div style="cursor: pointer" class="p-3 m-1 rounded menu_button row">
                 <div class="col-12" onclick="">
                     <i class="bi bi-search me-3"></i>
-                    <span>여행 계획 만들기</span>
+                    <span>여행 일정 만들기</span>
                 </div>
             </div>
         </RouterLink>
