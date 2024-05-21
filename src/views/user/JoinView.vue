@@ -92,8 +92,6 @@ const upload = async () => {
         <form id="form-join" method="POST" action="" @submit.prevent="joinUser">
             <input type="hidden" name="action" value="join" />
             <div class="form_group">
-                <input type="file" ref="images" @change="upload" name="photo" accept="image/*" />
-                <hr />
                 <label>이름</label><br />
                 <input class="p-1 mb-3" type="text" id="username" name="username" style="width: 100%" placeholder="이름을 입력해주세요." v-model="memberName" required />
                 <label>아이디</label><br />
