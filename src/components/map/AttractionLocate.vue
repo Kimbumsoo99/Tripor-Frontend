@@ -66,7 +66,7 @@ const getGugun = async function (sido) {
 
 <template>
     <div class="d-flex flex-column">
-        <div style="height: 70px; width: 100%" class="d-block d-md-none"></div>
+        <div style="height: 70px; width: 100%" id="locatesearch"></div>
         <div style="width: 100%; height: 25px"></div>
         <div id="test" class="d-flex flex-row">
             <span class="d-none d-lg-block">관광지를 선택하세요!</span>
@@ -102,5 +102,15 @@ const getGugun = async function (sido) {
     justify-content: center;
     align-items: center;
     display: inline;
+}
+@media (min-width: 1199px) {
+    #locatesearch{
+        display: none;
+    }
+}
+@media (max-width: 1199px) {
+    #locatesearch{
+        display: block;
+    }
 }
 </style>

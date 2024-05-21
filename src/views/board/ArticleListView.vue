@@ -112,7 +112,7 @@ onMounted(() => {
                 <div id="board-list" style="overflow: hidden; white-space: nowrap">
                     <div class="board__container" id="board-container">
                         <RouterLink :to="{ name: 'write' }" style="text-decoration: none; color: #332d2d">
-                            <button class="btn btn-primary ms-auto me-3 d-flex justify-content-end mb-3" style="overflow: hidden; white-space: nowrap" type="button" onclick="">글쓰기</button>
+                            <button class="btn btn-primary btn-sm ms-auto me-3 d-flex justify-content-end mb-3" style="overflow: hidden; white-space: nowrap" type="button" onclick="">글쓰기</button>
                         </RouterLink>
                         <!--  PAGE 및 검색으로 인해 추가 한 부분 -->
                         <form id="form-search" class="d-flex" action="">
