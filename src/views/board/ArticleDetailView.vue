@@ -79,6 +79,7 @@ const nextImage = () => {
 const newComment = ref("");
 
 const writeComment = async function (parentId = null) {
+    console.log(board.value)
     try {
         const response = await axios.post(`http://localhost/article/${board.value.articleId}/comment`, {
             memberId: userInfo.value.memberId,
@@ -86,6 +87,10 @@ const writeComment = async function (parentId = null) {
             parentCommentId: parentId,
         });
         console.log(response);
+
+        newComment.value = "";
+
+
         router.go(0);
     } catch (error) {
         console.log(error);
@@ -175,15 +180,15 @@ const dateFormatting = (date) => {
     const [year, month, day] = datePart.split("-");
 
     // 시간 부분을 분리
-    // const [hour, minute, second] = timePart.split(':');
+    const [hour, minute, second] = timePart.split(':');
 
     // 년-월-일 형식으로 변환
     const formattedDate = `${year}.${month}.${day}`;
     // 시간 부분도 원한다면 추가
-    // const formattedTime = `${hour}:${minute}:${second}`;
+    const formattedTime = `${hour}:${minute}:${second}`;
 
     // 원하는 형식으로 반환
-    return formattedDate;
+    return `${formattedDate} ${formattedTime}`;
 };
 </script>
 
@@ -196,7 +201,7 @@ const dateFormatting = (date) => {
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
             <div style="font-size: medium" class="d-flex flex-row">
                 <span class="writer-profile-img-area me-1">
-                    <img :src="writerProfileImg != null ? writerProfileImg : '/src/assets/image/default_profile_img.png'" id="profileImage" />
+                    <img :src="writerProfileImg != null ? writerProfileImg : '/src/assets/image/default_profile_img.png'" class="profileImage"/>
                 </span>
                 {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
             </div>
@@ -222,9 +227,9 @@ const dateFormatting = (date) => {
             </div>
             <div style="height: 30px"></div>
 
-            <template v-for="(comment, index) in comments" :key="comment.commentId">
+            <div v-for="(comment, index) in comments" :key="comment.commentId">
                 <div id="comment_div" class="d-flex flex-row justify-content-between m-2">
-                    <div class="profile-image-area m-2"><img :src="comment.profileImg != null ? comment.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage" /></div>
+                    <div class="profile-image-area m-2 profileImage"><img :src="comment.profileImg != null ? comment.profileImg : '/src/assets/image/default_profile_img.png'"/></div>
 
                     <div style="width: 87%">
                         <div class="d-flex justify-content-between m-2">
@@ -233,8 +238,8 @@ const dateFormatting = (date) => {
                                 <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ dateFormatting(comment.commentRegisterDate) }}</p>
                             </div>
                             <div class="d-flex flex-row">
-                                <div style="font-size: 15px; margin-right: 10px; cursor: pointer" @click="toggleReply(comment)">답글 달기</div>
-                                <div v-if="userInfo != null && comment.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
+                                <div style="font-size: 14px; cursor: pointer" @click="toggleReply(comment)">답글 달기</div>
+                                <div v-if="userInfo != null && comment.memberId == userInfo.memberId" style="font-size: 14px; margin-left: 10px; cursor: pointer; white-space: nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
                             </div>
                         </div>
                         <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
@@ -242,46 +247,64 @@ const dateFormatting = (date) => {
                             <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(comment.commentId)">수정하기</button>
                             <button class="btn btn-outline-danger btn-sm" @click="deleteComment(comment.commentId)">삭제하기</button>
                         </div>
-                        <div v-else-if="comment.replyMode" id="write_comment_div" class="m-2">
-                            {{ comment.commentContent }}
-                            <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg m3-t" type="text" name="content" required></textarea>
-                            <button class="btn btn-outline-secondary btn-sm me-1" @click="writeComment(comment.commentId)">작성</button>
-                            <button class="btn btn-outline-danger btn-sm" @click="toggleReply(comment)">닫기</button>
-                        </div>
                         <div v-else class="m-2">
                             {{ comment.commentContent }}
                         </div>
                     </div>
+                    
                 </div>
+                <div class="d-flex flex-row" v-if="comment.replyMode" >
+                    <div class="p-1 ms-1" style="width: 8%"><i class="bi bi-arrow-return-right" style="font-size: 40px; color: #ced4da"></i></div>
+                    <div id="write_comment_div" class="m-2" style="width:92%">
+                            <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg m3-t" type="text" name="content" required></textarea>
+                            <button class="btn btn-outline-secondary btn-sm me-1" @click="writeComment(comment.commentId)">작성</button>
+                            <button class="btn btn-outline-danger btn-sm" @click="toggleReply(comment)">닫기</button>
+                    </div>
+                </div>
+
                 <!-- 답글 -->
                 <div v-for="child in comment.childComments" :key="child.commentId" class="d-flex flex-row">
-                    <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px"></i></div>
-                    <div id="comment_div" class="d-flex flex-row m-1" style="width: 100%">
-                        <div class="profile-image-area"><img :src="child.profileImg != null ? child.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage" /></div>
-                        <div style="width: 28px"></div>
-                        <div>
-                            <div style="font-size: 15px">{{ child.memberId }} &nbsp;|&nbsp;{{ dateFormatting(child.commentRegisterDate) }}</div>
-                            <div>{{ child.commentContent }}</div>
+                    <div class="p-1 ms-1" style="width: 8%"><i class="bi bi-arrow-return-right" style="font-size: 40px; color: #ced4da"></i></div>
+
+                    <div id="comment_div" class="d-flex flex-row justify-content-between m-2" style="width: 92%">
+                        <div class="profile-image-area m-2 profileImage"><img :src="child.profileImg != null ? child.profileImg : '/src/assets/image/default_profile_img.png'" /></div>
+                        
+                        
+                        <div style="width: 87%" class="d-flex flex-column m-2">
+                            <div class="d-flex flex-row justify-content-between">
+                                <div>
+                                    <div style="font-size: 15px">{{ child.memberId }} &nbsp;
+                                    <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ dateFormatting(comment.commentRegisterDate) }}</p></div>
+                                </div>
+                                <div>
+                                    <div v-if="userInfo != null && child.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleChildCommentMode(child)">수정/삭제</div>
+                                </div>
+                            </div>
+                            <div v-if="child.updateCommentMode" id="write_comment_div">
+                                <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
+                                <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(child.commentId)">수정하기</button>
+                                <button class="btn btn-outline-danger btn-sm" @click="deleteComment(child.commentId)">삭제하기</button>
+                            </div>
+                            <div v-else class="mt-2 mb-2">{{ child.commentContent }}</div>
                         </div>
-                        <div class="d-flex flex-row">
-                            <div v-if="userInfo != null && child.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleChildCommentMode(child)">수정/삭제</div>
-                        </div>
+
                     </div>
-                    <div v-if="child.updateCommentMode" id="write_comment_div" class="m-2">
+                    <!-- <div v-if="child.updateCommentMode" id="write_comment_div" class="m-2">
+                        <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px"></i></div>
                         <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
                         <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(child.commentId)">수정하기</button>
                         <button class="btn btn-outline-danger btn-sm" @click="deleteComment(child.commentId)">삭제하기</button>
-                    </div>
+                    </div> -->
                 </div>
-            </template>
+            </div>
 
             <div id="write_comment_div" class="m-2">
                 <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
-                <button class="btn btn-outline-secondary" @click="writeComment">댓글달기</button>
+                <button class="btn btn-outline-secondary" @click.prevent="writeComment(null)">댓글달기</button>
             </div>
             <div style="height: 30px"></div>
         </div>
-    </div>
+        </div>
 </template>
 
 <style scoped>
