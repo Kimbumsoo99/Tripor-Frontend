@@ -28,7 +28,7 @@ const toggle = () => {
 </script>
 
 <template>
-    <div id="side_menu" class="d-md-none">
+    <div id="side_menu">
 				<div>
 					<i class="bi bi-x-lg" style="font-size: 24px; cursor:pointer" @click="closeSide"></i>
 					<div style="cursor: pointer" class="pt-3 pb-3 m-1 rounded menu_button row">
@@ -97,6 +97,26 @@ const toggle = () => {
 </template>
 
 <style scoped>
+@media (min-width: 1199px) {
+	#side_menu{
+		display: none;
+	}
+}
+@media (max-width: 1199px) {
+	#side_menu{
+		width: 300px;
+		height: 100%;
+		background-color: white;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 100000000;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+}
 #aside_div{
     width: 350px; 
     height: 100%; 
@@ -104,25 +124,9 @@ const toggle = () => {
     padding-right: 0; 
     z-index:9999
 }
-#side_menu .router-link-active{
-	color: #0077CC;
-}
 #aside_login_join{
 	position: absolute;
 	left: 20px;
 	bottom: 20px;
-}
-#side_menu{
-	width: 300px;
-	height: 100%;
-	background-color: white;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 100000000;
-	padding: 20px;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
 }
 </style>

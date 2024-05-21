@@ -198,7 +198,7 @@ const deleteComment = async function (id){
             <div v-for="(comment, index) in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row justify-content-between m-2"> 
                 <div class="profile-image-area m-2"><img :src="comment.profileImg != null? comment.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage"></div>
 
-                <div style="width: 82%">
+                <div style="width: 87%">
                     <div class="d-flex justify-content-between m-2">
                         <div style="font-size: 15px; white-space : nowrap">{{ comment.memberId }}&nbsp;
                             <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ comment.commentRegisterDate }}</p>

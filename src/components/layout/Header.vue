@@ -39,13 +39,14 @@ function closeCallback() {
         <SideMenu v-if="sideFlag" @close-side="closeCallback" />
         <div id="header_div" class="fixed-top" :class="[route.name === 'home' ? 'home-style' : '']">
             <div class="navbar navbar-expand-md bg-white navbar-light">
-                <div id="mobile_menu" class="d-block d-md-none">
+                <div id="mobile_menu">
                     <i class="bi bi-list" style="font-size: 24px; cursor: pointer" @click="openMobileMenu"></i>
                 </div>
                 <div class="container-fluid justify-content-center ps-3 pe-3">
                     <RouterLink :to="{ name: 'home' }" class="col-lg-2 d-flex justify-content-center" id="header_title">Tripːor</RouterLink>
+                    
 
-                    <div class="col-lg-2 d-none d-lg-block collapse navbar-collapse d-flex flex-row justify-content-end" id="header_join_login" style="display: block; overflow: hidden; white-space: nowrap">
+                    <div class="col-lg-2 collapse navbar-collapse justify-content-end" id="header_join_login">
                         <template v-if="userInfo == null">
                             <RouterLink :to="{ name: 'join' }" style="text-decoration: none; color: #0077cc"><button id="joinButton" class="btn btn-outline-primary m-1">회원가입</button></RouterLink>
                             <RouterLink :to="{ name: 'login' }" style="text-decoration: none; color: white"><button id="logInButton" class="btn text-white btn-primary m-1">로그인</button></RouterLink>
@@ -83,21 +84,35 @@ function closeCallback() {
     justify-content: center;
     align-content: center;
 }
-@media (min-width: 768px) {
+@media (min-width: 1199px) {
     .home-style .navbar {
         padding-left: 20px;
         padding-right: 60px;
         padding-top: 10px;
         padding-bottom: 10px;
     }
+    #mobile_menu{
+        display: none;
+    }
+    #header_login_join{
+        display: block !important;
+        background-color: red;
+        overflow: hidden; white-space: nowrap;
+    }
 }
-@media (max-width: 768px) {
+@media (max-width: 1199px) {
     .home-style .navbar {
         height: 138px;
         padding-left: 60px;
         padding-right: 60px;
         padding-top: 0px;
         padding-bottom: 0px;
+    }
+    #mobile_menu{
+        display: block;
+    }
+    #header_login_join{
+        display: none !important;
     }
 }
 #header_div {
