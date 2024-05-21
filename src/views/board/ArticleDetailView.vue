@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle } from "@/api/article.js";
 const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
@@ -26,11 +26,11 @@ const getBoard = async function () {
         id,
         (res) => {
             board.value = res.data.item;
-            if(board.value.memberId == userInfo.value.memberId) currentUserWriter.value = true;
+            if (board.value.memberId == userInfo.value.memberId) currentUserWriter.value = true;
             for (const image of board.value.fileInfos) {
                 imagesPath.value.push(VITE_UPLOAD_FILE_PATH + "/" + image.saveFolder + "/" + image.saveFile);
             }
-            if(imagesPath.value.length === 0) imageSliderVisible.value = false;
+            if (imagesPath.value.length === 0) imageSliderVisible.value = false;
             getComments();
             getMemberProfile();
         },
@@ -38,11 +38,10 @@ const getBoard = async function () {
     );
 };
 
-const writerProfileImg = ref('');
+const writerProfileImg = ref("");
 
 const getMemberProfile = async function () {
     const response = await axios.get(`http://localhost/member/${board.value.memberId}/profile`);
-    console.log(response.data.profile)
     writerProfileImg.value = response.data.profile;
 };
 
@@ -77,13 +76,14 @@ const nextImage = () => {
     currentIndex.value = (currentIndex.value + 1) % board.value.fileInfos.length;
 };
 
-const newComment = ref('')
+const newComment = ref("");
 
-const writeComment = async function () {
+const writeComment = async function (parentId = null) {
     try {
         const response = await axios.post(`http://localhost/article/${board.value.articleId}/comment`, {
             memberId: userInfo.value.memberId,
-            commentContent: newComment.value
+            commentContent: newComment.value,
+            parentCommentId: parentId,
         });
         console.log(response);
         router.go(0);
@@ -94,58 +94,65 @@ const writeComment = async function () {
 
 const comments = ref({});
 
-const getComments = async function() {
-    try {
-        const response = await axios.get(`http://localhost/article/${board.value.articleId}/comments`);
-        const commentsWithProfileImgs = await Promise.all(response.data.items.map(async comment => {
-            try {
-                const profileResponse = await axios.get(`http://localhost/member/${comment.memberId}/profile`);
-                return {
-                    ...comment,
-                    updateCommentMode: false,
-                    profileImg: profileResponse.data.profile, 
-                };
-            } catch (profileError) {
-                console.error(`Failed to fetch profile image for member ${comment.memberId}:`, profileError);
-                return {
-                    ...comment,
-                    updateCommentMode: false,
-                    profileImg: null,
-                };
-            }
-        }));
-        comments.value = commentsWithProfileImgs;
-        console.log(comments.value);
-    } catch (error) {
-        console.log(error);
-    }
-}
+const getComments = async function () {
+    await axios.get(`http://localhost/article/${board.value.articleId}/comments`).then((resComments) => {
+        comments.value = resComments.data.items;
+        comments.value.map((comment) => {
+            comment.replyMode = false;
+            comment.updateCommentMode = false;
+            axios.get(`http://localhost/member/${comment.memberId}/profile`).then((resProfile) => {
+                if (resProfile.data.result == "ok") {
+                    comment.profileImg = resProfile.data.profile;
+                } else {
+                    comment.profileImg = null;
+                }
+            });
+            comment.childComments.map((child) => {
+                axios.get(`http://localhost/member/${child.memberId}/profile`).then((resProfile) => {
+                    child.updateCommentMode = false;
+                    if (resProfile.data.result == "ok") {
+                        child.profileImg = resProfile.data.profile;
+                    } else {
+                        child.profileImg = null;
+                    }
+                });
+            });
+        });
+    });
+    console.log(comments.value);
+};
 
-
-const fixedcomment = ref('')
+const fixedcomment = ref("");
 
 const toggleCommentMode = (idx) => {
     comments.value[idx].updateCommentMode = !comments.value[idx].updateCommentMode;
-    if(comments.value[idx].updateCommentMode){
+    if (comments.value[idx].updateCommentMode) {
         fixedcomment.value = comments.value[idx].commentContent;
     }
-}
+};
+
+const toggleChildCommentMode = (comment) => {
+    fixedcomment.value = "";
+    comment.updateCommentMode = !comment.updateCommentMode;
+    if (comment.updateCommentMode) {
+        fixedcomment.value = comment.commentContent;
+    }
+};
 
 const updateComment = async function (id) {
     try {
         const response = await axios.put(`http://localhost/article/${board.value.articleId}/comments/${id}`, {
             memberId: userInfo.value.memberId,
-            commentContent: fixedcomment.value
+            commentContent: fixedcomment.value,
         });
-        console.log(response);
         router.go(0);
     } catch (error) {
         console.log(error);
     }
 };
 
-const deleteComment = async function (id){
-    try{
+const deleteComment = async function (id) {
+    try {
         const response = await axios.delete(`http://localhost/article/${board.value.articleId}/comments/${id}`);
         console.log(response);
         let msg = "댓글 삭제 시 문제 발생했습니다.";
@@ -155,8 +162,29 @@ const deleteComment = async function (id){
     } catch (error) {
         console.log(error);
     }
-}
+};
 
+const toggleReply = (comment) => {
+    comment.replyMode = !comment.replyMode;
+};
+
+const dateFormatting = (date) => {
+    const [datePart, timePart] = date.split(" ");
+
+    // 날짜 부분을 분리
+    const [year, month, day] = datePart.split("-");
+
+    // 시간 부분을 분리
+    // const [hour, minute, second] = timePart.split(':');
+
+    // 년-월-일 형식으로 변환
+    const formattedDate = `${year}.${month}.${day}`;
+    // 시간 부분도 원한다면 추가
+    // const formattedTime = `${hour}:${minute}:${second}`;
+
+    // 원하는 형식으로 반환
+    return formattedDate;
+};
 </script>
 
 <template>
@@ -168,8 +196,9 @@ const deleteComment = async function (id){
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
             <div style="font-size: medium" class="d-flex flex-row">
                 <span class="writer-profile-img-area me-1">
-                    <img :src="writerProfileImg != null? writerProfileImg : '/src/assets/image/default_profile_img.png'" id="profileImage">
-                </span> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
+                    <img :src="writerProfileImg != null ? writerProfileImg : '/src/assets/image/default_profile_img.png'" id="profileImage" />
+                </span>
+                {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
             </div>
             <hr />
 
@@ -193,66 +222,75 @@ const deleteComment = async function (id){
             </div>
             <div style="height: 30px"></div>
 
+            <template v-for="(comment, index) in comments" :key="comment.commentId">
+                <div id="comment_div" class="d-flex flex-row justify-content-between m-2">
+                    <div class="profile-image-area m-2"><img :src="comment.profileImg != null ? comment.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage" /></div>
 
-        
-            <div v-for="(comment, index) in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row justify-content-between m-2"> 
-                <div class="profile-image-area m-2"><img :src="comment.profileImg != null? comment.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage"></div>
-
-                <div style="width: 87%">
-                    <div class="d-flex justify-content-between m-2">
-                        <div style="font-size: 15px; white-space : nowrap">{{ comment.memberId }}&nbsp;
-                            <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ comment.commentRegisterDate }}</p>
+                    <div style="width: 87%">
+                        <div class="d-flex justify-content-between m-2">
+                            <div style="font-size: 15px; white-space: nowrap">
+                                {{ comment.memberId }}&nbsp;
+                                <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ dateFormatting(comment.commentRegisterDate) }}</p>
+                            </div>
+                            <div class="d-flex flex-row">
+                                <div style="font-size: 15px; margin-right: 10px; cursor: pointer" @click="toggleReply(comment)">답글 달기</div>
+                                <div v-if="userInfo != null && comment.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
+                            </div>
+                        </div>
+                        <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
+                            <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
+                            <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(comment.commentId)">수정하기</button>
+                            <button class="btn btn-outline-danger btn-sm" @click="deleteComment(comment.commentId)">삭제하기</button>
+                        </div>
+                        <div v-else-if="comment.replyMode" id="write_comment_div" class="m-2">
+                            {{ comment.commentContent }}
+                            <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg m3-t" type="text" name="content" required></textarea>
+                            <button class="btn btn-outline-secondary btn-sm me-1" @click="writeComment(comment.commentId)">작성</button>
+                            <button class="btn btn-outline-danger btn-sm" @click="toggleReply(comment)">닫기</button>
+                        </div>
+                        <div v-else class="m-2">
+                            {{ comment.commentContent }}
+                        </div>
+                    </div>
+                </div>
+                <!-- 답글 -->
+                <div v-for="child in comment.childComments" :key="child.commentId" class="d-flex flex-row">
+                    <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px"></i></div>
+                    <div id="comment_div" class="d-flex flex-row m-1" style="width: 100%">
+                        <div class="profile-image-area"><img :src="child.profileImg != null ? child.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage" /></div>
+                        <div style="width: 28px"></div>
+                        <div>
+                            <div style="font-size: 15px">{{ child.memberId }} &nbsp;|&nbsp;{{ dateFormatting(child.commentRegisterDate) }}</div>
+                            <div>{{ child.commentContent }}</div>
                         </div>
                         <div class="d-flex flex-row">
-                            <!-- <div style="font-size: 15px; margin-right: 10px; cursor: pointer;">답글 달기</div> -->
-                            <div v-if="comment.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space : nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
+                            <div v-if="userInfo != null && child.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleChildCommentMode(child)">수정/삭제</div>
                         </div>
                     </div>
-                    <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
+                    <div v-if="child.updateCommentMode" id="write_comment_div" class="m-2">
                         <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
-                        <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(comment.commentId)">수정하기</button>
-                        <button class="btn btn-outline-danger btn-sm" @click="deleteComment(comment.commentId)">삭제하기</button>
-                    </div>
-                    <div v-else class="m-2">
-                        {{ comment.commentContent }}
+                        <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(child.commentId)">수정하기</button>
+                        <button class="btn btn-outline-danger btn-sm" @click="deleteComment(child.commentId)">삭제하기</button>
                     </div>
                 </div>
-            </div>
+            </template>
 
-            <!-- 답글 -->
-            <!-- <div class="d-flex flex-row">
-                <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px;"></i> </div>
-                <div id="comment_div" class="d-flex flex-row m-1" style="width: 100%">
-                    <div class="profile-image-area"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
-                    <div style="width: 28px"></div>
-                    <div>
-                        <div style="font-size: 15px">
-                            김딱수&nbsp;|&nbsp;날짜
-                        </div>
-                        <div>
-                            좋은 글 잘 봤습니다^^
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            
             <div id="write_comment_div" class="m-2">
                 <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
                 <button class="btn btn-outline-secondary" @click="writeComment">댓글달기</button>
             </div>
             <div style="height: 30px"></div>
-            
         </div>
     </div>
 </template>
 
 <style scoped>
-#comment_div{
+#comment_div {
     background-color: #f8f9fa;
     padding: 8px;
     border-radius: 10px;
 }
-.writer-profile-img-area{
+.writer-profile-img-area {
     width: 27px;
     height: 27px;
     border: 1px solid #ccc;
@@ -263,13 +301,13 @@ const deleteComment = async function (id){
     justify-content: center;
     align-content: center;
 }
-.writer-profile-img-area img{
-    position:absolute;
+.writer-profile-img-area img {
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.profile-image-area{
+.profile-image-area {
     width: 58px;
     height: 58px;
     border: 1px solid #ccc;
@@ -282,8 +320,8 @@ const deleteComment = async function (id){
     justify-content: center;
     align-content: center;
 }
-.profile-img-area img{
-    position:absolute;
+.profile-img-area img {
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
