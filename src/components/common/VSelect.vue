@@ -3,7 +3,7 @@ import { ref } from "vue";
 const selectOption = ref([
     { text: "검색 조건", value: "" },
     { text: "제목", value: "subject" },
-    { text: "작성자", value: "memberId" },
+    { text: "작성자", value: "member_id" },
 ]);
 const emit = defineEmits(["onKeySelect"]);
 

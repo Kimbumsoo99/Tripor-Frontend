@@ -49,7 +49,6 @@ const getArticleList = function () {
     listArticle(
         param.value,
         (res) => {
-            console.log(res);
             articleList.value = res.data.items.articles;
             currentPage.value = res.data.meta.currentPage;
             totalPage.value = res.data.meta.totalPageCount;
@@ -73,7 +72,6 @@ const getArticleList = function () {
 
 const computedIndex = computed(() => {
     return articleList.value.map((article, index) => {
-        console.log(totalCount.value, index, currentPage.value);
         return totalCount.value - index - (currentPage.value - 1) * VITE_ARTICLE_LIST_SIZE;
     });
 });
@@ -115,7 +113,7 @@ onMounted(() => {
                             <button class="btn btn-primary btn-sm ms-auto me-3 d-flex justify-content-end mb-3" style="overflow: hidden; white-space: nowrap" type="button" onclick="">글쓰기</button>
                         </RouterLink>
                         <!--  PAGE 및 검색으로 인해 추가 한 부분 -->
-                        <form id="form-search" class="d-flex" action="">
+                        <form id="form-search" class="d-flex" action="" @submit.prevent="searchArticle">
                             <input type="hidden" name="action" value="list" />
                             <input type="hidden" name="pgno" value="1" />
                             <VSelect @on-key-select="onKeySelect" />
