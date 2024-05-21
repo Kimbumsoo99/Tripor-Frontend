@@ -85,7 +85,6 @@ const writeComment = async function (parentId = null) {
             commentContent: newComment.value,
             parentCommentId: parentId,
         });
-        console.log(response);
         router.go(0);
     } catch (error) {
         console.log(error);
@@ -119,7 +118,6 @@ const getComments = async function () {
             });
         });
     });
-    console.log(comments.value);
 };
 
 const fixedcomment = ref("");
@@ -154,7 +152,6 @@ const updateComment = async function (id) {
 const deleteComment = async function (id) {
     try {
         const response = await axios.delete(`http://localhost/article/${board.value.articleId}/comments/${id}`);
-        console.log(response);
         let msg = "댓글 삭제 시 문제 발생했습니다.";
         if (response.status == 200) msg = "댓글 삭제가 완료되었습니다.";
         alert(msg);

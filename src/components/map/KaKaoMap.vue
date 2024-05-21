@@ -123,7 +123,7 @@ const movedMarkers = (tour) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${tour.firstImage ? tour.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                            <img src="${tour.firstImage ? tour.firstImage : "/src/assets/image/no_image_logo.png"}" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>

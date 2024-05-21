@@ -7,8 +7,6 @@ const emit = defineEmits(["pageChange"]);
 const navigationSize = parseInt(import.meta.env.VITE_ARTICLE_NAVIGATION_SIZE);
 
 const startPage = computed(() => {
-    console.log(props.currentPage);
-    console.log(parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1);
     return parseInt((props.currentPage - 1) / navigationSize) * navigationSize + 1;
 });
 
@@ -31,7 +29,6 @@ function range(start, end) {
 }
 
 function onPageChange(pg) {
-    console.log(pg + "로 이동!!!");
     emit("pageChange", pg);
 }
 </script>
