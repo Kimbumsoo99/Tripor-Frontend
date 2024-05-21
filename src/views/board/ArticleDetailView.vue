@@ -32,9 +32,18 @@ const getBoard = async function () {
             }
             if(imagesPath.value.length === 0) imageSliderVisible.value = false;
             getComments();
+            getMemberProfile();
         },
         (err) => console.log(err)
     );
+};
+
+const writerProfileImg = ref('');
+
+const getMemberProfile = async function () {
+    const response = await axios.get(`http://localhost/member/${board.value.memberId}/profile`);
+    console.log(response.data.profile)
+    writerProfileImg.value = response.data.profile;
 };
 
 const boardRemove = async function () {
@@ -53,7 +62,6 @@ const updateHit = async function () {
 
 onMounted(() => {
     getBoard();
-    // getComments();
     updateHit();
 });
 
@@ -89,10 +97,24 @@ const comments = ref({});
 const getComments = async function() {
     try {
         const response = await axios.get(`http://localhost/article/${board.value.articleId}/comments`);
-        comments.value = response.data.items.map(comment => ({
-            ...comment,
-            updateCommentMode: false,
+        const commentsWithProfileImgs = await Promise.all(response.data.items.map(async comment => {
+            try {
+                const profileResponse = await axios.get(`http://localhost/member/${comment.memberId}/profile`);
+                return {
+                    ...comment,
+                    updateCommentMode: false,
+                    profileImg: profileResponse.data.profile, 
+                };
+            } catch (profileError) {
+                console.error(`Failed to fetch profile image for member ${comment.memberId}:`, profileError);
+                return {
+                    ...comment,
+                    updateCommentMode: false,
+                    profileImg: null,
+                };
+            }
         }));
+        comments.value = commentsWithProfileImgs;
         console.log(comments.value);
     } catch (error) {
         console.log(error);
@@ -144,10 +166,9 @@ const deleteComment = async function (id){
             <RouterLink :to="{ name: 'board' }" style="text-decoration: none"><span class="mb-3 text-primary" style="cursor: pointer">&lt; 뒤로가기</span></RouterLink>
 
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
-            <!-- <img :src="modifyProfile ? modifyProfile : '/src/assets/image/default_profile_img.png'" id="profileImage" /> -->
             <div style="font-size: medium" class="d-flex flex-row">
                 <span class="writer-profile-img-area me-1">
-                    <img src="@/assets/image/default_profile_img.png" id="profileImage">
+                    <img :src="writerProfileImg != null? writerProfileImg : '/src/assets/image/default_profile_img.png'" id="profileImage">
                 </span> {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
             </div>
             <hr />
@@ -165,9 +186,6 @@ const deleteComment = async function (id){
             <div id="content_data">{{ board.content }}</div>
             <div style="height: 15px"></div>
 
-            <!-- <div v-for="(image, idx) in imagesPath" :key="idx">
-                <img :src="image" width="100%" style="border: solid 1px black" />
-            </div> -->
             <hr />
             <div class="d-flex justify-content-center" v-if="currentUserWriter">
                 <RouterLink :to="{ name: 'update', params: { id: board.articleId } }" style="text-decoration: none"><input type="button" class="btn text-white btn-outline-primary m-1" onclick="" value="수정하기" /></RouterLink>
@@ -177,15 +195,17 @@ const deleteComment = async function (id){
 
 
         
-            <div v-for="(comment, index) in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row m-2"> 
-                <div class="profile-image-area m-2"><img src="@/assets/image/default_profile_img.png" id="profileImage"></div>
-                <div style="width: 20px"></div>
-                <div style="width: 100%">
+            <div v-for="(comment, index) in comments" :key="comment.commentId" id="comment_div" class="d-flex flex-row justify-content-between m-2"> 
+                <div class="profile-image-area m-2"><img :src="comment.profileImg != null? comment.profileImg : '/src/assets/image/default_profile_img.png'" id="profileImage"></div>
+
+                <div style="width: 82%">
                     <div class="d-flex justify-content-between m-2">
-                        <div style="font-size: 15px">{{ comment.memberId }}&nbsp;|&nbsp;{{ comment.commentRegisterDate }}</div>
+                        <div style="font-size: 15px; white-space : nowrap">{{ comment.memberId }}&nbsp;
+                            <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ comment.commentRegisterDate }}</p>
+                        </div>
                         <div class="d-flex flex-row">
                             <!-- <div style="font-size: 15px; margin-right: 10px; cursor: pointer;">답글 달기</div> -->
-                            <div v-if="comment.memberId == userInfo.memberId" style="font-size: 15px; cursor: pointer;" @click="toggleCommentMode(index)">수정/삭제</div>
+                            <div v-if="comment.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space : nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
                         </div>
                     </div>
                     <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
@@ -229,21 +249,25 @@ const deleteComment = async function (id){
 <style scoped>
 #comment_div{
     background-color: #f8f9fa;
-    padding: 10px;
+    padding: 8px;
     border-radius: 10px;
 }
 .writer-profile-img-area{
-    width: 25px;
-    height: 25px;
+    width: 27px;
+    height: 27px;
     border: 1px solid #ccc;
     border-radius: 50%;
-
     position: relative;
-
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-content: center;
+}
+.writer-profile-img-area img{
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .profile-image-area{
     width: 58px;
@@ -257,6 +281,12 @@ const deleteComment = async function (id){
     display: flex;
     justify-content: center;
     align-content: center;
+}
+.profile-img-area img{
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 @media (min-width: 1199px) {
     #article_div {
