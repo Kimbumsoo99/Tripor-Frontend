@@ -78,11 +78,12 @@ const nextImage = () => {
 
 const newComment = ref("");
 
-const writeComment = async function () {
+const writeComment = async function (parentId = null) {
     try {
         const response = await axios.post(`http://localhost/article/${board.value.articleId}/comment`, {
             memberId: userInfo.value.memberId,
             commentContent: newComment.value,
+            parentCommentId: parentId,
         });
         console.log(response);
         router.go(0);
@@ -97,8 +98,9 @@ const getComments = async function () {
     await axios.get(`http://localhost/article/${board.value.articleId}/comments`).then((resComments) => {
         comments.value = resComments.data.items;
         comments.value.map((comment) => {
+            comment.replyMode = false;
+            comment.updateCommentMode = false;
             axios.get(`http://localhost/member/${comment.memberId}/profile`).then((resProfile) => {
-                comment.updateCommentMode = false;
                 if (resProfile.data.result == "ok") {
                     comment.profileImg = resProfile.data.profile;
                 } else {
@@ -160,6 +162,10 @@ const deleteComment = async function (id) {
     } catch (error) {
         console.log(error);
     }
+};
+
+const toggleReply = (comment) => {
+    comment.replyMode = !comment.replyMode;
 };
 
 const dateFormatting = (date) => {
@@ -227,14 +233,20 @@ const dateFormatting = (date) => {
                                 <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ dateFormatting(comment.commentRegisterDate) }}</p>
                             </div>
                             <div class="d-flex flex-row">
-                                <!-- <div style="font-size: 15px; margin-right: 10px; cursor: pointer;">답글 달기</div> -->
-                                <div v-if="comment.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
+                                <div style="font-size: 15px; margin-right: 10px; cursor: pointer" @click="toggleReply(comment)">답글 달기</div>
+                                <div v-if="userInfo != null && comment.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleCommentMode(index)">수정/삭제</div>
                             </div>
                         </div>
                         <div v-if="comment.updateCommentMode" id="write_comment_div" class="m-2">
                             <textarea v-model="fixedcomment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg" type="text" name="content" required></textarea>
                             <button class="btn btn-outline-secondary btn-sm me-1" @click="updateComment(comment.commentId)">수정하기</button>
                             <button class="btn btn-outline-danger btn-sm" @click="deleteComment(comment.commentId)">삭제하기</button>
+                        </div>
+                        <div v-else-if="comment.replyMode" id="write_comment_div" class="m-2">
+                            {{ comment.commentContent }}
+                            <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg m3-t" type="text" name="content" required></textarea>
+                            <button class="btn btn-outline-secondary btn-sm me-1" @click="writeComment(comment.commentId)">작성</button>
+                            <button class="btn btn-outline-danger btn-sm" @click="toggleReply(comment)">닫기</button>
                         </div>
                         <div v-else class="m-2">
                             {{ comment.commentContent }}
@@ -252,7 +264,7 @@ const dateFormatting = (date) => {
                             <div>{{ child.commentContent }}</div>
                         </div>
                         <div class="d-flex flex-row">
-                            <div v-if="child.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleChildCommentMode(child)">수정/삭제</div>
+                            <div v-if="userInfo != null && child.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleChildCommentMode(child)">수정/삭제</div>
                         </div>
                     </div>
                     <div v-if="child.updateCommentMode" id="write_comment_div" class="m-2">

@@ -6,6 +6,7 @@ import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 
 const route = useRoute();
+const router = useRouter();
 const memberStore = useMemberStore();
 
 const { isLogin, userInfo } = storeToRefs(memberStore);
@@ -13,8 +14,9 @@ const { userLogout } = memberStore;
 
 const sideFlag = ref(false);
 
-const logout = () => {
-    userLogout();
+const logout = async () => {
+    await userLogout();
+    router.push({ name: "home" });
 };
 
 onMounted(async () => {
@@ -44,7 +46,6 @@ function closeCallback() {
                 </div>
                 <div class="container-fluid justify-content-center ps-3 pe-3">
                     <RouterLink :to="{ name: 'home' }" class="col-lg-2 d-flex justify-content-center" id="header_title">Tripːor</RouterLink>
-                    
 
                     <div class="col-lg-2 collapse navbar-collapse justify-content-end" id="header_join_login">
                         <template v-if="userInfo == null">
@@ -71,7 +72,7 @@ function closeCallback() {
 </template>
 
 <style scoped>
-.profile-image-area{
+.profile-image-area {
     width: 33px;
     height: 33px;
     border: 1px solid #ccc;
@@ -91,13 +92,14 @@ function closeCallback() {
         padding-top: 10px;
         padding-bottom: 10px;
     }
-    #mobile_menu{
+    #mobile_menu {
         display: none;
     }
-    #header_login_join{
+    #header_login_join {
         display: block !important;
         background-color: red;
-        overflow: hidden; white-space: nowrap;
+        overflow: hidden;
+        white-space: nowrap;
     }
 }
 @media (max-width: 1199px) {
@@ -108,10 +110,10 @@ function closeCallback() {
         padding-top: 0px;
         padding-bottom: 0px;
     }
-    #mobile_menu{
+    #mobile_menu {
         display: block;
     }
-    #header_login_join{
+    #header_login_join {
         display: none !important;
     }
 }
