@@ -6,7 +6,9 @@ import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
+import { localAxios } from "@/util/http-commons";
 
+const local = localAxios();
 const memberStore = useMemberStore();
 
 const { userInfo } = storeToRefs(memberStore);
@@ -49,8 +51,8 @@ const makePlan = async () => {
 
     const params = { tripList, memberId, planName };
 
-    await axios
-        .post("http://localhost:8080/trip/plan", params)
+    await local
+        .post("/trip/plan", params)
         .then(() => {
             planList.value = [];
             const flag = confirm("여행 계획 확인하러가기");

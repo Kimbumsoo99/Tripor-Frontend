@@ -6,8 +6,10 @@ import { detailArticle } from "@/api/article.js";
 const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
+import { localAxios } from "@/util/http-commons";
 
 const memberStore = useMemberStore();
+const local = localAxios();
 
 const { userInfo } = storeToRefs(memberStore);
 
@@ -41,12 +43,12 @@ const getBoard = async function () {
 const writerProfileImg = ref("");
 
 const getMemberProfile = async function () {
-    const response = await axios.get(`http://localhost:8080/member/${board.value.memberId}/profile`);
+    const response = await local.get(`/member/${board.value.memberId}/profile`);
     writerProfileImg.value = response.data.profile;
 };
 
 const boardRemove = async function () {
-    const response = await axios.delete(`http://localhost:8080/article/${route.params.id}`);
+    const response = await local.delete(`/article/${route.params.id}`);
     let msg = "글 삭제 시 문제 발생했습니다.";
     if (response.status == 200) msg = "글 삭제가 완료되었습니다.";
     alert(msg);
@@ -54,7 +56,7 @@ const boardRemove = async function () {
 };
 
 const updateHit = async function () {
-    await axios.put(`http://localhost:8080/article/hit/${route.params.id}`, {
+    await local.put(`/article/hit/${route.params.id}`, {
         articleId: board.value.articleId,
     });
 };
@@ -79,9 +81,9 @@ const nextImage = () => {
 const newComment = ref("");
 
 const writeComment = async function (parentId = null) {
-    console.log(board.value)
+    console.log(board.value);
     try {
-        const response = await axios.post(`http://localhost:8080/article/${board.value.articleId}/comment`, {
+        const response = await local.post(`/article/${board.value.articleId}/comment`, {
             memberId: userInfo.value.memberId,
             commentContent: newComment.value,
             parentCommentId: parentId,
@@ -96,12 +98,12 @@ const writeComment = async function (parentId = null) {
 const comments = ref({});
 
 const getComments = async function () {
-    await axios.get(`http://localhost:8080/article/${board.value.articleId}/comments`).then((resComments) => {
+    await local.get(`/article/${board.value.articleId}/comments`).then((resComments) => {
         comments.value = resComments.data.items;
         comments.value.map((comment) => {
             comment.replyMode = false;
             comment.updateCommentMode = false;
-            axios.get(`http://localhost:8080/member/${comment.memberId}/profile`).then((resProfile) => {
+            local.get(`/member/${comment.memberId}/profile`).then((resProfile) => {
                 if (resProfile.data.result == "ok") {
                     comment.profileImg = resProfile.data.profile;
                 } else {
@@ -109,7 +111,7 @@ const getComments = async function () {
                 }
             });
             comment.childComments.map((child) => {
-                axios.get(`http://localhost:8080/member/${child.memberId}/profile`).then((resProfile) => {
+                local.get(`/member/${child.memberId}/profile`).then((resProfile) => {
                     child.updateCommentMode = false;
                     if (resProfile.data.result == "ok") {
                         child.profileImg = resProfile.data.profile;
@@ -141,7 +143,7 @@ const toggleChildCommentMode = (comment) => {
 
 const updateComment = async function (id) {
     try {
-        const response = await axios.put(`http://localhost:8080/article/${board.value.articleId}/comments/${id}`, {
+        const response = await local.put(`/article/${board.value.articleId}/comments/${id}`, {
             memberId: userInfo.value.memberId,
             commentContent: fixedcomment.value,
         });
@@ -153,7 +155,7 @@ const updateComment = async function (id) {
 
 const deleteComment = async function (id) {
     try {
-        const response = await axios.delete(`http://localhost:8080/article/${board.value.articleId}/comments/${id}`);
+        const response = await local.delete(`/article/${board.value.articleId}/comments/${id}`);
         let msg = "댓글 삭제 시 문제 발생했습니다.";
         if (response.status == 200) msg = "댓글 삭제가 완료되었습니다.";
         alert(msg);
@@ -174,7 +176,7 @@ const dateFormatting = (date) => {
     const [year, month, day] = datePart.split("-");
 
     // 시간 부분을 분리
-    const [hour, minute, second] = timePart.split(':');
+    const [hour, minute, second] = timePart.split(":");
 
     // 년-월-일 형식으로 변환
     const formattedDate = `${year}.${month}.${day}`;
@@ -195,7 +197,7 @@ const dateFormatting = (date) => {
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
             <div style="font-size: medium" class="d-flex flex-row">
                 <span class="writer-profile-img-area me-1">
-                    <img :src="writerProfileImg != null ? writerProfileImg : '/src/assets/image/default_profile_img.png'" class="profileImage"/>
+                    <img :src="writerProfileImg != null ? writerProfileImg : '/src/assets/image/default_profile_img.png'" class="profileImage" />
                 </span>
                 {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
             </div>
@@ -223,7 +225,7 @@ const dateFormatting = (date) => {
 
             <div v-for="(comment, index) in comments" :key="comment.commentId">
                 <div id="comment_div" class="d-flex flex-row justify-content-between m-2">
-                    <div class="profile-image-area m-2 profileImage"><img :src="comment.profileImg != null ? comment.profileImg : '/src/assets/image/default_profile_img.png'"/></div>
+                    <div class="profile-image-area m-2 profileImage"><img :src="comment.profileImg != null ? comment.profileImg : '/src/assets/image/default_profile_img.png'" /></div>
 
                     <div style="width: 87%">
                         <div class="d-flex justify-content-between m-2">
@@ -245,14 +247,13 @@ const dateFormatting = (date) => {
                             {{ comment.commentContent }}
                         </div>
                     </div>
-                    
                 </div>
-                <div class="d-flex flex-row" v-if="comment.replyMode" >
+                <div class="d-flex flex-row" v-if="comment.replyMode">
                     <div class="p-1 ms-1" style="width: 8%"><i class="bi bi-arrow-return-right" style="font-size: 40px; color: #ced4da"></i></div>
-                    <div id="write_comment_div" class="m-2" style="width:92%">
-                            <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg m3-t" type="text" name="content" required></textarea>
-                            <button class="btn btn-outline-secondary btn-sm me-1" @click="writeComment(comment.commentId)">작성</button>
-                            <button class="btn btn-outline-danger btn-sm" @click="toggleReply(comment)">닫기</button>
+                    <div id="write_comment_div" class="m-2" style="width: 92%">
+                        <textarea v-model="newComment" style="width: 100%" id="content" rows="3" class="border rounded input-group-lg m3-t" type="text" name="content" required></textarea>
+                        <button class="btn btn-outline-secondary btn-sm me-1" @click="writeComment(comment.commentId)">작성</button>
+                        <button class="btn btn-outline-danger btn-sm" @click="toggleReply(comment)">닫기</button>
                     </div>
                 </div>
 
@@ -262,13 +263,14 @@ const dateFormatting = (date) => {
 
                     <div id="comment_div" class="d-flex flex-row justify-content-between m-2" style="width: 92%">
                         <div class="profile-image-area m-2 profileImage"><img :src="child.profileImg != null ? child.profileImg : '/src/assets/image/default_profile_img.png'" /></div>
-                        
-                        
+
                         <div style="width: 87%" class="d-flex flex-column m-2">
                             <div class="d-flex flex-row justify-content-between">
                                 <div>
-                                    <div style="font-size: 15px">{{ child.memberId }} &nbsp;
-                                    <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ dateFormatting(comment.commentRegisterDate) }}</p></div>
+                                    <div style="font-size: 15px">
+                                        {{ child.memberId }} &nbsp;
+                                        <p class="d-none d-sm-inline-block" style="font-size: 15px; margin: 0px">|&nbsp;{{ dateFormatting(comment.commentRegisterDate) }}</p>
+                                    </div>
                                 </div>
                                 <div>
                                     <div v-if="userInfo != null && child.memberId == userInfo.memberId" style="font-size: 14px; cursor: pointer; white-space: nowrap" @click="toggleChildCommentMode(child)">수정/삭제</div>
@@ -281,7 +283,6 @@ const dateFormatting = (date) => {
                             </div>
                             <div v-else class="mt-2 mb-2">{{ child.commentContent }}</div>
                         </div>
-
                     </div>
                     <!-- <div v-if="child.updateCommentMode" id="write_comment_div" class="m-2">
                         <div class="p-1 ms-1"><i class="bi bi-arrow-return-right" style="font-size: 40px"></i></div>
@@ -298,7 +299,7 @@ const dateFormatting = (date) => {
             </div>
             <div style="height: 30px"></div>
         </div>
-        </div>
+    </div>
 </template>
 
 <style scoped>

@@ -18,12 +18,13 @@ const emailDomain = ref("");
 const selectedSido = ref("");
 const gugun = ref("");
 const profile = ref(null);
-
+import { localAxios } from "@/util/http-commons";
+const local = localAxios();
 const duplicatedId = ref(false);
 const incorrectPw = ref(false);
 
 const getSido = async function () {
-    await axios.get("http://localhost:8080/trip/sido").then((response) => {
+    await local.get("/trip/sido").then((response) => {
         sidoList.value = response.data.items;
     });
 };
@@ -37,7 +38,7 @@ watch(selectedSido, (newVal) => {
 });
 
 const getGugun = async function (sido) {
-    await axios.get(`http://localhost:8080/trip/${sido}/gugun`).then((response) => {
+    await local.get(`/trip/${sido}/gugun`).then((response) => {
         gugunList.value = response.data.items;
     });
 };
@@ -46,7 +47,7 @@ const joinUser = async function () {
     if (memberPw.value === memberPwCheck.value) {
         incorrectPw.value = false;
         try {
-            const response = await axios.post("http://localhost:8080/member", {
+            const response = await local.post("/member", {
                 memberId: memberId.value,
                 memberPw: memberPw.value,
                 memberName: memberName.value,

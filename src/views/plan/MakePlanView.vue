@@ -4,6 +4,8 @@ import MakePlan from "@/components/plan/MakePlan.vue";
 import axios from "axios";
 import { ref } from "vue";
 
+import { localAxios } from "@/util/http-commons";
+const local = localAxios();
 const tourData = ref([]);
 
 const planFlag = ref(true);
@@ -19,8 +21,8 @@ const searchTrip = async (searchKeyword) => {
     }
 
     const params = { keyword: searchKeyword };
-    await axios
-        .get(`http://localhost:8080/trip/search`, { params })
+    await local
+        .get(`/trip/search`, { params })
         .then((res) => {
             tourData.value = res.data.items;
         })

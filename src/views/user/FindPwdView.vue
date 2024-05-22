@@ -1,7 +1,8 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
-
+import { localAxios } from "@/util/http-commons";
+const local = localAxios();
 const id = ref("");
 const email = ref("");
 const name = ref("");
@@ -15,7 +16,7 @@ const findPassword = async function () {
         find.value = false;
         noexist.value = false;
 
-        const response = await axios.get(`http://localhost:8080/member/${id.value}`);
+        const response = await local.get(`/member/${id.value}`);
 
         if (response.data.member === null) {
             noexist.value = true;

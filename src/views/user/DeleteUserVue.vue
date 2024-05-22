@@ -2,7 +2,8 @@
 import axios from "axios";
 import { useMemberStore } from "@/stores/member";
 import { useRouter } from "vue-router";
-
+import { localAxios } from "@/util/http-commons";
+const local = localAxios();
 const router = useRouter();
 
 const memberStore = useMemberStore();
@@ -10,7 +11,7 @@ const memberStore = useMemberStore();
 const { userInfo } = memberStore;
 
 const userRemove = async function () {
-    await axios.delete(`http://localhost:8080/member/${userInfo.memberId}`);
+    await local.delete(`/member/${userInfo.memberId}`);
     alert("회원탈퇴가 완료되었습니다.");
     router.push({ name: "home" });
 };

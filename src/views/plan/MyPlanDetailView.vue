@@ -8,7 +8,8 @@ import { saveMemoAPI } from "@/api/trip";
 import OpenAI from "openai";
 import draggable from "vuedraggable";
 import PlanDetailTitle from "@/components/plan/item/PlanDetailTitle.vue";
-
+import { localAxios } from "@/util/http-commons";
+const local = localAxios();
 const route = useRoute();
 const router = useRouter();
 
@@ -28,7 +29,7 @@ window.onload = async () => {
 
 const getPlanInfo = async function () {
     planId.value = route.params.id;
-    const response = await axios.get(`http://localhost:8080/trip/plan/${planId.value}`);
+    const response = await local.get(`/trip/plan/${planId.value}`);
     console.log("RESPONSE", response);
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;

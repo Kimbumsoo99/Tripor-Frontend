@@ -2,6 +2,9 @@
 import { computed, onMounted, ref, watch, defineExpose } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
+import { localAxios } from "@/util/http-commons";
+
+const local = localAxios();
 
 const props = defineProps({ sortList: Array, contentId: Number });
 const emit = defineEmits(["closeOverlay", "movedMarkers"]);
@@ -10,36 +13,13 @@ const tourList = ref([]);
 
 const place = ref({});
 
-// watch(
-//     () => props.contentId,
-//     () => {
-//         axios.get(`http://localhost:8080/trip/${props.contentId}`).then((res) => {
-//             place.value = res.data.item;
-//         });
-
-//         const placeSaveList = [];
-//         props.tourData.forEach((i, index) => {
-//             let distance = Math.sqrt(Math.pow(i.latitude - place.value.latitude, 2) + Math.pow(i.longitude - place.value.longitude, 2));
-
-//             let placeSave = i;
-//             placeSave.distance = distance;
-//             placeSave.index = index;
-
-//             placeSaveList.push(placeSave);
-//         });
-//         tourList.value = placeSaveList;
-//     }
-// );
-
 const movePlace = async (content) => {
     emit("movedMarkers", content);
-    // const response = await axios.get(`http://localhost:8080/trip/${contentId}`);
-    // place.value = response.data.item;
 };
 
 const getAttractionInfo = async (contentId) => {
     try {
-        const response = await axios.get(`http://localhost:8080/trip/${contentId}`);
+        const response = await local.get(`/trip/${contentId}`);
         place.value = response.data.item;
     } catch (error) {
         console.error(error);

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { localAxios } from "@/util/http-commons";
 import axios from "axios";
+const local = localAxios();
 
 const emit = defineEmits(["getLocate", "setSido"]);
 
@@ -24,7 +26,7 @@ const categoryItems = [
 ];
 
 const getSido = async function () {
-    await axios.get("http://localhost:8080/trip/sido").then((response) => {
+    await local.get("/trip/sido").then((response) => {
         sidoList.value = response.data.items;
     });
 };
@@ -58,7 +60,7 @@ watch(selectContentType, (type) => {
 });
 
 const getGugun = async function (sido) {
-    await axios.get(`http://localhost:8080/trip/${sido}/gugun`).then((response) => {
+    await local.get(`/trip/${sido}/gugun`).then((response) => {
         gugunList.value = response.data.items;
     });
 };
