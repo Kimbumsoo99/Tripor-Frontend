@@ -17,7 +17,7 @@ const emit = defineEmits(["searchTrip", "makePlanPolylines"]);
 const props = defineProps({ currentTour: Object });
 
 const planList = ref([]);
-const userPlanName = ref(userInfo.value.memberName + "의 여행계획");
+const userPlanName = ref(userInfo.value.memberName + "의 여행일정");
 
 const searchKeyword = ref("");
 
