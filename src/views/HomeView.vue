@@ -26,7 +26,7 @@ const changeLocation = async (sido, gugun, type = false) => {
     }
     console.log(params);
     let tourList;
-    await axios.get(`http://localhost/trip/option`, { params }).then((res) => {
+    await axios.get(`http://localhost:8080/trip/option`, { params }).then((res) => {
         tourList = res.data.items;
     });
     tourData.value = tourList;

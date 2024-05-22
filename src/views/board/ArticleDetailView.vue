@@ -1,6 +1,6 @@
 <script setup>
 import axios from "axios";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle } from "@/api/article.js";
 const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
@@ -41,12 +41,12 @@ const getBoard = async function () {
 const writerProfileImg = ref("");
 
 const getMemberProfile = async function () {
-    const response = await axios.get(`http://localhost/member/${board.value.memberId}/profile`);
+    const response = await axios.get(`http://localhost:8080/member/${board.value.memberId}/profile`);
     writerProfileImg.value = response.data.profile;
 };
 
 const boardRemove = async function () {
-    const response = await axios.delete(`http://localhost/article/${route.params.id}`);
+    const response = await axios.delete(`http://localhost:8080/article/${route.params.id}`);
     let msg = "글 삭제 시 문제 발생했습니다.";
     if (response.status == 200) msg = "글 삭제가 완료되었습니다.";
     alert(msg);
@@ -54,7 +54,7 @@ const boardRemove = async function () {
 };
 
 const updateHit = async function () {
-    await axios.put(`http://localhost/article/hit/${route.params.id}`, {
+    await axios.put(`http://localhost:8080/article/hit/${route.params.id}`, {
         articleId: board.value.articleId,
     });
 };
@@ -81,7 +81,7 @@ const newComment = ref("");
 const writeComment = async function (parentId = null) {
     console.log(board.value)
     try {
-        const response = await axios.post(`http://localhost/article/${board.value.articleId}/comment`, {
+        const response = await axios.post(`http://localhost:8080/article/${board.value.articleId}/comment`, {
             memberId: userInfo.value.memberId,
             commentContent: newComment.value,
             parentCommentId: parentId,
@@ -96,12 +96,12 @@ const writeComment = async function (parentId = null) {
 const comments = ref({});
 
 const getComments = async function () {
-    await axios.get(`http://localhost/article/${board.value.articleId}/comments`).then((resComments) => {
+    await axios.get(`http://localhost:8080/article/${board.value.articleId}/comments`).then((resComments) => {
         comments.value = resComments.data.items;
         comments.value.map((comment) => {
             comment.replyMode = false;
             comment.updateCommentMode = false;
-            axios.get(`http://localhost/member/${comment.memberId}/profile`).then((resProfile) => {
+            axios.get(`http://localhost:8080/member/${comment.memberId}/profile`).then((resProfile) => {
                 if (resProfile.data.result == "ok") {
                     comment.profileImg = resProfile.data.profile;
                 } else {
@@ -109,7 +109,7 @@ const getComments = async function () {
                 }
             });
             comment.childComments.map((child) => {
-                axios.get(`http://localhost/member/${child.memberId}/profile`).then((resProfile) => {
+                axios.get(`http://localhost:8080/member/${child.memberId}/profile`).then((resProfile) => {
                     child.updateCommentMode = false;
                     if (resProfile.data.result == "ok") {
                         child.profileImg = resProfile.data.profile;
@@ -141,7 +141,7 @@ const toggleChildCommentMode = (comment) => {
 
 const updateComment = async function (id) {
     try {
-        const response = await axios.put(`http://localhost/article/${board.value.articleId}/comments/${id}`, {
+        const response = await axios.put(`http://localhost:8080/article/${board.value.articleId}/comments/${id}`, {
             memberId: userInfo.value.memberId,
             commentContent: fixedcomment.value,
         });
@@ -153,7 +153,7 @@ const updateComment = async function (id) {
 
 const deleteComment = async function (id) {
     try {
-        const response = await axios.delete(`http://localhost/article/${board.value.articleId}/comments/${id}`);
+        const response = await axios.delete(`http://localhost:8080/article/${board.value.articleId}/comments/${id}`);
         let msg = "댓글 삭제 시 문제 발생했습니다.";
         if (response.status == 200) msg = "댓글 삭제가 완료되었습니다.";
         alert(msg);

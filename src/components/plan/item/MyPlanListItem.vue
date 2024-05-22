@@ -9,7 +9,7 @@ const router = useRouter();
 
 onMounted(async () => {
     await axios
-        .get(`http://localhost/trip/plan/${props.plan.planId}/trip`)
+        .get(`http://localhost:8080/trip/plan/${props.plan.planId}/trip`)
         .then((res) => {
             tripList.value = res.data.items;
         })
@@ -23,7 +23,7 @@ const planDelete = async () => {
     const flag = confirm("정말 삭제하시겠습니까?\n복구할 수 없습니다.");
     if (!flag) return;
     await axios
-        .delete(`http://localhost/trip/plan/${props.plan.planId}`)
+        .delete(`http://localhost:8080/trip/plan/${props.plan.planId}`)
         .then(() => {
             router.go(0);
         })

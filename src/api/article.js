@@ -11,7 +11,7 @@ async function insertImage(image, success, fail) {
     const formData = new FormData();
     formData.append("image", image);
     await axios
-        .post(`http://localhost/article/image`, formData, {
+        .post(`http://localhost:8080/article/image`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

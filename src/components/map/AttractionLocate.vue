@@ -24,7 +24,7 @@ const categoryItems = [
 ];
 
 const getSido = async function () {
-    await axios.get("http://localhost/trip/sido").then((response) => {
+    await axios.get("http://localhost:8080/trip/sido").then((response) => {
         sidoList.value = response.data.items;
     });
 };
@@ -58,7 +58,7 @@ watch(selectContentType, (type) => {
 });
 
 const getGugun = async function (sido) {
-    await axios.get(`http://localhost/trip/${sido}/gugun`).then((response) => {
+    await axios.get(`http://localhost:8080/trip/${sido}/gugun`).then((response) => {
         gugunList.value = response.data.items;
     });
 };
@@ -104,12 +104,12 @@ const getGugun = async function (sido) {
     display: inline;
 }
 @media (min-width: 1199px) {
-    #locatesearch{
+    #locatesearch {
         display: none;
     }
 }
 @media (max-width: 1199px) {
-    #locatesearch{
+    #locatesearch {
         display: block;
     }
 }

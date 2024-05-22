@@ -20,7 +20,7 @@ const searchTrip = async (searchKeyword) => {
 
     const params = { keyword: searchKeyword };
     await axios
-        .get(`http://localhost/trip/search`, { params })
+        .get(`http://localhost:8080/trip/search`, { params })
         .then((res) => {
             tourData.value = res.data.items;
         })

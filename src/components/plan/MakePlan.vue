@@ -50,7 +50,7 @@ const makePlan = async () => {
     const params = { tripList, memberId, planName };
 
     await axios
-        .post("http://localhost/trip/plan", params)
+        .post("http://localhost:8080/trip/plan", params)
         .then(() => {
             planList.value = [];
             const flag = confirm("여행 계획 확인하러가기");
