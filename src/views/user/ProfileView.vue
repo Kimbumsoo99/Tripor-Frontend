@@ -5,7 +5,11 @@ import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { insertImage } from "@/api/article.js";
 const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
-
+import { localAxios } from "@/util/http-commons";
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { defaultProfileImgUrl } = imgStore;
+const local = localAxios();
 const memberStore = useMemberStore();
 
 const { userInfo } = storeToRefs(memberStore);
@@ -22,8 +26,8 @@ const email = ref(userInfo.value.emailId + "@" + userInfo.value.emailDomain);
 const isComplete = ref(false);
 
 const memberUpdate = async function () {
-    await axios
-        .put("http://localhost:8080/member", {
+    await local
+        .put("/member", {
             memberId: userInfo.value.memberId,
             memberPw: pw.value,
             memberName: name.value,
@@ -72,7 +76,7 @@ const upload = async () => {
                     <div id="profile_div">
                         <div class="d-flex flex-column align-items-center" id="profile_upper" style="position: relative">
                             <div class="profile-image-area">
-                                <img :src="modifyProfile ? modifyProfile : '/src/assets/image/default_profile_img.png'" id="profileImage" />
+                                <img :src="modifyProfile ? modifyProfile : defaultProfileImgUrl" id="profileImage" />
                             </div>
                             <div class="profile-btn-area mt-3">
                                 <button type="button" class="btn btn-outline-secondary btn-sm me-1" @click="handleImageUpload">이미지 선택</button>

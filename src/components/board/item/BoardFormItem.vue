@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { insertImage, deleteImage, registArticle, getModifyArticle, modifyArticle } from "@/api/article.js";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
+const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
 import axios from "axios";
 import OpenAI from "openai";
 
@@ -145,7 +146,7 @@ const nextImage = () => {
 };
 
 const getImageSrc = (file) => {
-    return `/public/upload/${file.saveFolder}/${file.saveFile}`;
+    return `${VITE_UPLOAD_FILE_PATH}/${file.saveFolder}/${file.saveFile}`;
 };
 
 const moveDetail = () => {
@@ -158,17 +159,15 @@ const aiExpand = () => {
     aiExpanded.value = !aiExpanded.value;
 };
 
-
-const q1 = ref('');
-const q2 = ref('');
-const q3 = ref('');
-const q4 = ref('');
-const q5 = ref('');
-const q6 = ref('');
-const q7 = ref('');
-const q8 = ref('');
-const q9 = ref('');
-
+const q1 = ref("");
+const q2 = ref("");
+const q3 = ref("");
+const q4 = ref("");
+const q5 = ref("");
+const q6 = ref("");
+const q7 = ref("");
+const q8 = ref("");
+const q9 = ref("");
 
 // chatGPT description
 const getGPTResponse = async () => {
@@ -233,7 +232,6 @@ const hideLoadingSpinner = () => {
             <div class="image-slider">
                 <button @click.prevent="prevImage" class="nav-btn prev-btn">&lt;</button>
                 <div class="image-list">
-                    
                     <div v-for="(file, index) in input.image" :key="file.imageId" class="image-div" :class="{ active: index === currentIndex }">
                         <img :src="getImageSrc(file)" />
                         <button type="button" class="m-1 p-1 btn btn-outline-danger delete-btn" @click.prevent="deleteImageFile(file.imageId)">Delete</button>

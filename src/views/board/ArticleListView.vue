@@ -55,18 +55,6 @@ const getArticleList = function () {
         },
         (err) => console.log(err)
     );
-    // axios("http://localhost:8080/article", { params: param.value })
-    //     .then((response) => {
-    //         console.log(response);
-    //         articleList.value = response.data.items.articles;
-    //         currentPage.value = response.data.meta.currentPage;
-    //         totalPage.value = response.data.meta.totalPageCount;
-    //         totalCount.value = response.data.meta.totalCount;
-    //     })
-    //     .catch((error) => {
-    //         console.log("에러발생");
-    //         console.error(error);
-    //     });
 };
 
 const computedIndex = computed(() => {

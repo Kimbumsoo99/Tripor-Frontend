@@ -1,9 +1,13 @@
-<script setup></script>
+<script setup>
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { noImageLogoUrl } = imgStore;
+</script>
 
 <template>
-    <div class="position-absolute top-50 start-50 translate-middle-x" style="text-align:center">
+    <div class="position-absolute top-50 start-50 translate-middle-x" style="text-align: center">
         <div style="height: 100px"></div>
-        <img src="../../assets/image/no_image_logo.png" style="height: 380px">
+        <img :src="noImageLogoUrl" style="height: 380px" />
         <div style="height: 20px"></div>
         <h4>아직 여행 계획이 없어요</h4>
         <div>

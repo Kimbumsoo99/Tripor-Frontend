@@ -2,7 +2,11 @@
 import axios from "axios";
 import { useMemberStore } from "@/stores/member";
 import { useRouter } from "vue-router";
-
+import { localAxios } from "@/util/http-commons";
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { noImageLogoUrl } = imgStore;
+const local = localAxios();
 const router = useRouter();
 
 const memberStore = useMemberStore();
@@ -10,7 +14,7 @@ const memberStore = useMemberStore();
 const { userInfo } = memberStore;
 
 const userRemove = async function () {
-    await axios.delete(`http://localhost:8080/member/${userInfo.memberId}`);
+    await local.delete(`/member/${userInfo.memberId}`);
     alert("회원탈퇴가 완료되었습니다.");
     router.push({ name: "home" });
 };
@@ -18,7 +22,7 @@ const userRemove = async function () {
 
 <template>
     <div class="p-5 mb-3 position-absolute start-50 translate-middle-x" id="delete_user_div">
-        <img src="/src/assets/image/no_image_logo.png" style="height: 380px" />
+        <img :src="noImageLogoUrl" style="height: 380px" />
         <div style="height: 20px"></div>
         <h4>정말로 탈퇴하시겠어요?</h4>
         <p>탈퇴 버튼 클릭 시, 계정은 삭제되며 복구되지 않습니다.</p>

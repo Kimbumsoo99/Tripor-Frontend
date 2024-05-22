@@ -5,7 +5,9 @@ import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
+import { localAxios } from "@/util/http-commons";
 const memberStore = useMemberStore();
+const local = localAxios();
 
 onMounted(async () => {
     const { isValidToken } = storeToRefs(memberStore);
@@ -26,7 +28,7 @@ const changeLocation = async (sido, gugun, type = false) => {
     }
     console.log(params);
     let tourList;
-    await axios.get(`http://localhost:8080/trip/option`, { params }).then((res) => {
+    await local.get(`/trip/option`, { params }).then((res) => {
         tourList = res.data.items;
     });
     tourData.value = tourList;

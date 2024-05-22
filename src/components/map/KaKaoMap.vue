@@ -2,6 +2,9 @@
 import { onMounted, ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import AttractionInfo from "./AttractionInfo.vue";
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { noImageLogoUrl, getContentImgUrl } = imgStore;
 
 const route = useRoute();
 const router = useRouter();
@@ -123,7 +126,7 @@ const movedMarkers = (tour) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${tour.firstImage ? tour.firstImage : "/src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                            <img src="${tour.firstImage ? tour.firstImage : noImageLogoUrl}" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${tour.addr ? tour.addr : "정보 없음"}</div>
@@ -224,7 +227,7 @@ const updateMapMarkers = async (tourList, oldTourList) => {
         flag = true;
         const position = new kakao.maps.LatLng(item.latitude, item.longitude);
 
-        const imageUrl = "src/assets/image/" + item.contentTypeId + ".png";
+        const imageUrl = getContentImgUrl(item.contentTypeId);
         const imageSize = new kakao.maps.Size(35, 35);
         const markerImage = new kakao.maps.MarkerImage(imageUrl, imageSize);
         const selectedMarkerImage = new kakao.maps.MarkerImage(imageUrl, new kakao.maps.Size(60, 60));
@@ -247,7 +250,7 @@ const updateMapMarkers = async (tourList, oldTourList) => {
                                     </div>
                                     <div class="body">
                                         <div class="img">
-                                            <img src="${item.firstImage ? item.firstImage : "src/assets/image/no_image_logo.png"}" width="80px" height="80px">
+                                            <img src="${item.firstImage ? item.firstImage : noImageLogoUrl}" width="80px" height="80px">
                                         </div>
                                         <div class="desc">
                                             <div class="ellipsis">주소: ${item.addr ? item.addr : "정보 없음"}</div>

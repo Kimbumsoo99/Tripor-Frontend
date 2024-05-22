@@ -1,7 +1,8 @@
-import { localAxios } from "@/util/http-commons";
+import { localAxios, multipartAxios } from "@/util/http-commons";
 import axios from "axios";
 
 const local = localAxios();
+const multipart = multipartAxios();
 
 function listArticle(param, success, fail) {
     local.get(`/article`, { params: param }).then(success).catch(fail);
@@ -10,14 +11,7 @@ function listArticle(param, success, fail) {
 async function insertImage(image, success, fail) {
     const formData = new FormData();
     formData.append("image", image);
-    await axios
-        .post(`http://localhost:8080/article/image`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        })
-        .then(success)
-        .catch(fail);
+    await multipart.post(`/article/image`, formData).then(success).catch(fail);
 }
 
 function deleteImage(image, success, fail) {

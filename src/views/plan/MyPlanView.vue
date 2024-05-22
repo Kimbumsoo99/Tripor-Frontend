@@ -5,7 +5,8 @@ import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
-
+import { localAxios } from "@/util/http-commons";
+const local = localAxios();
 const memberStore = useMemberStore();
 
 const { userInfo } = storeToRefs(memberStore);
@@ -15,8 +16,8 @@ const memberId = ref("");
 
 onMounted(() => {
     memberId.value = userInfo.value.memberId;
-    axios
-        .get(`http://localhost:8080/trip/plan/m/${memberId.value}`)
+    local
+        .get(`/trip/plan/m/${memberId.value}`)
         .then((res) => {
             myPlans.value = res.data.items;
         })
