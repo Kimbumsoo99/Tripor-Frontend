@@ -3,6 +3,9 @@ import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { localAxios } from "@/util/http-commons";
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { noImageLogoUrl } = imgStore;
 
 const local = localAxios();
 const props = defineProps({ plan: Object });
@@ -33,7 +36,7 @@ const planDelete = async () => {
 };
 
 const findThumbnail = computed(() => {
-    let thumbnail = "src/assets/image/no_image_logo.png";
+    let thumbnail = noImageLogoUrl;
 
     tripList.value.forEach((item) => {
         if (item.firstImage) {

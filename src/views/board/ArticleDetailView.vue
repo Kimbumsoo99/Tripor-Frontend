@@ -7,6 +7,9 @@ const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { localAxios } from "@/util/http-commons";
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { defaultProfileImgUrl } = imgStore;
 
 const memberStore = useMemberStore();
 const local = localAxios();
@@ -197,7 +200,7 @@ const dateFormatting = (date) => {
             <h3 class="mt-3" id="title_data">{{ board.subject }}</h3>
             <div style="font-size: medium" class="d-flex flex-row">
                 <span class="writer-profile-img-area me-1">
-                    <img :src="writerProfileImg != null ? writerProfileImg : '/src/assets/image/default_profile_img.png'" class="profileImage" />
+                    <img :src="writerProfileImg != null ? writerProfileImg : defaultProfileImgUrl" class="profileImage" />
                 </span>
                 {{ board.memberId }} | {{ board.registerDate }} | 조회수 {{ board.hit }}
             </div>
@@ -225,7 +228,7 @@ const dateFormatting = (date) => {
 
             <div v-for="(comment, index) in comments" :key="comment.commentId">
                 <div id="comment_div" class="d-flex flex-row justify-content-between m-2">
-                    <div class="profile-image-area m-2 profileImage"><img :src="comment.profileImg != null ? comment.profileImg : '/src/assets/image/default_profile_img.png'" /></div>
+                    <div class="profile-image-area m-2 profileImage"><img :src="comment.profileImg != null ? comment.profileImg : defaultProfileImgUrl" /></div>
 
                     <div style="width: 87%">
                         <div class="d-flex justify-content-between m-2">
@@ -262,7 +265,7 @@ const dateFormatting = (date) => {
                     <div class="p-1 ms-1" style="width: 8%"><i class="bi bi-arrow-return-right" style="font-size: 40px; color: #ced4da"></i></div>
 
                     <div id="comment_div" class="d-flex flex-row justify-content-between m-2" style="width: 92%">
-                        <div class="profile-image-area m-2 profileImage"><img :src="child.profileImg != null ? child.profileImg : '/src/assets/image/default_profile_img.png'" /></div>
+                        <div class="profile-image-area m-2 profileImage"><img :src="child.profileImg != null ? child.profileImg : defaultProfileImgUrl" /></div>
 
                         <div style="width: 87%" class="d-flex flex-column m-2">
                             <div class="d-flex flex-row justify-content-between">

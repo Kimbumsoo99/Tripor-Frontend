@@ -3,6 +3,9 @@ import { computed, onMounted, ref, watch, defineExpose } from "vue";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { localAxios } from "@/util/http-commons";
+import { imageStore } from "@/stores/image.js";
+const imgStore = imageStore();
+const { noImageLogoUrl } = imgStore;
 
 const local = localAxios();
 
@@ -58,7 +61,7 @@ defineExpose({ show, hide });
         </div>
         <div style="height: 10px"></div>
         <div id="placeInfo">
-            <img loading="lazy" :src="place.firstImage ? place.firstImage : 'src/assets/image/no_image_logo.png'" id="placeImage" />
+            <img loading="lazy" :src="place.firstImage ? place.firstImage : noImageLogoUrl" id="placeImage" />
             <div style="height: 10px"></div>
             <div class="p-1">
                 <div v-if="place.addr !== null" style="font-weight: bold">주소: {{ place.addr ? place.addr : "정보 없음" }}</div>
