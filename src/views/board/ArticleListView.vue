@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
 import VSelect from "@/components/common/VSelect.vue";
@@ -56,7 +55,7 @@ const getArticleList = function () {
         },
         (err) => console.log(err)
     );
-    // axios("http://localhost/article", { params: param.value })
+    // axios("http://localhost:8080/article", { params: param.value })
     //     .then((response) => {
     //         console.log(response);
     //         articleList.value = response.data.items.articles;

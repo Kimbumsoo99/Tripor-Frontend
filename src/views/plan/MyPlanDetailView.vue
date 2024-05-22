@@ -1,7 +1,7 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
 import axios from "axios";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { shortestPathByPlanList } from "@/api/trip";
 import { saveMemoAPI } from "@/api/trip";
@@ -28,7 +28,7 @@ window.onload = async () => {
 
 const getPlanInfo = async function () {
     planId.value = route.params.id;
-    const response = await axios.get(`http://localhost/trip/plan/${planId.value}`);
+    const response = await axios.get(`http://localhost:8080/trip/plan/${planId.value}`);
     console.log("RESPONSE", response);
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;
@@ -116,11 +116,6 @@ const q5 = ref("");
 
 const memo = ref("");
 const memoField = ref("");
-
-const memoText = () => {
-    memoField.value = memo.textContent;
-    console.log(memo.value.textContent);
-};
 
 // chatGPT description
 const getGPTResponse = async () => {

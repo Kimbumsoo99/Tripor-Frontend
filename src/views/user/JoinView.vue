@@ -23,7 +23,7 @@ const duplicatedId = ref(false);
 const incorrectPw = ref(false);
 
 const getSido = async function () {
-    await axios.get("http://localhost/trip/sido").then((response) => {
+    await axios.get("http://localhost:8080/trip/sido").then((response) => {
         sidoList.value = response.data.items;
     });
 };
@@ -37,7 +37,7 @@ watch(selectedSido, (newVal) => {
 });
 
 const getGugun = async function (sido) {
-    await axios.get(`http://localhost/trip/${sido}/gugun`).then((response) => {
+    await axios.get(`http://localhost:8080/trip/${sido}/gugun`).then((response) => {
         gugunList.value = response.data.items;
     });
 };
@@ -46,7 +46,7 @@ const joinUser = async function () {
     if (memberPw.value === memberPwCheck.value) {
         incorrectPw.value = false;
         try {
-            const response = await axios.post("http://localhost/member", {
+            const response = await axios.post("http://localhost:8080/member", {
                 memberId: memberId.value,
                 memberPw: memberPw.value,
                 memberName: memberName.value,

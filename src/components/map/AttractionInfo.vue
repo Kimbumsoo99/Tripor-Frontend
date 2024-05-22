@@ -13,7 +13,7 @@ const place = ref({});
 // watch(
 //     () => props.contentId,
 //     () => {
-//         axios.get(`http://localhost/trip/${props.contentId}`).then((res) => {
+//         axios.get(`http://localhost:8080/trip/${props.contentId}`).then((res) => {
 //             place.value = res.data.item;
 //         });
 
@@ -33,13 +33,13 @@ const place = ref({});
 
 const movePlace = async (content) => {
     emit("movedMarkers", content);
-    // const response = await axios.get(`http://localhost/trip/${contentId}`);
+    // const response = await axios.get(`http://localhost:8080/trip/${contentId}`);
     // place.value = response.data.item;
 };
 
 const getAttractionInfo = async (contentId) => {
     try {
-        const response = await axios.get(`http://localhost/trip/${contentId}`);
+        const response = await axios.get(`http://localhost:8080/trip/${contentId}`);
         place.value = response.data.item;
     } catch (error) {
         console.error(error);

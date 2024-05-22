@@ -23,7 +23,7 @@ const isComplete = ref(false);
 
 const memberUpdate = async function () {
     await axios
-        .put("http://localhost/member", {
+        .put("http://localhost:8080/member", {
             memberId: userInfo.value.memberId,
             memberPw: pw.value,
             memberName: name.value,
@@ -136,7 +136,7 @@ const upload = async () => {
     font-size: 16px;
     color: rgb(220, 0, 0);
 }
-.profile-image-area{
+.profile-image-area {
     object-fit: cover;
     width: 150px;
     height: 150px;
