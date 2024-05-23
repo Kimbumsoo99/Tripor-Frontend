@@ -7,7 +7,7 @@ import { useRouter } from "vue-router";
 const { VITE_ARTICLE_LIST_SIZE, VITE_ARTICLE_NAVIGATION_SIZE } = import.meta.env;
 
 const router = useRouter();
-router.beforeRouteLeave = (to, from, next) => {
+router.beforeRouteLeave = (to, from) => {
     console.log(to);
     console.log(from);
 };
@@ -24,18 +24,6 @@ const param = ref({
     key: "",
     word: "",
 });
-
-// const selectOption = ref([
-//     { text: "검색조건", value: "" },
-//     { text: "글번호", value: "article_id" },
-//     { text: "제목", value: "subject" },
-//     { text: "작성자아이디", value: "member_id" },
-// ]);
-
-// const changeKey = (val) => {
-//     console.log("BoarList에서 선택한 조건 : " + val);
-//     param.value.key = val;
-// };
 
 const onPageChange = (val) => {
     console.log(val + "번 페이지로 이동 준비 끝!!!");
@@ -93,13 +81,11 @@ onMounted(() => {
             <div class="mb-3 position-absolute top-50 start-50 translate-middle-x" id="board_div">
                 <h4 class="d-flex justify-content-center" style="overflow: hidden; white-space: nowrap">여행 정보를 공유해요</h4>
 
-                <!-- board list area -->
                 <div id="board-list" style="overflow: hidden; white-space: nowrap">
                     <div class="board__container" id="board-container">
                         <RouterLink :to="{ name: 'write' }" style="text-decoration: none; color: #332d2d">
                             <button class="btn btn-primary btn-sm ms-auto me-3 d-flex justify-content-end mb-3" style="overflow: hidden; white-space: nowrap" type="button" onclick="">글쓰기</button>
                         </RouterLink>
-                        <!--  PAGE 및 검색으로 인해 추가 한 부분 -->
                         <form id="form-search" class="d-flex" action="" @submit.prevent="searchArticle">
                             <input type="hidden" name="action" value="list" />
                             <input type="hidden" name="pgno" value="1" />
@@ -110,14 +96,12 @@ onMounted(() => {
                             </div>
                         </form>
                         <div style="height: 10px"></div>
-                        <!--  PAGE 및 검색으로 인해 추가 한 부분 -->
                         <table class="board-table">
                             <thead class="board__table-head">
                                 <tr class="board__titles">
                                     <th class="board__column th-num col-2 col-sm-2">번호</th>
                                     <th class="board__column th-title col-4 col-sm-5">제목</th>
                                     <th class="board__column th-author col-2 col-sm-3">작성자</th>
-                                    <!-- <th class="board__column th-date col-3 d-none d-md-block">작성일</th> -->
                                     <th class="board__column th-views col-1 col-sm-2">조회</th>
                                 </tr>
                             </thead>
@@ -140,20 +124,11 @@ onMounted(() => {
                                     <td class="board__column col-2 col-sm-3">
                                         {{ article.memberId }}
                                     </td>
-                                    <!-- <td class="board__column col-3 d-none d-md-block">
-                                        {{ article.registerDate }}
-                                    </td> -->
                                     <td class="board__column col-1 col-sm-2">{{ article.hit }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <!-- 
-                    <div class="p-5" id="contents_container" style="display: none">
-                        <button class="btn mb-3" id="back_btn" onclick="javascript:post()">
-                            < 뒤로가기</button>
-                        <div class="contents__container p-5"></div>
-                        -->
                     <!--  페이지 추가  -->
                     <div class="row mt-2">
                         <PageNavigation :current-page="currentPage" :total-page="totalPage" @pageChange="onPageChange" />

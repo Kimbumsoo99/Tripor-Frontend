@@ -1,7 +1,6 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
 import MakePlan from "@/components/plan/MakePlan.vue";
-import axios from "axios";
 import { ref } from "vue";
 
 import { localAxios } from "@/util/http-commons";

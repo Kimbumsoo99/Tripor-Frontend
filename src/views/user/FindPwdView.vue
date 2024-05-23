@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref } from "vue";
 import { localAxios } from "@/util/http-commons";
 const local = localAxios();

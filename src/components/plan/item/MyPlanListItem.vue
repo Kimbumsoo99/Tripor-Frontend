@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { localAxios } from "@/util/http-commons";

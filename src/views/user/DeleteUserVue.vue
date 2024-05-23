@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { useMemberStore } from "@/stores/member";
 import { useRouter } from "vue-router";
 import { localAxios } from "@/util/http-commons";

@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
 import PlanItem from "./item/PlanItem.vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";

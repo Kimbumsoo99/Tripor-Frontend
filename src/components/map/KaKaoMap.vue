@@ -62,7 +62,7 @@ const contentList = ref([]);
 const currentOverlay = ref(null);
 const currentMarker = ref(null);
 const currentMarkerOverlay = ref(null);
-const closeOverlay = async (item = null) => {
+const closeOverlay = async () => {
     // 아이템 정보가 제공되었고, planItems 배열에서 아이템 검사
     // if (item && planItems.some((planItem) => planItem.title === item.title)) {
     //     // 아이템이 planItems 배열에 있다면 함수 종료

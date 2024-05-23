@@ -9,7 +9,7 @@ const route = useRoute();
 const router = useRouter();
 const memberStore = useMemberStore();
 
-const { isLogin, userInfo } = storeToRefs(memberStore);
+const { userInfo } = storeToRefs(memberStore);
 const { userLogout } = memberStore;
 
 const sideFlag = ref(false);
@@ -54,10 +54,6 @@ function closeCallback() {
                         </template>
                         <template v-else>
                             <div class="d-flex flex-row align-items-center">
-                                <!-- <div class="profile-image-area me-1">
-									<img src="@/assets/image/default_profile_img.png" id="profileImage">
-									
-								</div> -->
                                 <span class="me-1">{{ userInfo.memberName }}님 로그인 중</span>
                                 <button id="logOutButton" class="btn text-white btn-primary m-1" @click="logout">로그아웃</button>
                             </div>

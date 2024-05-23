@@ -8,7 +8,7 @@ const router = useRouter();
 
 const memberStore = useMemberStore();
 
-const { isLogin, isLoginError, userInfo } = storeToRefs(memberStore);
+const { isLogin, userInfo } = storeToRefs(memberStore);
 const { userLogin, getUserInfo } = memberStore;
 
 const memberId = ref($cookies.get("id"));
@@ -52,13 +52,13 @@ const login = async () => {
 const showPassword = ref(false);
 const toggleShow = () => {
     showPassword.value = !showPassword.value;
-}
+};
 </script>
 
 <template>
     <div class="shadow-sm rounded border p-5 position-absolute start-50 translate-middle-x" id="login_div">
         <h4>로그인</h4>
-        <p class="mb-5">환영해요! 다시 오셨네요 :)</p>
+        <p class="mb-5">환영해요! 다시 오셨네요 :&#41;</p>
         <form id="form-login" method="POST" @submit.prevent="login">
             <input type="hidden" name="action" value="login" />
             <div class="form_group">
@@ -71,7 +71,7 @@ const toggleShow = () => {
                 <div class="input password">
                     <input v-if="showPassword" class="p-1 mb-5" type="text" id="userpwd" @keyup.enter="login" v-model="memberPw" style="width: 100%" placeholder="비밀번호를 입력해주세요." required />
                     <input v-else class="p-1 mb-5" type="password" id="userpwd" @keyup.enter="login" v-model="memberPw" style="width: 100%" placeholder="비밀번호를 입력해주세요." required />
-                    <div class="eyes" @click="toggleShow" ><i class="fa" :class="{ 'fa-eye': showPassword, 'fa-eye-slash': !showPassword }"></i></div>
+                    <div class="eyes" @click="toggleShow"><i class="fa" :class="{ 'fa-eye': showPassword, 'fa-eye-slash': !showPassword }"></i></div>
                 </div>
                 <div class="alert alert-danger" role="alert" v-if="apiResult.result == 'err'">{{ apiResult.msg }}</div>
                 <button type="submit" id="regist" class="col-12 btn btn-primary mb-3">로그인</button>
@@ -91,19 +91,19 @@ const toggleShow = () => {
 
 <style scoped>
 .input {
-  position: relative;
+    position: relative;
 }
 
 .input .eyes {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  color: gray;
-  font-size: 20px;
-  height: 30px;
-  cursor: pointer;
-  z-index: 100000000000;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    color: gray;
+    font-size: 20px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 100000000000;
 }
 @media (min-width: 1199px) {
     #login_div {

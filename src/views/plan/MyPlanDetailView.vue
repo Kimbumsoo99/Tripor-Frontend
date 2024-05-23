@@ -1,6 +1,5 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { shortestPathByPlanList } from "@/api/trip";
@@ -30,7 +29,6 @@ window.onload = async () => {
 const getPlanInfo = async function () {
     planId.value = route.params.id;
     const response = await local.get(`/trip/plan/${planId.value}`);
-    console.log("RESPONSE", response);
     planInfo.value = response.data.items;
     tripList.value = response.data.tripList;
     originList.value = tripList.value;
@@ -51,18 +49,14 @@ const bycicleMin = ref(0);
 
 const getTimeFromDistance = (distance) => {
     totalDistance.value = distance;
-    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
     const walkkTime = (distance / 67) | 0;
 
-    // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
     if (walkkTime > 60) {
         walkHour.value = Math.floor(walkkTime / 60);
     }
     walkMin.value = walkkTime % 60;
 
-    // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
     const bycicleTime = (distance / 227) | 0;
-    // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
     if (bycicleTime > 60) {
         bycicleHour.value = Math.floor(bycicleTime / 60);
     }
@@ -70,12 +64,10 @@ const getTimeFromDistance = (distance) => {
 };
 
 const findShortPath = () => {
-    console.log(shortList.value);
     if (!shortList.value) {
         shortestPathByPlanList(
             planId.value,
             (res) => {
-                console.log(res);
                 shortList.value = res.data.items;
                 shortFlag.value = true;
                 tripList.value = shortList.value;
@@ -113,7 +105,6 @@ const q1 = ref("");
 const q2 = ref("");
 const q3 = ref("");
 const q4 = ref("");
-const q5 = ref("");
 
 const memo = ref("");
 const memoField = ref("");

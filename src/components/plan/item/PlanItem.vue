@@ -6,7 +6,6 @@ const imgStore = imageStore();
 const { noImageLogoUrl } = imgStore;
 
 const removeFromPlanList = (item) => {
-    // console.log(item);
     emit("removeFromPlanList", item);
 };
 </script>

@@ -53,7 +53,6 @@ export const useMemberStore = defineStore(
                 decodeToken.memberId,
                 (response) => {
                     if (response.status === httpStatusCode.OK) {
-                        console.log("getUserInfo", response.data);
                         userInfo.value = response.data.member;
                     } else {
                         console.log("유저 정보 없음!!!!");
@@ -81,7 +80,6 @@ export const useMemberStore = defineStore(
                 async (error) => {
                     // HttpStatus.UNAUTHORIZE(401) : RefreshToken 기간 만료 >> 다시 로그인!!!!
                     if (error.response.status === httpStatusCode.UNAUTHORIZED) {
-                        // 다시 로그인 전 DB에 저장된 RefreshToken 제거.
                         await logout(
                             userInfo.value.memberId,
                             (response) => {
@@ -90,7 +88,6 @@ export const useMemberStore = defineStore(
                                 } else {
                                     console.log("리프레시 토큰 제거 실패");
                                 }
-                                alert("RefreshToken 기간 만료!!! 다시 로그인해 주세요.");
                                 isLogin.value = false;
                                 userInfo.value = null;
                                 isValidToken.value = false;
@@ -108,12 +105,9 @@ export const useMemberStore = defineStore(
         };
 
         const userLogout = async () => {
-            console.log("로그아웃 아이디 : " + userInfo.value.memberId);
             await logout(
                 userInfo.value.memberId,
                 (response) => {
-                    console.log("로그아웃");
-                    console.log(response);
                     if (response.status === httpStatusCode.OK) {
                         isLogin.value = false;
                         userInfo.value = null;
