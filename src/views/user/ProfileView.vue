@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";

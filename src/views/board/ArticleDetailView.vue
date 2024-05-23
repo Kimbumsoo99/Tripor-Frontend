@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle } from "@/api/article.js";
@@ -33,7 +32,7 @@ const getBoard = async function () {
             board.value = res.data.item;
             if (board.value.memberId == userInfo.value.memberId) currentUserWriter.value = true;
             for (const image of board.value.fileInfos) {
-                imagesPath.value.push(VITE_UPLOAD_FILE_PATH + "/" + image.saveFolder + "/" + image.saveFile);
+                imagesPath.value.push(`${VITE_UPLOAD_FILE_PATH}/${image.saveFolder}/${image.saveFile}`);
             }
             if (imagesPath.value.length === 0) imageSliderVisible.value = false;
             getComments();
@@ -84,9 +83,8 @@ const nextImage = () => {
 const newComment = ref("");
 
 const writeComment = async function (parentId = null) {
-    console.log(board.value);
     try {
-        const response = await local.post(`/article/${board.value.articleId}/comment`, {
+        await local.post(`/article/${board.value.articleId}/comment`, {
             memberId: userInfo.value.memberId,
             commentContent: newComment.value,
             parentCommentId: parentId,
@@ -146,7 +144,7 @@ const toggleChildCommentMode = (comment) => {
 
 const updateComment = async function (id) {
     try {
-        const response = await local.put(`/article/${board.value.articleId}/comments/${id}`, {
+        await local.put(`/article/${board.value.articleId}/comments/${id}`, {
             memberId: userInfo.value.memberId,
             commentContent: fixedcomment.value,
         });

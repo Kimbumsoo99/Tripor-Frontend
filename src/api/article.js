@@ -1,5 +1,4 @@
 import { localAxios, multipartAxios } from "@/util/http-commons";
-import axios from "axios";
 
 const local = localAxios();
 const multipart = multipartAxios();

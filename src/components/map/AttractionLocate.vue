@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { localAxios } from "@/util/http-commons";
-import axios from "axios";
 const local = localAxios();
 
 const emit = defineEmits(["getLocate", "setSido"]);

@@ -1,7 +1,6 @@
 <script setup>
 import KaKaoMap from "@/components/map/KaKaoMap.vue";
 import AttractionLocate from "@/components/map/AttractionLocate.vue";
-import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
@@ -12,7 +11,6 @@ const local = localAxios();
 onMounted(async () => {
     const { isValidToken } = storeToRefs(memberStore);
     const { getUserInfo } = memberStore;
-    console.log("Home onMounted", isValidToken.value);
     let token = sessionStorage.getItem("accessToken");
     if (token) {
         await getUserInfo(token);
@@ -26,7 +24,6 @@ const changeLocation = async (sido, gugun, type = false) => {
     if (type !== false) {
         params.type = type;
     }
-    console.log(params);
     let tourList;
     await local.get(`/trip/option`, { params }).then((res) => {
         tourList = res.data.items;

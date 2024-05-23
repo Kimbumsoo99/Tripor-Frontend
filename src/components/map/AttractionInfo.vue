@@ -1,32 +1,16 @@
 <script setup>
-import { computed, onMounted, ref, watch, defineExpose } from "vue";
-import axios from "axios";
-import { useRoute, useRouter } from "vue-router";
-import { localAxios } from "@/util/http-commons";
+import { ref, defineExpose } from "vue";
 import { imageStore } from "@/stores/image.js";
 const imgStore = imageStore();
 const { noImageLogoUrl } = imgStore;
 
-const local = localAxios();
-
 const props = defineProps({ sortList: Array, contentId: Number });
 const emit = defineEmits(["closeOverlay", "movedMarkers"]);
-
-const tourList = ref([]);
 
 const place = ref({});
 
 const movePlace = async (content) => {
     emit("movedMarkers", content);
-};
-
-const getAttractionInfo = async (contentId) => {
-    try {
-        const response = await local.get(`/trip/${contentId}`);
-        place.value = response.data.item;
-    } catch (error) {
-        console.error(error);
-    }
 };
 
 let detailVisible = ref(false);
@@ -44,7 +28,6 @@ const hide = () => {
 const show = (content) => {
     detailVisible.value = true;
     place.value = content;
-    // getAttractionInfo(content.contentId);
 };
 
 defineExpose({ show, hide });

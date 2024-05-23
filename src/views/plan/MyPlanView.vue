@@ -1,7 +1,6 @@
 <script setup>
 import MyPlanList from "@/components/plan/MyPlanList.vue";
 import NoPlan from "@/components/plan/NoPlan.vue";
-import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";

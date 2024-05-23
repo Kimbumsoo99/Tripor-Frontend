@@ -1,5 +1,4 @@
 <script setup>
-import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { insertImage } from "@/api/article.js";
@@ -47,7 +46,7 @@ const joinUser = async function () {
     if (memberPw.value === memberPwCheck.value) {
         incorrectPw.value = false;
         try {
-            const response = await local.post("/member", {
+            await local.post("/member", {
                 memberId: memberId.value,
                 memberPw: memberPw.value,
                 memberName: memberName.value,
@@ -69,20 +68,6 @@ const joinUser = async function () {
     } else {
         incorrectPw.value = true;
     }
-};
-
-const images = ref([]);
-
-const upload = async () => {
-    console.log(images.value.files[0]);
-    await insertImage(
-        images.value.files[0],
-        (res) => {
-            console.log(res);
-            profile.value = `${VITE_UPLOAD_FILE_PATH}/${res.data.fileInfo.saveFolder}/${res.data.fileInfo.saveFile}`;
-        },
-        (err) => console.log(err)
-    );
 };
 </script>
 

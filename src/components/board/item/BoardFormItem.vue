@@ -1,11 +1,10 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { insertImage, deleteImage, registArticle, getModifyArticle, modifyArticle } from "@/api/article.js";
 import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 const { VITE_UPLOAD_FILE_PATH } = import.meta.env;
-import axios from "axios";
 import OpenAI from "openai";
 
 const route = useRoute();
@@ -38,10 +37,8 @@ onMounted(() => {
         getModifyArticle(
             id,
             ({ data }) => {
-                console.log("getModifyArticle 로딩", data);
                 article.value = data.item;
                 input.value.image = data.item.fileInfos;
-                // images.value.files = data.item.fileinfos;
             },
             (err) => {
                 console.log(err);
@@ -55,8 +52,6 @@ const submitHandler = () => {
 };
 
 const writeArticle = () => {
-    console.log("write");
-
     registArticle(
         article.value,
         input.value.image,
@@ -64,7 +59,6 @@ const writeArticle = () => {
             let msg = "글등록 처리시 문제 발생했습니다.";
             if (response.status == 201) msg = "글등록이 완료되었습니다.";
             alert(msg);
-            // console.log(response.data.data);
             router.push({ name: "detail", params: { id: response.data.data } });
         },
         (err) => console.log(err)
@@ -92,28 +86,20 @@ const moveToList = () => {
 const images = ref([]);
 
 const upload = async () => {
-    console.log(images.value.files);
     for (const file of images.value.files) {
         await insertImage(
             file,
             (res) => {
-                console.log(res);
                 input.value.image.push(res.data.fileInfo);
             },
             (err) => console.log(err)
         );
-        console.log("file");
-        console.log(file);
     }
-    console.log(input.value.image);
-    // console.log(images.value.files);
-    // console.log(article.value);
 };
 
 const currentIndex = ref(0);
 
 const deleteImageFile = (imageId) => {
-    console.log(imageId);
     if (confirm("삭제하시겠습니까?")) {
         input.value.image = input.value.image.filter((image) => image.imageId !== imageId);
         if (currentIndex.value > 0) {
@@ -124,7 +110,6 @@ const deleteImageFile = (imageId) => {
             deleteImage(
                 imageId,
                 (res) => {
-                    console.log("삭제 완료");
                     console.log(res);
                 },
                 (err) => console.log(err)
@@ -134,13 +119,11 @@ const deleteImageFile = (imageId) => {
 };
 
 const prevImage = () => {
-    console.log(input.value.image);
     if (currentIndex.value == 0) return;
     currentIndex.value = (currentIndex.value - 1 + input.value.image.length) % input.value.image.length;
 };
 
 const nextImage = () => {
-    console.log(input.value.image);
     if (currentIndex.value == input.value.image.length - 1) return;
     currentIndex.value = (currentIndex.value + 1) % input.value.image.length;
 };
@@ -202,7 +185,6 @@ const getGPTResponse = async () => {
         });
 
         article.value.content = response.choices[0].message.content;
-        console.log("chatGPT 결과: ", response.choices[0].message.content);
 
         hideLoadingSpinner();
     } catch (error) {
