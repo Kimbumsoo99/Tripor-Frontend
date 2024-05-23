@@ -17,7 +17,7 @@
 Version 1: 2024.03.15 ~ 2024.05.24
 
 ## 💙 기술스택
-<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/5e8e2991-ce05-4eb9-88c4-e73300bcab78" width="710px">
+<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/e64cdc7b-c30d-47d9-8c43-bdf7faf82247" width="720px">
 
 ## 💙 ERD
 <img width="750px" alt="image" src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/b5471d5b-ed49-48da-90cc-0d893d13b4b6">
