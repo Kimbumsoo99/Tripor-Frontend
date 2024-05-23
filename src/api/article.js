@@ -22,11 +22,6 @@ function detailArticle(articleId, success, fail) {
 }
 
 function registArticle(article, images, success, fail) {
-    console.log("boardjs article", article);
-    console.log("image", images);
-
-    const articlePostDto = { articleDto: article, fileInfos: images };
-    console.log(articlePostDto);
     local
         .post(`/article`, {
             articleDto: article,
@@ -37,7 +32,6 @@ function registArticle(article, images, success, fail) {
 }
 
 async function getModifyArticle(articleno, success, fail) {
-    console.log("getModifyArticle");
     await local.get(`/article/${articleno}`).then(success).catch(fail);
 }
 
@@ -45,9 +39,5 @@ function modifyArticle(article, success, fail) {
     console.log(article);
     local.put(`/article`, article).then(success).catch(fail);
 }
-
-// function deleteArticle(articleno, success, fail) {
-//     local.delete(`/board/${articleno}`).then(success).catch(fail);
-// }
 
 export { insertImage, deleteImage, listArticle, detailArticle, registArticle, getModifyArticle, modifyArticle };
