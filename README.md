@@ -20,7 +20,7 @@ Version 1: 2024.03.15 ~ 2024.05.24
 <img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/7865ea52-b663-45b9-8930-c72b82da72b2" width="800px" alt="기술스택">
 
 ## 💙 프로젝트 구조도
-<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/bef8d8e0-85ab-44b4-aaba-db776b272826" width="390px" alt="Tripor drawio">
-<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/cf91a0da-c177-4d27-b32a-49a6d8454fa1" alt="image" style="width: 570px;">
+<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/bef8d8e0-85ab-44b4-aaba-db776b272826" width="360px" alt="Tripor drawio">
+<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/cf91a0da-c177-4d27-b32a-49a6d8454fa1" alt="image" style="width: 530px;">
 
 ## 💙 시연영상
