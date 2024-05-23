@@ -17,9 +17,44 @@
 Version 1: 2024.03.15 ~ 2024.05.24
 
 ## 💙 기술스택
-<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/7865ea52-b663-45b9-8930-c72b82da72b2" width="800px" alt="기술스택">
+<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/5e8e2991-ce05-4eb9-88c4-e73300bcab78" width="710px">
 
-## 💙 프로젝트 구조도
-<img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/bef8d8e0-85ab-44b4-aaba-db776b272826" width="500px" alt="Tripor drawio">
+## 💙 ERD
+<img width="750px" alt="image" src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/b5471d5b-ed49-48da-90cc-0d893d13b4b6">
+
+## 💙 주요 기능
+- **국내 관광지 정보 조회**
+  - 지역별 관광지 조회
+  - 관광타입(문화시설, 음식점, ...)별 관광지 조회
+  - 주변 관광지 추천
+- **회원 관리**
+  - 로그인/회원가입
+  - 비밀번호 찾기
+  - 회원정보 수정 (프로필사진 등록 포함)
+  - 회원탈퇴
+- **여행 계획 만들기**
+  - 여행지 검색, 여행 일정 만들기
+  - 나의 여행 계획 보기
+  - 최적 경로 추천
+  - AI로 예산 및 일정 세우기
+- **여행 정보 공유하기**
+  - 작성자/제목으로 게시물 검색
+  - 게시물 등록, 수정, 삭제, 조회
+  - AI로 글쓰기
 
 ## 💙 시연영상
+
+https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/9fcdc8dd-8986-430f-aaba-bfe8259ec942
+
+
+
+
+
+
+
+
+
+
+
+
+
