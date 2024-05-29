@@ -1,6 +1,7 @@
 # ✈️ Tripor
 <img src="https://github.com/SSAFY-Tripor/Tripor-Frontend/assets/76653033/60a30dca-f523-4c16-bc4c-f9979d7e66aa" width="950px">
 
+
 ## 💙 프로젝트 소개
 
 국내 여행에 대한 수요가 꾸준히 늘어나고 있습니다.<br>
